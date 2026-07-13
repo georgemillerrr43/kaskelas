@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" width="200" height="80">
+  <!-- Handwritten artistic signature flow -->
+  <path d="M 20 45 Q 40 15 60 45 T 100 45 T 140 40 T 180 35 Q 195 25 190 55" fill="none" stroke="#4f46e5" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 50 25 C 55 55 45 65 48 55" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round"/>
+  <path d="M 90 40 Q 115 58 145 35" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round"/>
+</svg>
