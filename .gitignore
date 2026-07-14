@@ -24,6 +24,12 @@ desktop.ini
 .claude/
 .claude-flow/
 
+# ── Database ──
+database.sql
+*.sqlite
+*.sqlite3
+*.db
+
 # ── Assets (generated/user-uploaded) ──
 assets/uploads/
 assets/cache/
