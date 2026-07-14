@@ -25,7 +25,8 @@ $role_color_class = $is_admin ? 'role-admin' : 'role-anggota';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Uangkas Kelas - Aplikasi Kas Kelas</title>
-    <link rel="icon" type="image/svg+xml" href="assets/images/joji.svg">
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+    <link rel="alternate icon" href="assets/images/favicon.svg">
     <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -108,16 +109,11 @@ $role_color_class = $is_admin ? 'role-admin' : 'role-anggota';
             color: #1e293b;
         }
 
-        /* ── Scrollbar ─────────────────── */
-        ::-webkit-scrollbar { width: 5px; height: 5px; }
-        ::-webkit-scrollbar-track { background: var(--surface-bg); }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
-        /* ── Layout Wrapper ─────────────── */
+        /* ── dvh fallback for mobile ─── */
         .app-wrapper {
             display: flex;
             min-height: 100vh;
+            min-height: 100dvh;
             width: 100%;
             overflow-x: hidden;
         }
@@ -327,8 +323,8 @@ $role_color_class = $is_admin ? 'role-admin' : 'role-anggota';
         .mobile-topbar {
             display: none;
             background: var(--sidebar-bg);
-            padding: calc(6px + var(--sa-top)) 16px 6px;
-            height: calc(var(--mobile-topbar-h) + var(--sa-top));
+            padding: calc(6px + var(--sa-top)) 12px 6px;
+            min-height: calc(var(--mobile-topbar-h) + var(--sa-top));
             align-items: center;
             justify-content: space-between;
             position: sticky; top: 0; z-index: 60;
@@ -424,6 +420,8 @@ $role_color_class = $is_admin ? 'role-admin' : 'role-anggota';
             .mobile-topbar { display: flex; }
             .page-content { padding: 16px; }
             .app-footer { padding: 12px 16px calc(12px + var(--sa-bottom)); flex-direction: column; text-align: center; }
+            table.data-table thead th { padding: 10px 8px; font-size: 9px; }
+            table.data-table tbody td { padding: 8px 8px; font-size: 12px; }
         }
 
         @media (max-width: 480px) {

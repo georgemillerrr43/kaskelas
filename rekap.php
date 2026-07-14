@@ -96,14 +96,14 @@ try {
         <table class="data-table">
             <thead>
                 <tr>
-                    <th class="text-center" style="width:48px">No</th>
-                    <th style="min-width:180px;border-right:1px solid #e2e8f0">Nama Siswa</th>
-                    <th class="text-center" style="width:110px;background:#fafaff">Minggu 1</th>
-                    <th class="text-center" style="width:110px;background:#fafaff">Minggu 2</th>
-                    <th class="text-center" style="width:110px;background:#fafaff">Minggu 3</th>
-                    <th class="text-center" style="width:110px;background:#fafaff">Minggu 4</th>
-                    <th class="text-center" style="width:110px;background:#fafaff">Minggu 5</th>
-                    <th class="text-center" style="width:140px;border-left:1px solid #e2e8f0;background:#f8faff">Total Bulan Ini</th>
+                    <th class="text-center" style="width:40px">No</th>
+                    <th style="min-width:150px;border-right:1px solid #e2e8f0">Nama Siswa</th>
+                    <th class="text-center" style="width:80px;background:#fafaff">Mgg 1</th>
+                    <th class="text-center" style="width:80px;background:#fafaff">Mgg 2</th>
+                    <th class="text-center" style="width:80px;background:#fafaff">Mgg 3</th>
+                    <th class="text-center" style="width:80px;background:#fafaff">Mgg 4</th>
+                    <th class="text-center" style="width:80px;background:#fafaff">Mgg 5</th>
+                    <th class="text-center" style="width:100px;border-left:1px solid #e2e8f0;background:#f8faff">Total</th>
                 </tr>
             </thead>
             <tbody>
