@@ -166,3 +166,14 @@
 [2026-07-14T09:32:32.622Z] [INFO] Running optimize in headless mode (Claude Code AI)
 [2026-07-14T09:32:43.655Z] [WARN] Headless optimize returned success=false (Process exited with code 1); falling back to local mode
 [2026-07-14T09:32:43.657Z] [INFO] Worker optimize completed in 11037ms
+[2026-07-14T09:35:35.000Z] [INFO] Worker audit deferred: Memory too low: 8.7% free
+[2026-07-14T09:42:12.127Z] [INFO] Starting worker: map (1/2 concurrent)
+[2026-07-14T09:42:12.129Z] [INFO] Worker map completed in 14ms
+[2026-07-14T09:42:12.136Z] [INFO] Starting worker: audit (1/2 concurrent)
+[2026-07-14T09:42:12.137Z] [INFO] Running audit in headless mode (Claude Code AI)
+[2026-07-14T09:42:24.949Z] [WARN] Headless audit returned success=false (Process exited with code 1); falling back to local mode
+[2026-07-14T09:42:24.952Z] [INFO] Worker audit completed in 12817ms
+[2026-07-14T09:42:28.067Z] [INFO] Starting worker: testgaps (1/2 concurrent)
+[2026-07-14T09:42:28.068Z] [INFO] Running testgaps in headless mode (Claude Code AI)
+[2026-07-14T09:42:39.166Z] [WARN] Headless testgaps returned success=false (Process exited with code 1); falling back to local mode
+[2026-07-14T09:42:39.171Z] [INFO] Worker testgaps completed in 11107ms

@@ -136,7 +136,7 @@ try {
                                 $amount = $paid ? $payments[$member['id']][$w] : 0;
                                 if ($paid) $total_paid_this_month += $amount;
                             ?>
-                                <td class="text-center px-2 md:px-3 py-3 group">
+                                <td class="text-center px-2 md:px-3 py-3 group whitespace-nowrap">
                                     <?php if ($paid): ?>
                                         <div class="inline-flex flex-col items-center" title="Lunas Rp <?= number_format($amount, 0, ',', '.') ?>">
                                             <span class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs md:text-sm font-bold group-hover:scale-110 transition-transform duration-150 shadow-sm">
@@ -157,7 +157,7 @@ try {
 
                             <!-- Total Bulan Ini -->
                             <td class="text-center font-bold whitespace-nowrap" style="border-left:1px solid #e2e8f0;background:#fafaff">
-                                <span class="inline-block px-2 md:px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-lg text-[10px] md:text-xs font-bold border border-indigo-100">
+                                    <span class="inline-block px-2 md:px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-lg text-[10px] md:text-xs font-bold border border-indigo-100 whitespace-nowrap">
                                     Rp <?= number_format($total_paid_this_month, 0, ',', '.') ?>
                                 </span>
                             </td>

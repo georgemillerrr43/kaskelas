@@ -356,7 +356,7 @@ $role_color_class = $is_admin ? 'role-admin' : 'role-anggota';
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
         }
-        .mobile-user-info { line-height: 1; overflow: hidden; }
+        .mobile-user-info { line-height: 1; overflow: hidden; min-width: 0; }
         .mobile-user-name { font-size: 10px; font-weight: 700; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 70px; }
         .mobile-user-role { font-size: 8px; font-weight: 600; margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .mobile-user-role.role-admin { color: #a5b4fc; }
@@ -430,6 +430,20 @@ $role_color_class = $is_admin ? 'role-admin' : 'role-anggota';
             .card-body { padding: 16px; }
             .mobile-topbar { gap: 4px; padding-left: 10px; padding-right: 10px; }
             .mobile-user-name { max-width: 50px; }
+        }
+
+        /* ── Extra-small screens (≤360px) ── */
+        @media (max-width: 360px) {
+            .mobile-topbar { gap: 3px; padding-left: 8px; padding-right: 8px; }
+            .mobile-brand-text { font-size: 11px; }
+            .mobile-brand-icon { width: 28px; height: 28px; font-size: 11px; }
+            .mobile-user-info { display: none; }
+            .mobile-user-pill { padding: 3px; }
+            .mobile-user-avatar { width: 28px; height: 28px; }
+            .mobile-menu-btn { width: 30px; height: 30px; font-size: 12px; }
+            .page-content { padding: 10px; }
+            table.data-table thead th { padding: 8px 6px; font-size: 8px; }
+            table.data-table tbody td { padding: 6px; font-size: 11px; }
         }
 
         @media (min-width: 769px) and (max-width: 1024px) {
