@@ -17,6 +17,6 @@ if (ini_get("session.use_cookies")) {
 // Hancurkan session
 session_destroy();
 
-// Redirect ke halaman login
-header("Location: login.php");
+// Redirect ke halaman publik
+header("Location: index.php");
 exit();

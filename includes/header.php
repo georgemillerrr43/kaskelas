@@ -3,18 +3,16 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header("Location: index.php");
     exit();
 }
 
 $current_page = basename($_SERVER['SCRIPT_NAME']);
-$user_role = $_SESSION['role'] ?? 'anggota';
-$user_nama = $_SESSION['nama'] ?? 'Pengguna';
+$user_role = 'admin'; // Only admin can access protected pages
+$user_nama = $_SESSION['nama'] ?? 'Bendahara';
 $user_initial = strtoupper(substr($user_nama, 0, 1));
-$is_admin = $user_role === 'admin';
-$role_label = $is_admin ? 'Bendahara' : 'Anggota';
-$role_icon = $is_admin ? 'fa-shield-halved' : 'fa-user-graduate';
-$role_color_class = $is_admin ? 'role-admin' : 'role-anggota';
+$role_label = 'Bendahara';
+$role_icon = 'fa-shield-halved';
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -172,9 +170,9 @@ $role_color_class = $is_admin ? 'role-admin' : 'role-anggota';
             font-size: 9px; font-weight: 700;
             margin-top: 5px; letter-spacing: 0.5px;
             text-transform: uppercase;
+            background: rgba(99,102,241,0.2); color: #a5b4fc;
+            border: 1px solid rgba(99,102,241,0.2);
         }
-        .sb-user-role.role-admin { background: rgba(99,102,241,0.2); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.2); }
-        .sb-user-role.role-anggota { background: rgba(16,185,129,0.15); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.2); }
 
         /* ── Navigation ───────────────── */
         .sb-nav {
@@ -639,7 +637,7 @@ $role_color_class = $is_admin ? 'role-admin' : 'role-anggota';
             <div class="sb-avatar"><?= $user_initial ?></div>
             <div class="sb-user-info">
                 <div class="sb-user-name" title="<?= htmlspecialchars($user_nama) ?>"><?= htmlspecialchars($user_nama) ?></div>
-                <span class="sb-user-role <?= $role_color_class ?>">
+                <span class="sb-user-role">
                     <i class="fa-solid <?= $role_icon ?>" style="font-size:8px"></i>
                     <?= $role_label ?>
                 </span>

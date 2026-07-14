@@ -20,7 +20,7 @@ try {
 }
 
 // 1. Tangani Penambahan Transaksi (Hanya Admin)
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user_role === 'admin' && isset($_POST['action_type']) && $_POST['action_type'] === 'add') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_type']) && $_POST['action_type'] === 'add') {
     $tanggal = $_POST['tanggal'] ?? date('Y-m-d');
     $jenis = $_POST['jenis'] ?? 'pemasukan';
     $jumlah = (float)($_POST['jumlah'] ?? 0);
@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user_role === 'admin' && isset($_P
 }
 
 // 2. Tangani Penghapusan Transaksi (Hanya Admin)
-if ($user_role === 'admin' && isset($_GET['action']) && $_GET['action'] === 'delete') {
+if (isset($_GET['action']) && $_GET['action'] === 'delete') {
     $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
     if ($id > 0) {
         try {
@@ -219,11 +219,9 @@ $nama_bulan = [
             <button onclick="exportLaporanPDF()" class="btn btn-secondary btn-sm">
                 <i class="fa-solid fa-file-pdf"></i> Export PDF
             </button>
-            <?php if ($user_role === 'admin'): ?>
-                <button onclick="toggleTransactionModal(true)" class="btn btn-primary btn-sm">
-                    <i class="fa-solid fa-plus"></i> Catat Kas
-                </button>
-            <?php endif; ?>
+            <button onclick="toggleTransactionModal(true)" class="btn btn-primary btn-sm">
+                <i class="fa-solid fa-plus"></i> Catat Kas
+            </button>
         </div>
     </div>
 
@@ -275,15 +273,13 @@ $nama_bulan = [
                         <th>Keterangan</th>
                         <th style="width:180px">Pembayar</th>
                         <th class="text-right" style="width:140px">Jumlah</th>
-                        <?php if ($user_role === 'admin'): ?>
                             <th class="text-center" style="width:80px">Aksi</th>
-                        <?php endif; ?>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($transactions)): ?>
                         <tr>
-                            <td colspan="<?= $user_role === 'admin' ? 7 : 6 ?>" class="text-center py-16 text-slate-400">
+                            <td colspan="7" class="text-center py-16 text-slate-400">
                                 <i class="fa-solid fa-receipt text-4xl mb-3 text-slate-300 block"></i>
                                 Tidak ada data transaksi yang cocok dengan filter.
                             </td>
@@ -313,7 +309,6 @@ $nama_bulan = [
                                 <td class="text-right font-mono font-bold <?= $trans['jenis'] === 'pemasukan' ? 'text-emerald-600' : 'text-rose-600' ?>">
                                     <?= $trans['jenis'] === 'pemasukan' ? '+' : '-' ?>Rp <?= number_format($trans['jumlah'], 0, ',', '.') ?>
                                 </td>
-                                <?php if ($user_role === 'admin'): ?>
                                     <td class="text-center">
                                         <a href="transaksi.php?action=delete&id=<?= $trans['id'] ?>"
                                            onclick="return confirm('Apakah Anda yakin ingin menghapus data transaksi ini? Penghapusan akan memicu perubahan pada saldo saat ini.')"
@@ -322,7 +317,6 @@ $nama_bulan = [
                                             <i class="fa-solid fa-trash-can"></i>
                                         </a>
                                     </td>
-                                <?php endif; ?>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -333,7 +327,6 @@ $nama_bulan = [
 </div>
 
 <!-- Modal Dialog Input Transaksi -->
-<?php if ($user_role === 'admin'): ?>
 <div id="transactionModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
     <!-- Backdrop -->
     <div class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm -z-10" onclick="toggleTransactionModal(false)"></div>
@@ -442,7 +435,6 @@ $nama_bulan = [
         </form>
     </div>
 </div>
-<?php endif; ?>
 
 <!-- Libraries for PDF Generation -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>

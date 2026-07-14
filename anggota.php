@@ -166,7 +166,7 @@ try {
     <?php endif; ?>
 
     <!-- Tabel Daftar Anggota -->
-    <div class="<?= $user_role === 'admin' ? 'lg:col-span-2' : 'lg:col-span-3' ?> card overflow-hidden">
+    <div class="lg:col-span-2 card overflow-hidden">
         <div class="card-header flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
                 <h4 class="font-bold text-slate-800 text-sm md:text-base">Daftar Anggota Kelas</h4>
@@ -192,7 +192,7 @@ try {
                         <th>Nama Lengkap</th>
                         <th class="text-center" style="width:90px">Gender</th>
                         <th style="width:110px">Terdaftar</th>
-                        <?php if ($user_role === 'admin'): ?>
+                        <?php if (true): ?>
                             <th class="text-center" style="width:85px">Aksi</th>
                         <?php endif; ?>
                     </tr>
@@ -200,7 +200,7 @@ try {
                 <tbody>
                     <?php if (empty($anggota_list)): ?>
                         <tr>
-                            <td colspan="<?= $user_role === 'admin' ? 6 : 5 ?>" class="text-center py-12 text-slate-400">
+                            <td colspan="6" class="text-center py-12 text-slate-400">
                                 <i class="fa-solid fa-users-slash text-4xl mb-3 text-slate-300 block"></i>
                                 Belum ada data anggota kelas.
                             </td>
@@ -218,7 +218,7 @@ try {
                                     </span>
                                 </td>
                                 <td class="text-xs text-slate-400"><?= date('d/m/Y', strtotime($member['created_at'])) ?></td>
-                                <?php if ($user_role === 'admin'): ?>
+                                <?php if (true): ?>
                                     <td class="text-center">
                                         <div class="flex items-center justify-center gap-2">
                                             <a href="anggota.php?action=edit&id=<?= $member['id'] ?>"

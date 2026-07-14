@@ -403,12 +403,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </button>
                 </form>
 
-                <div class="login-hint">
-                    <strong><i class="fa-solid fa-circle-info mr-1"></i> Informasi Akses Default:</strong>
-                    <div class="grid">
-                        <span><strong>Bendahara:</strong> admin / adminpassword</span>
-                        <span><strong>Siswa:</strong> siswa / siswapassword</span>
-                    </div>
+                <div class="login-hint" style="text-align:center">
+                    <i class="fa-solid fa-shield-halved" style="margin-right:6px;color:var(--primary-400)"></i>
+                    <strong>Akses khusus Bendahara Kelas</strong>
+                    <div style="margin-top:8px;font-size:11px;color:var(--text-muted)">Login: <strong>admin</strong> / <strong>adminpassword</strong></div>
                 </div>
             </div>
         </div>

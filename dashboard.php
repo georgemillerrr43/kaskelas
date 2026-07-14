@@ -302,11 +302,9 @@ function formatRupiah($angka) {
         </div>
     </div>
     <div class="flex items-center gap-3 flex-shrink-0">
-        <?php if ($user_role === 'admin'): ?>
             <a href="transaksi.php?action=add" class="btn btn-primary btn-sm">
                 <i class="fa-solid fa-plus"></i> Catat Transaksi
             </a>
-        <?php endif; ?>
         <a href="rekap.php" class="btn btn-secondary btn-sm">
             <i class="fa-solid fa-table-cells"></i> Lihat Matriks Rekap
         </a>

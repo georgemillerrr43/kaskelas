@@ -26,7 +26,7 @@ try {
       `username` VARCHAR(50) NOT NULL UNIQUE,
       `password` VARCHAR(255) NOT NULL,
       `nama` VARCHAR(100) NOT NULL,
-      `role` ENUM('admin', 'anggota') NOT NULL,
+      `role` ENUM('admin') NOT NULL,
       `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
@@ -62,15 +62,12 @@ try {
         $pdo->exec("ALTER TABLE `transaksi` ADD COLUMN `minggu` TINYINT NULL COMMENT '1-5 untuk uang kas mingguan' AFTER `anggota_id`");
     }
 
-    // 7. Auto-seed akun default jika tabel `users` masih kosong
+    // 7. Auto-seed akun bendahara jika tabel `users` masih kosong
     $stmt = $pdo->query("SELECT COUNT(*) FROM users");
     if ($stmt->fetchColumn() == 0) {
         $admin_pass = password_hash('adminpassword', PASSWORD_BCRYPT);
-        $siswa_pass = password_hash('siswapassword', PASSWORD_BCRYPT);
-        
         $stmt_insert = $pdo->prepare("INSERT INTO users (username, password, nama, role) VALUES (?, ?, ?, ?)");
         $stmt_insert->execute(['admin', $admin_pass, 'Bendahara Kelas', 'admin']);
-        $stmt_insert->execute(['siswa', $siswa_pass, 'Anggota Kelas', 'anggota']);
     }
     
     // 8. Auto-seed data anggota default jika tabel `anggota` masih kosong
