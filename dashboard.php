@@ -526,4 +526,3 @@ function formatRupiah($angka) {
 </script>
 
 <?php require_once 'includes/footer.php'; ?>
-</stan>

@@ -25,6 +25,7 @@ $role_color_class = $is_admin ? 'role-admin' : 'role-anggota';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Uangkas Kelas - Aplikasi Kas Kelas</title>
+    <link rel="icon" type="image/svg+xml" href="assets/images/joji.svg">
     <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -57,13 +58,10 @@ $role_color_class = $is_admin ? 'role-admin' : 'role-anggota';
             --sa-top: env(safe-area-inset-top, 0px);
 
             /* Primary */
-            --primary-50: #eef2ff;
-            --primary-100: #e0e7ff;
             --primary-400: #818cf8;
             --primary-500: #6366f1;
             --primary-600: #4f46e5;
             --primary-700: #4338ca;
-            --primary-900: #312e81;
 
             /* Semantic */
             --income: #059669;
@@ -78,7 +76,6 @@ $role_color_class = $is_admin ? 'role-admin' : 'role-anggota';
 
             /* Sidebar */
             --sidebar-bg: #0f172a;
-            --sidebar-secondary: #1e293b;
             --sidebar-border: rgba(255,255,255,0.07);
             --sidebar-text: rgba(255,255,255,0.5);
             --sidebar-text-hover: rgba(255,255,255,0.9);
@@ -93,7 +90,6 @@ $role_color_class = $is_admin ? 'role-admin' : 'role-anggota';
             /* Shadows */
             --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
             --shadow-elevated: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.05);
-            --shadow-modal: 0 20px 60px rgba(0,0,0,0.2);
 
             /* Transitions */
             --transition-fast: 150ms cubic-bezier(0.4,0,0.2,1);
@@ -168,15 +164,8 @@ $role_color_class = $is_admin ? 'role-admin' : 'role-anggota';
             flex-shrink: 0;
         }
         .brand-text { line-height: 1; }
-        .brand-title {
-            font-size: 15px; font-weight: 800;
-            color: #fff; letter-spacing: -0.3px;
-        }
-        .brand-sub {
-            font-size: 9px; font-weight: 600;
-            color: var(--primary-400); letter-spacing: 1.2px;
-            text-transform: uppercase; margin-top: 3px;
-        }
+        .brand-title { font-size: 15px; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
+        .brand-sub { font-size: 9px; font-weight: 600; color: var(--primary-400); letter-spacing: 1.2px; text-transform: uppercase; margin-top: 3px; }
 
         /* ── Sidebar User Card ────────── */
         .sidebar-user {
@@ -345,42 +334,46 @@ $role_color_class = $is_admin ? 'role-admin' : 'role-anggota';
             position: sticky; top: 0; z-index: 60;
             box-shadow: 0 2px 12px rgba(0,0,0,0.25);
         }
-        .mobile-brand { display: flex; align-items: center; gap: 10px; }
+        .mobile-brand { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
         .mobile-brand-icon {
-            width: 34px; height: 34px; border-radius: 9px;
+            width: 32px; height: 32px; border-radius: 8px;
             background: linear-gradient(135deg, var(--primary-500), #8b5cf6);
             display: flex; align-items: center; justify-content: center;
-            font-size: 14px; color: #fff;
+            font-size: 13px; color: #fff;
         }
-        .mobile-brand-text { font-size: 14px; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
+        .mobile-brand-text { font-size: 13px; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
 
         .mobile-user-pill {
-            display: flex; align-items: center; gap: 7px;
-            padding: 5px 10px 5px 6px;
+            display: flex; align-items: center; gap: 6px;
+            padding: 4px 8px 4px 5px;
             border-radius: 99px;
             background: rgba(255,255,255,0.08);
             border: 1px solid rgba(255,255,255,0.1);
+            flex-shrink: 1;
+            min-width: 0;
+            overflow: hidden;
         }
         .mobile-user-avatar {
-            width: 28px; height: 28px; border-radius: 50%;
+            width: 26px; height: 26px; border-radius: 50%;
             background: linear-gradient(135deg, var(--primary-500), #8b5cf6);
-            color: #fff; font-size: 11px; font-weight: 800;
+            color: #fff; font-size: 10px; font-weight: 800;
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
         }
-        .mobile-user-info { line-height: 1; }
-        .mobile-user-name { font-size: 11px; font-weight: 700; color: #fff; max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .mobile-user-role { font-size: 9px; font-weight: 600; margin-top: 1px; }
+        .mobile-user-info { line-height: 1; overflow: hidden; }
+        .mobile-user-name { font-size: 10px; font-weight: 700; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 70px; }
+        .mobile-user-role { font-size: 8px; font-weight: 600; margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .mobile-user-role.role-admin { color: #a5b4fc; }
         .mobile-user-role.role-anggota { color: #6ee7b7; }
 
         .mobile-menu-btn {
-            width: 36px; height: 36px; border-radius: 9px;
+            width: 34px; height: 34px; border-radius: 8px;
             background: rgba(255,255,255,0.08);
             border: 1px solid rgba(255,255,255,0.12);
-            color: #fff; font-size: 15px;
+            color: #fff; font-size: 14px;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: var(--transition-fast);
+            flex-shrink: 0;
         }
         .mobile-menu-btn:hover { background: rgba(255,255,255,0.15); }
 
@@ -437,6 +430,8 @@ $role_color_class = $is_admin ? 'role-admin' : 'role-anggota';
             .page-content { padding: 12px; }
             .card-header { padding: 14px 16px; }
             .card-body { padding: 16px; }
+            .mobile-topbar { gap: 4px; padding-left: 10px; padding-right: 10px; }
+            .mobile-user-name { max-width: 50px; }
         }
 
         @media (min-width: 769px) and (max-width: 1024px) {
@@ -742,4 +737,3 @@ $role_color_class = $is_admin ? 'role-admin' : 'role-anggota';
 
         <!-- Page Content -->
         <div class="page-content">
-</stan>

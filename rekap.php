@@ -131,34 +131,33 @@ try {
 
                             <?php
                             $total_paid_this_month = 0;
-                            $iuran_kas = 2000; // default iuran mingguan
                             for ($w = 1; $w <= 5; $w++):
                                 $paid = isset($payments[$member['id']][$w]);
                                 $amount = $paid ? $payments[$member['id']][$w] : 0;
                                 if ($paid) $total_paid_this_month += $amount;
                             ?>
-                                <td class="text-center px-3 py-3 group">
+                                <td class="text-center px-2 md:px-3 py-3 group">
                                     <?php if ($paid): ?>
                                         <div class="inline-flex flex-col items-center" title="Lunas Rp <?= number_format($amount, 0, ',', '.') ?>">
-                                            <span class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm font-bold group-hover:scale-110 transition-transform duration-150 shadow-sm">
+                                            <span class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs md:text-sm font-bold group-hover:scale-110 transition-transform duration-150 shadow-sm">
                                                 <i class="fa-solid fa-check"></i>
                                             </span>
-                                            <span class="text-[9px] text-emerald-600 font-bold mt-1"><?= number_format($amount, 0, ',', '.') ?></span>
+                                            <span class="whitespace-nowrap text-[8px] md:text-[9px] text-emerald-600 font-bold mt-1"><?= number_format($amount, 0, ',', '.') ?></span>
                                         </div>
                                     <?php else: ?>
                                         <div class="inline-flex flex-col items-center" title="Belum membayar">
-                                            <span class="w-8 h-8 rounded-full bg-slate-100 text-slate-300 flex items-center justify-center text-sm group-hover:bg-rose-50 group-hover:text-rose-300 transition-all duration-150">
+                                            <span class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-slate-100 text-slate-300 flex items-center justify-center text-xs md:text-sm group-hover:bg-rose-50 group-hover:text-rose-300 transition-all duration-150">
                                                 <i class="fa-solid fa-minus"></i>
                                             </span>
-                                            <span class="text-[9px] text-slate-300 font-medium mt-1">-</span>
+                                            <span class="whitespace-nowrap text-[8px] md:text-[9px] text-slate-300 font-medium mt-1">-</span>
                                         </div>
                                     <?php endif; ?>
                                 </td>
                             <?php endfor; ?>
 
                             <!-- Total Bulan Ini -->
-                            <td class="text-center font-bold" style="border-left:1px solid #e2e8f0;background:#fafaff">
-                                <span class="inline-block px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-lg text-xs font-bold border border-indigo-100">
+                            <td class="text-center font-bold whitespace-nowrap" style="border-left:1px solid #e2e8f0;background:#fafaff">
+                                <span class="inline-block px-2 md:px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-lg text-[10px] md:text-xs font-bold border border-indigo-100">
                                     Rp <?= number_format($total_paid_this_month, 0, ',', '.') ?>
                                 </span>
                             </td>
@@ -171,4 +170,3 @@ try {
 </div>
 
 <?php require_once 'includes/footer.php'; ?>
-</stan>
