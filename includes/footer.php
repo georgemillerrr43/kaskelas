@@ -1,72 +1,57 @@
         </div><!-- end .page-content -->
 
-        <!-- Global Footer -->
+        <!-- Footer -->
         <footer class="app-footer">
             <span>
-                &copy; <?= date('Y') ?> <strong style="color:#64748b">Uangkas Kelas</strong>. Hak Cipta Dilindungi.
+                &copy; <?= date('Y') ?> <strong style="color:#475569">Uangkas Kelas</strong>. Hak Cipta Dilindungi.
             </span>
             <span>
-                Dibuat oleh <strong style="color:#4f46e5">Joji</strong> &mdash; Transparansi keuangan kelas yang akurat &amp; aman.
+                Dibuat oleh <strong style="color:var(--primary-600)">Joji</strong> &mdash; Transparansi keuangan kelas yang akurat &amp; aman.
             </span>
         </footer>
 
-    </div><!-- end .main-content -->
-</div><!-- end .app-wrapper -->
+    </div><!-- end .main-area -->
+</div><!-- end .app-shell -->
 
-<!-- Mobile Sidebar Toggle Script -->
+<!-- Mobile Sidebar Toggle -->
 <script>
 (function() {
-    const toggleBtn  = document.getElementById('mobileMenuToggle');
-    const sidebar    = document.getElementById('sidebar');
-    const overlay    = document.getElementById('sidebarOverlay');
-    const menuIcon   = document.getElementById('menuIcon');
+    const btn = document.getElementById('mobileMenuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const icon = document.getElementById('menuIcon');
 
-    function openSidebar() {
+    function open() {
         sidebar.classList.add('open');
         overlay.classList.add('active');
-        if (menuIcon) {
-            menuIcon.classList.replace('fa-bars', 'fa-xmark');
-        }
+        if (icon) icon.classList.replace('fa-bars', 'fa-xmark');
         document.body.style.overflow = 'hidden';
-        // Prevent iOS rubber-banding when sidebar is open
         document.body.style.position = 'fixed';
         document.body.style.width = '100%';
     }
-
-    function closeSidebar() {
+    function close() {
         sidebar.classList.remove('open');
         overlay.classList.remove('active');
-        if (menuIcon) {
-            menuIcon.classList.replace('fa-xmark', 'fa-bars');
-        }
+        if (icon) icon.classList.replace('fa-xmark', 'fa-bars');
         document.body.style.overflow = '';
         document.body.style.position = '';
         document.body.style.width = '';
     }
 
-    if (toggleBtn) {
-        toggleBtn.addEventListener('click', function() {
-            sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
-        });
-    }
+    if (btn) btn.addEventListener('click', function() {
+        sidebar.classList.contains('open') ? close() : open();
+    });
+    if (overlay) overlay.addEventListener('click', close);
 
-    if (overlay) {
-        overlay.addEventListener('click', closeSidebar);
-    }
-
-    // Close sidebar when a nav link is clicked on mobile
-    const navLinks = sidebar ? sidebar.querySelectorAll('.nav-link, .logout-link') : [];
-    navLinks.forEach(function(link) {
+    const links = sidebar ? sidebar.querySelectorAll('.sb-link, .sb-logout') : [];
+    links.forEach(function(link) {
         link.addEventListener('click', function() {
-            if (window.innerWidth <= 768) closeSidebar();
+            if (window.innerWidth <= 768) close();
         });
     });
 
-    // Handle window resize: close sidebar automatically when going to desktop
     window.addEventListener('resize', function() {
-        if (window.innerWidth > 768 && sidebar && sidebar.classList.contains('open')) {
-            closeSidebar();
-        }
+        if (window.innerWidth > 768 && sidebar && sidebar.classList.contains('open')) close();
     });
 })();
 </script>
