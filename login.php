@@ -78,10 +78,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         /* Animated gradient background */
         .login-bg {
             min-height: 100vh;
+            min-height: 100dvh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 24px;
+            padding: 16px;
             position: relative;
             background: linear-gradient(-45deg, #1e1b4b, #312e81, #3730a3, #1e40af, #0e7490);
             background-size: 400% 400%;
@@ -332,9 +333,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         @media (max-width: 480px) {
-            .login-header { padding: 32px 24px 0; }
-            .login-form { padding: 24px; }
+            .login-header { padding: 28px 20px 0; }
+            .login-form { padding: 20px; }
             .login-header h1 { font-size: 20px; }
+            .login-header p { font-size: 12px; }
+            .login-icon { width: 52px; height: 52px; font-size: 22px; }
+            .login-card { max-width: 360px; border-radius: 16px; }
+            .login-hint .grid { grid-template-columns: 1fr; gap: 4px; }
+            .input-wrap input { padding: 11px 14px 11px 38px; font-size: 13px; }
+            .btn-login { padding: 14px; }
+        }
+
+        @media (max-width: 360px) {
+            .login-header { padding: 24px 16px 0; }
+            .login-form { padding: 16px; }
         }
     </style>
 </head>

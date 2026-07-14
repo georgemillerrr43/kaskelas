@@ -118,40 +118,40 @@ function formatRupiah($angka) {
 ?>
 
 <!-- Grid Summary Cards -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5 mb-6 md:mb-8">
     <!-- Card Pemasukan -->
-    <div class="card p-5 flex items-center justify-between hover:shadow-elevated hover:-translate-y-0.5 transition-all duration-200">
-        <div class="space-y-1">
+    <div class="card p-4 md:p-5 flex items-center justify-between card-hover">
+        <div class="space-y-1 min-w-0">
             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Total Pemasukan</span>
-            <h3 class="text-xl font-bold text-emerald-600"><?= formatRupiah($total_pemasukan) ?></h3>
+            <h3 class="text-lg md:text-xl font-bold text-emerald-600 truncate"><?= formatRupiah($total_pemasukan) ?></h3>
             <span class="text-[10px] text-emerald-500 font-semibold flex items-center gap-1">
-                <i class="fa-solid fa-arrow-trend-up"></i> Akumulasi Uang Masuk
+                <i class="fa-solid fa-arrow-trend-up"></i> Akumulasi Masuk
             </span>
         </div>
-        <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center text-lg flex-shrink-0">
+        <div class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center text-base md:text-lg flex-shrink-0 ml-3">
             <i class="fa-solid fa-circle-arrow-down"></i>
         </div>
     </div>
 
     <!-- Card Pengeluaran -->
-    <div class="card p-5 flex items-center justify-between hover:shadow-elevated hover:-translate-y-0.5 transition-all duration-200">
-        <div class="space-y-1">
+    <div class="card p-4 md:p-5 flex items-center justify-between card-hover">
+        <div class="space-y-1 min-w-0">
             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Total Pengeluaran</span>
-            <h3 class="text-xl font-bold text-rose-600"><?= formatRupiah($total_pengeluaran) ?></h3>
+            <h3 class="text-lg md:text-xl font-bold text-rose-600 truncate"><?= formatRupiah($total_pengeluaran) ?></h3>
             <span class="text-[10px] text-rose-500 font-semibold flex items-center gap-1">
-                <i class="fa-solid fa-arrow-trend-down"></i> Uang Terpakai/Keluar
+                <i class="fa-solid fa-arrow-trend-down"></i> Uang Terpakai
             </span>
         </div>
-        <div class="w-11 h-11 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center text-lg flex-shrink-0">
+        <div class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center text-base md:text-lg flex-shrink-0 ml-3">
             <i class="fa-solid fa-circle-arrow-up"></i>
         </div>
     </div>
 
     <!-- Card Saldo Sisa -->
-    <div class="card p-5 flex items-center justify-between hover:shadow-elevated hover:-translate-y-0.5 transition-all duration-200">
-        <div class="space-y-1">
+    <div class="card p-4 md:p-5 flex items-center justify-between card-hover">
+        <div class="space-y-1 min-w-0">
             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Saldo Saat Ini</span>
-            <h3 class="text-xl font-bold <?= $saldo_kas >= 0 ? 'text-indigo-600' : 'text-rose-600' ?>"><?= formatRupiah($saldo_kas) ?></h3>
+            <h3 class="text-lg md:text-xl font-bold truncate <?= $saldo_kas >= 0 ? 'text-indigo-600' : 'text-rose-600' ?>"><?= formatRupiah($saldo_kas) ?></h3>
             <span class="text-[10px] font-semibold flex items-center gap-1">
                 <?php if ($saldo_kas < 0): ?>
                     <span class="text-rose-500"><i class="fa-solid fa-triangle-exclamation"></i> Saldo Defisit</span>
@@ -160,21 +160,21 @@ function formatRupiah($angka) {
                 <?php endif; ?>
             </span>
         </div>
-        <div class="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-500 flex items-center justify-center text-lg flex-shrink-0">
+        <div class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-indigo-50 text-indigo-500 flex items-center justify-center text-base md:text-lg flex-shrink-0 ml-3">
             <i class="fa-solid fa-wallet"></i>
         </div>
     </div>
 
     <!-- Card Kas Minggu Ini -->
-    <div class="card p-5 hover:shadow-elevated hover:-translate-y-0.5 transition-all duration-200">
+    <div class="card p-4 md:p-5 card-hover">
         <div class="flex items-start justify-between mb-3">
-            <div>
+            <div class="min-w-0">
                 <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Kas Minggu Ini</span>
-                <h3 class="text-xl font-bold text-slate-800">
-                    <?= $siswa_lunas_minggu_ini ?> <span class="text-xs font-semibold text-slate-400">/ <?= $total_anggota ?> Siswa</span>
+                <h3 class="text-lg md:text-xl font-bold text-slate-800">
+                    <?= $siswa_lunas_minggu_ini ?> <span class="text-xs font-semibold text-slate-400">/ <?= $total_anggota ?></span>
                 </h3>
             </div>
-            <div class="w-11 h-11 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center text-lg flex-shrink-0">
+            <div class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center text-base md:text-lg flex-shrink-0 ml-3">
                 <i class="fa-solid fa-calendar-check"></i>
             </div>
         </div>
@@ -193,14 +193,14 @@ function formatRupiah($angka) {
 </div>
 
 <!-- Grid Charts & Recent Activity -->
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
 
     <!-- Chart.js Container -->
-    <div class="lg:col-span-2 card p-6 flex flex-col">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4 mb-5">
-            <div>
-                <h4 class="font-bold text-slate-800 text-base">Grafik Analisis Keuangan</h4>
-                <p class="text-xs text-slate-400" id="chartSubtitle">Pemasukan vs Pengeluaran Bulanan (<?= $tahun_aktif ?>)</p>
+    <div class="lg:col-span-2 card p-4 md:p-6 flex flex-col">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4 mb-4">
+            <div class="min-w-0">
+                <h4 class="font-bold text-slate-800 text-sm md:text-base">Grafik Analisis Keuangan</h4>
+                <p class="text-[11px] text-slate-400 truncate" id="chartSubtitle">Pemasukan vs Pengeluaran Bulanan (<?= $tahun_aktif ?>)</p>
             </div>
 
             <div class="flex flex-wrap items-center gap-3">
@@ -233,18 +233,18 @@ function formatRupiah($angka) {
         </div>
 
         <!-- Chart Bulanan -->
-        <div id="chartBulanContainer" class="relative w-full" style="height:300px">
+        <div id="chartBulanContainer" class="relative w-full" style="height:240px;min-height:240px">
             <canvas id="financialChart"></canvas>
         </div>
 
         <!-- Chart Mingguan -->
-        <div id="chartMingguContainer" class="relative w-full hidden" style="height:300px">
+        <div id="chartMingguContainer" class="relative w-full hidden" style="height:240px;min-height:240px">
             <canvas id="weeklyFinancialChart"></canvas>
         </div>
     </div>
 
     <!-- Recent Transactions -->
-    <div class="card p-6 flex flex-col">
+    <div class="card p-4 md:p-6 flex flex-col">
         <div class="border-b border-slate-100 pb-4 mb-4 flex items-center justify-between">
             <div>
                 <h4 class="font-bold text-slate-800 text-base">Transaksi Terbaru</h4>
@@ -291,14 +291,14 @@ function formatRupiah($angka) {
 </div>
 
 <!-- Info Banner -->
-<div class="bg-gradient-to-r from-indigo-50 to-violet-50 border border-indigo-100 rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-5">
-    <div class="flex items-start gap-4">
-        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 text-white flex items-center justify-center text-lg flex-shrink-0 shadow-md shadow-indigo-500/20">
+<div class="bg-gradient-to-r from-indigo-50 to-violet-50 border border-indigo-100 rounded-xl md:rounded-2xl p-4 md:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="flex items-start gap-3 md:gap-4">
+        <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 text-white flex items-center justify-center text-base md:text-lg flex-shrink-0 shadow-md shadow-indigo-500/20">
             <i class="fa-solid fa-graduation-cap"></i>
         </div>
-        <div>
-            <h4 class="font-bold text-indigo-900 text-base">Butuh Bantuan atau Ingin Mencatat Kas?</h4>
-            <p class="text-sm text-indigo-700/80 mt-0.5">Bendahara dapat menambahkan data siswa atau mencatat kas mingguan dengan navigasi cepat di sebelah kiri.</p>
+        <div class="min-w-0">
+            <h4 class="font-bold text-indigo-900 text-sm md:text-base">Butuh Bantuan atau Ingin Mencatat Kas?</h4>
+            <p class="text-xs md:text-sm text-indigo-700/80 mt-0.5">Bendahara dapat menambahkan data siswa atau mencatat kas mingguan dengan navigasi cepat di sebelah kiri.</p>
         </div>
     </div>
     <div class="flex items-center gap-3 flex-shrink-0">
@@ -349,6 +349,8 @@ function formatRupiah($angka) {
         // ── Chart defaults ──
         Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
         Chart.defaults.font.size = 11;
+        Chart.defaults.responsive = true;
+        Chart.defaults.maintainAspectRatio = false;
 
         function createGradient(ctx, chartArea, color1, color2) {
             const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);

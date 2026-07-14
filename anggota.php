@@ -114,11 +114,11 @@ try {
 
     <!-- Form Tambah/Edit (Admin only) -->
     <?php if ($user_role === 'admin'): ?>
-        <div class="lg:col-span-1 card p-6">
-            <h3 class="font-bold text-slate-800 text-base mb-1">
+        <div class="lg:col-span-1 card p-5 md:p-6">
+            <h3 class="font-bold text-slate-800 text-sm md:text-base mb-1">
                 <?= $edit_mode ? 'Edit Data Anggota' : 'Tambah Anggota Baru' ?>
             </h3>
-            <p class="text-xs text-slate-400 mb-5">
+            <p class="text-xs text-slate-400 mb-4 md:mb-5">
                 <?= $edit_mode ? 'Ubah informasi anggota kelas terpilih.' : 'Daftarkan nama siswa baru ke dalam sistem kas kelas.' ?>
             </p>
 
@@ -167,18 +167,19 @@ try {
 
     <!-- Tabel Daftar Anggota -->
     <div class="<?= $user_role === 'admin' ? 'lg:col-span-2' : 'lg:col-span-3' ?> card overflow-hidden">
-        <div class="card-header flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="card-header flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-                <h4 class="font-bold text-slate-800 text-base">Daftar Anggota Kelas</h4>
+                <h4 class="font-bold text-slate-800 text-sm md:text-base">Daftar Anggota Kelas</h4>
                 <p class="text-xs text-slate-400">Total terdaftar: <strong><?= count($anggota_list) ?></strong> siswa</p>
             </div>
-            <div class="relative w-full sm:w-64">
+            <div class="relative w-full sm:w-56 md:w-64">
                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 text-xs">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </span>
                 <input type="text" id="searchInput"
                        class="input text-xs pl-9"
-                       placeholder="Cari nama atau NIS...">
+                       placeholder="Cari nama atau NIS..."
+                       style="height:36px;font-size:12px">
             </div>
         </div>
 
@@ -186,13 +187,13 @@ try {
             <table class="data-table" id="anggotaTable">
                 <thead>
                     <tr>
-                        <th class="text-center" style="width:48px">No</th>
-                        <th style="width:110px">NIS</th>
+                        <th class="text-center" style="width:40px">No</th>
+                        <th style="width:90px">NIS</th>
                         <th>Nama Lengkap</th>
-                        <th class="text-center" style="width:110px">Gender</th>
-                        <th style="width:140px">Terdaftar</th>
+                        <th class="text-center" style="width:90px">Gender</th>
+                        <th style="width:110px">Terdaftar</th>
                         <?php if ($user_role === 'admin'): ?>
-                            <th class="text-center" style="width:100px">Aksi</th>
+                            <th class="text-center" style="width:85px">Aksi</th>
                         <?php endif; ?>
                     </tr>
                 </thead>

@@ -176,8 +176,8 @@ $nama_bulan = [
 
 <div class="space-y-6">
     <!-- Header Control Bar: Filter & Tambah Transaksi -->
-    <div class="card p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-5">
-        <form method="GET" action="transaksi.php" class="grid grid-cols-1 sm:grid-cols-4 gap-4 flex-grow max-w-4xl">
+    <div class="card p-4 md:p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <form method="GET" action="transaksi.php" class="grid grid-cols-2 sm:grid-cols-4 gap-3 flex-grow max-w-4xl">
             <div>
                 <label for="filter_jenis" class="input-label">Jenis Transaksi</label>
                 <select name="filter_jenis" id="filter_jenis" class="input select text-xs">
@@ -228,31 +228,31 @@ $nama_bulan = [
     </div>
 
     <!-- Ringkasan Filter -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div class="card p-4 flex items-center justify-between">
-            <div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
+        <div class="card p-3 md:p-4 flex items-center justify-between card-hover">
+            <div class="min-w-0">
                 <div class="input-label mb-0.5">Pemasukan Terfilter</div>
-                <span class="text-base font-bold text-emerald-600">Rp <?= number_format($total_pemasukan_filter, 0, ',', '.') ?></span>
+                <span class="text-sm md:text-base font-bold text-emerald-600 truncate block">Rp <?= number_format($total_pemasukan_filter, 0, ',', '.') ?></span>
             </div>
-            <div class="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-500 flex items-center justify-center text-sm">
+            <div class="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-emerald-50 text-emerald-500 flex items-center justify-center text-xs md:text-sm flex-shrink-0 ml-2">
                 <i class="fa-solid fa-arrow-down-long"></i>
             </div>
         </div>
-        <div class="card p-4 flex items-center justify-between">
-            <div>
+        <div class="card p-3 md:p-4 flex items-center justify-between card-hover">
+            <div class="min-w-0">
                 <div class="input-label mb-0.5">Pengeluaran Terfilter</div>
-                <span class="text-base font-bold text-rose-600">Rp <?= number_format($total_pengeluaran_filter, 0, ',', '.') ?></span>
+                <span class="text-sm md:text-base font-bold text-rose-600 truncate block">Rp <?= number_format($total_pengeluaran_filter, 0, ',', '.') ?></span>
             </div>
-            <div class="w-9 h-9 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center text-sm">
+            <div class="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center text-xs md:text-sm flex-shrink-0 ml-2">
                 <i class="fa-solid fa-arrow-up-long"></i>
             </div>
         </div>
-        <div class="card p-4 flex items-center justify-between">
-            <div>
+        <div class="card p-3 md:p-4 flex items-center justify-between card-hover">
+            <div class="min-w-0">
                 <div class="input-label mb-0.5">Saldo Hasil Filter</div>
-                <span class="text-base font-bold <?= $saldo_filter >= 0 ? 'text-indigo-600' : 'text-rose-600' ?>">Rp <?= number_format($saldo_filter, 0, ',', '.') ?></span>
+                <span class="text-sm md:text-base font-bold truncate block <?= $saldo_filter >= 0 ? 'text-indigo-600' : 'text-rose-600' ?>">Rp <?= number_format($saldo_filter, 0, ',', '.') ?></span>
             </div>
-            <div class="w-9 h-9 rounded-lg bg-indigo-50 text-indigo-500 flex items-center justify-center text-sm">
+            <div class="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-indigo-50 text-indigo-500 flex items-center justify-center text-xs md:text-sm flex-shrink-0 ml-2">
                 <i class="fa-solid fa-calculator"></i>
             </div>
         </div>

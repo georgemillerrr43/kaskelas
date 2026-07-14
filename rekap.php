@@ -52,21 +52,21 @@ try {
 <?php endif; ?>
 
 <!-- Header Filter -->
-<div class="card p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-6">
-    <div>
-        <h4 class="font-bold text-slate-800 text-base">Matriks Kas Mingguan Siswa</h4>
+<div class="card p-4 md:p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-5 md:mb-6">
+    <div class="min-w-0">
+        <h4 class="font-bold text-slate-800 text-sm md:text-base">Matriks Kas Mingguan Siswa</h4>
         <p class="text-xs text-slate-400">Pilih bulan dan tahun untuk melihat rincian iuran mingguan (Minggu 1 - Minggu 5)</p>
     </div>
 
-    <form method="GET" action="rekap.php" class="flex flex-wrap items-center gap-3">
+    <form method="GET" action="rekap.php" class="flex flex-wrap items-center gap-2 md:gap-3">
         <select name="bulan" id="bulan" onchange="this.form.submit()"
-                class="input select text-xs" style="width:auto;min-width:140px">
+                class="input select text-xs" style="width:auto;min-width:120px">
             <?php foreach ($nama_bulan as $num => $name): ?>
                 <option value="<?= $num ?>" <?= $num === $bulan_aktif ? 'selected' : '' ?>><?= $name ?></option>
             <?php endforeach; ?>
         </select>
         <select name="tahun" id="tahun" onchange="this.form.submit()"
-                class="input select text-xs" style="width:auto;min-width:100px">
+                class="input select text-xs" style="width:auto;min-width:90px">
             <?php
             $current_y = (int)date('Y');
             for ($y = $current_y - 3; $y <= $current_y + 2; $y++):
@@ -78,14 +78,14 @@ try {
 </div>
 
 <!-- Legend -->
-<div class="flex flex-wrap gap-4 items-center mb-6 text-xs text-slate-500 font-medium bg-indigo-50/60 p-4 border border-indigo-100/50 rounded-xl">
+<div class="flex flex-wrap gap-3 items-center mb-5 text-xs text-slate-500 font-medium bg-indigo-50/60 p-3 md:p-4 border border-indigo-100/50 rounded-xl">
     <span class="font-semibold text-indigo-900"><i class="fa-solid fa-circle-info mr-1"></i> Keterangan:</span>
     <span class="inline-flex items-center gap-1.5">
-        <span class="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center"><i class="fa-solid fa-check text-white text-[9px]"></i></span>
-        Lunas / Sudah Bayar
+        <span class="w-4 h-4 md:w-5 md:h-5 rounded-full bg-emerald-500 flex items-center justify-center"><i class="fa-solid fa-check text-white text-[8px] md:text-[9px]"></i></span>
+        Lunas
     </span>
     <span class="inline-flex items-center gap-1.5">
-        <span class="w-5 h-5 rounded-full bg-slate-200 flex items-center justify-center"><i class="fa-solid fa-minus text-slate-400 text-[9px]"></i></span>
+        <span class="w-4 h-4 md:w-5 md:h-5 rounded-full bg-slate-200 flex items-center justify-center"><i class="fa-solid fa-minus text-slate-400 text-[8px] md:text-[9px]"></i></span>
         Belum Bayar
     </span>
 </div>

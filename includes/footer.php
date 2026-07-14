@@ -24,15 +24,24 @@
     function openSidebar() {
         sidebar.classList.add('open');
         overlay.classList.add('active');
-        menuIcon.classList.replace('fa-bars', 'fa-xmark');
+        if (menuIcon) {
+            menuIcon.classList.replace('fa-bars', 'fa-xmark');
+        }
         document.body.style.overflow = 'hidden';
+        // Prevent iOS rubber-banding when sidebar is open
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
     }
 
     function closeSidebar() {
         sidebar.classList.remove('open');
         overlay.classList.remove('active');
-        menuIcon.classList.replace('fa-xmark', 'fa-bars');
+        if (menuIcon) {
+            menuIcon.classList.replace('fa-xmark', 'fa-bars');
+        }
         document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
     }
 
     if (toggleBtn) {
@@ -51,6 +60,13 @@
         link.addEventListener('click', function() {
             if (window.innerWidth <= 768) closeSidebar();
         });
+    });
+
+    // Handle window resize: close sidebar automatically when going to desktop
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768 && sidebar && sidebar.classList.contains('open')) {
+            closeSidebar();
+        }
     });
 })();
 </script>

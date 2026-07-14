@@ -1,11 +1,12 @@
 <?php
 // config/database.php
 
-// Database Configuration (Menggunakan kredensial terbaru dari aaPanel Anda)
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'db_kas_kelas');
-define('DB_USER', 'db_kas_kelas');
-define('DB_PASS', 'mdzn3hGBPNTmYx4f');
+// Database Configuration — sesuaikan dengan lingkungan Anda
+// Untuk keamanan di production, gunakan environment variable atau file .env
+define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_NAME', getenv('DB_NAME') ?: 'db_kas_kelas');
+define('DB_USER', getenv('DB_USER') ?: 'db_kas_kelas');
+define('DB_PASS', getenv('DB_PASS') ?: 'mdzn3hGBPNTmYx4f');
 
 try {
     // 1. Koneksi awal ke MySQL Server

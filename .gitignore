@@ -1,0 +1,32 @@
+# ── Environment & Config ──
+.env
+.env.local
+.env.*.local
+config/database.local.php
+
+# ── OS Files ──
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── IDE / Editor ──
+.vscode/
+.idea/
+*.sublime-*
+*.swp
+*.swo
+*~
+
+# ── Logs ──
+*.log
+
+# ── Claude (personal AI harness) ──
+.claude/
+.claude-flow/
+
+# ── Assets (generated/user-uploaded) ──
+assets/uploads/
+assets/cache/
+
+# ── Git ──
+# Keep the git directory clean of transient files

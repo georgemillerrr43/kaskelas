@@ -52,9 +52,13 @@ $role_color_class = $is_admin ? 'role-admin' : 'role-anggota';
         :root {
             --sidebar-width: 260px;
             --topbar-h: 64px;
+            --mobile-topbar-h: 60px;
+            --sa-bottom: env(safe-area-inset-bottom, 0px);
+            --sa-top: env(safe-area-inset-top, 0px);
 
             /* Primary */
             --primary-50: #eef2ff;
+            --primary-100: #e0e7ff;
             --primary-400: #818cf8;
             --primary-500: #6366f1;
             --primary-600: #4f46e5;
@@ -261,7 +265,12 @@ $role_color_class = $is_admin ? 'role-admin' : 'role-anggota';
         }
 
         /* ── Sidebar Logout ─────────── */
-        .sidebar-footer { padding: 12px; border-top: 1px solid var(--sidebar-border); position: relative; }
+        .sidebar-footer {
+            padding: 12px;
+            padding-bottom: calc(12px + var(--sa-bottom));
+            border-top: 1px solid var(--sidebar-border);
+            position: relative;
+        }
         .logout-link {
             display: flex; align-items: center; gap: 10px;
             padding: 11px 14px; border-radius: var(--radius-md);
@@ -329,8 +338,8 @@ $role_color_class = $is_admin ? 'role-admin' : 'role-anggota';
         .mobile-topbar {
             display: none;
             background: var(--sidebar-bg);
-            padding: 0 16px;
-            height: 60px;
+            padding: calc(6px + var(--sa-top)) 16px 6px;
+            height: calc(var(--mobile-topbar-h) + var(--sa-top));
             align-items: center;
             justify-content: space-between;
             position: sticky; top: 0; z-index: 60;
@@ -379,10 +388,16 @@ $role_color_class = $is_admin ? 'role-admin' : 'role-anggota';
         #sidebarOverlay {
             display: none;
             position: fixed; inset: 0;
-            background: rgba(0,0,0,0.55);
+            background: rgba(0,0,0,0.5);
             z-index: 49;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        #sidebarOverlay.active {
+            display: block;
+            opacity: 1;
         }
 
         /* ── Page Content Area ───────── */
@@ -406,14 +421,26 @@ $role_color_class = $is_admin ? 'role-admin' : 'role-anggota';
 
         /* ── Responsive ─────────────── */
         @media (max-width: 768px) {
-            #sidebar { transform: translateX(-100%); }
+            #sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+            }
             #sidebar.open { transform: translateX(0); }
             .main-content { margin-left: 0; width: 100%; min-width: 0; }
             .topbar { display: none; }
             .mobile-topbar { display: flex; }
-            .page-content { padding: 20px 16px; }
-            #sidebarOverlay.active { display: block; }
-            .app-footer { padding: 16px; flex-direction: column; text-align: center; }
+            .page-content { padding: 16px; }
+            .app-footer { padding: 12px 16px calc(12px + var(--sa-bottom)); flex-direction: column; text-align: center; }
+        }
+
+        @media (max-width: 480px) {
+            .page-content { padding: 12px; }
+            .card-header { padding: 14px 16px; }
+            .card-body { padding: 16px; }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .page-content { padding: 24px; }
         }
 
         /* ── Utility: Card ───────────── */
@@ -422,6 +449,13 @@ $role_color_class = $is_admin ? 'role-admin' : 'role-anggota';
             border-radius: var(--radius-lg);
             border: 1px solid var(--border);
             box-shadow: var(--shadow-card);
+        }
+        .card-hover {
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-elevated);
         }
         .card-header {
             padding: 20px 24px;
@@ -551,7 +585,10 @@ $role_color_class = $is_admin ? 'role-admin' : 'role-anggota';
         .table-wrap {
             overflow-x: auto;
             width: 100%;
+            -webkit-overflow-scrolling: touch;
         }
+        .table-wrap::-webkit-scrollbar { height: 3px; }
+        .table-wrap::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
         table.data-table {
             width: 100%;
             border-collapse: collapse;
