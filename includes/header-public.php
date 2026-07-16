@@ -13,6 +13,8 @@ $user_initial = $user_nama ? strtoupper(substr($user_nama, 0, 1)) : '';
     <title>Uangkas Kelas — Sistem Informasi Kas Kelas</title>
     <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
     <script>
         tailwind.config = {
             theme: {

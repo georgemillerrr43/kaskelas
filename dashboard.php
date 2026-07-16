@@ -306,7 +306,7 @@ function formatRupiah($angka) {
                 <i class="fa-solid fa-plus"></i> Catat Transaksi
             </a>
         <a href="rekap.php" class="btn btn-secondary btn-sm">
-            <i class="fa-solid fa-table-cells"></i> Matriks Rekap
+            <i class="fa-solid fa-table-cells"></i> Rekap
         </a>
     </div>
 </div>

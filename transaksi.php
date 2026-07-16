@@ -259,8 +259,8 @@ $nama_bulan = [
     <!-- Ledger Table -->
     <div class="card overflow-hidden">
         <div class="card-header">
-            <h4 class="font-bold text-slate-800 text-base">Buku Riwayat Transaksi Kas</h4>
-            <p class="text-xs text-slate-400 mt-0.5">Ditemukan <strong><?= count($transactions) ?></strong> riwayat transaksi berdasarkan filter aktif</p>
+            <h4 class="font-bold text-slate-800 text-base">Riwayat Transaksi Kas</h4>
+            <p class="text-xs text-slate-400 mt-0.5">Ditemukan <strong><?= count($transactions) ?></strong> transaksi berdasarkan filter</p>
         </div>
 
         <div class="table-wrap">
@@ -535,7 +535,7 @@ $nama_bulan = [
         // Enable CORS to allow canvas drawing
         sigImg.crossOrigin = "anonymous";
         // Use relative path for subfolders and root domain compatibility
-        sigImg.src = 'assets/images/joji.svg';
+        sigImg.src = 'assets/images/ttd.svg';
         
         sigImg.onload = function() {
             // Create a canvas to convert SVG to standard PNG base64 data URL
@@ -902,8 +902,7 @@ $nama_bulan = [
 
         // 4. Gambar Tanda Tangan
         if (sigImgData) {
-            // Posisi X dikurangi setengah lebar gambar (17.5) agar pas di tengah
-            // doc.addImage(sigImgData, 'PNG', centerX - 17.5, ttdY + 6, 35, 15);
+            doc.addImage(sigImgData, 'PNG', centerX - 17.5, ttdY + 6, 35, 15);
         }
 
         // 5. Garis Bawah (Underline)

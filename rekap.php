@@ -54,8 +54,8 @@ try {
 <!-- Header Filter -->
 <div class="card p-4 md:p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-5 md:mb-6">
     <div class="min-w-0">
-        <h4 class="font-bold text-slate-800 text-sm md:text-base">Matriks Kas Mingguan Siswa</h4>
-        <p class="text-xs text-slate-400">Pilih bulan dan tahun untuk melihat rincian iuran mingguan (Minggu 1 - Minggu 5)</p>
+        <h4 class="font-bold text-slate-800 text-sm md:text-base">Rekap Kas Mingguan</h4>
+        <p class="text-xs text-slate-400">Status iuran mingguan per siswa (Mg 1 - Mg 5)</p>
     </div>
 
     <form method="GET" action="rekap.php" class="flex flex-wrap items-center gap-2 md:gap-3">

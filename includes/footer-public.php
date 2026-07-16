@@ -10,18 +10,6 @@
         </footer>
 
         <script>
-        function printTab(paneId) {
-            document.querySelectorAll('.tab-pane').forEach(function(p) { p.style.display = 'none'; });
-            document.getElementById(paneId).style.display = 'block';
-            window.print();
-            document.querySelectorAll('.tab-pane').forEach(function(p) { p.style.display = ''; });
-            document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
-            var activeBtn = document.querySelector('.tab-btn[data-tab="' + paneId.replace('pane-', '') + '"]');
-            if (activeBtn) activeBtn.classList.add('active');
-            var activePane = document.getElementById(paneId);
-            if (activePane) activePane.classList.add('active');
-        }
-
         (function() {
             /* ── Theme ────────────────────────────────── */
             const html = document.documentElement;

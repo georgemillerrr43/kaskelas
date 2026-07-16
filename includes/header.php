@@ -462,7 +462,7 @@ $user_initial = strtoupper(substr($user_nama, 0, 1));
                 <i class="fa-solid fa-list-check"></i> Transaksi
             </a>
             <a href="rekap.php" class="nav-link <?= $current_page === 'rekap.php' ? 'active' : '' ?>">
-                <i class="fa-solid fa-table-cells-large"></i> Matriks Kas
+                <i class="fa-solid fa-table-cells-large"></i> Rekap
             </a>
             <a href="anggota.php" class="nav-link <?= $current_page === 'anggota.php' ? 'active' : '' ?>">
                 <i class="fa-solid fa-users"></i> Anggota
@@ -498,13 +498,13 @@ $user_initial = strtoupper(substr($user_nama, 0, 1));
             <i class="fa-solid fa-chart-pie"></i> Dashboard
         </a>
         <a href="transaksi.php" class="drawer-link <?= $current_page === 'transaksi.php' ? 'active' : '' ?>">
-            <i class="fa-solid fa-list-check"></i> Riwayat Transaksi
+            <i class="fa-solid fa-list-check"></i> Transaksi
         </a>
         <a href="rekap.php" class="drawer-link <?= $current_page === 'rekap.php' ? 'active' : '' ?>">
-            <i class="fa-solid fa-table-cells-large"></i> Matriks Rekap Kas
+            <i class="fa-solid fa-table-cells-large"></i> Rekap
         </a>
         <a href="anggota.php" class="drawer-link <?= $current_page === 'anggota.php' ? 'active' : '' ?>">
-            <i class="fa-solid fa-users"></i> Anggota Kelas
+            <i class="fa-solid fa-users"></i> Anggota
         </a>
     </div>
     <div class="drawer-footer">

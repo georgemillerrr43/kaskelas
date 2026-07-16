@@ -169,8 +169,8 @@ try {
     <div class="lg:col-span-2 card overflow-hidden">
         <div class="card-header flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-                <h4 class="font-bold text-slate-800 text-sm md:text-base">Daftar Anggota Kelas</h4>
-                <p class="text-xs text-slate-400">Total terdaftar: <strong><?= count($anggota_list) ?></strong> siswa</p>
+                <h4 class="font-bold text-slate-800 text-sm md:text-base">Daftar Anggota</h4>
+                <p class="text-xs text-slate-400">Total: <strong><?= count($anggota_list) ?></strong> siswa</p>
             </div>
             <div class="relative w-full sm:w-56 md:w-64">
                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 text-xs">
