@@ -386,6 +386,28 @@ $user_initial = $user_nama ? strtoupper(substr($user_nama, 0, 1)) : '';
             table.data-table tbody td { padding: 10px; font-size: 12px; }
         }
 
+        /* ── TTD ─────────────────────────────────── */
+        .ttd-section {
+            display: flex; justify-content: flex-end;
+            padding-top: 32px; margin-top: 24px;
+        }
+        .ttd-box {
+            text-align: center; width: 200px;
+        }
+        .ttd-box img {
+            height: 50px; margin-bottom: 4px;
+        }
+        .ttd-box .ttd-line {
+            border-top: 1px solid var(--text);
+            width: 100%; margin: 4px 0;
+        }
+        .ttd-box .ttd-name {
+            font-size: 12px; font-weight: 700; color: var(--text);
+        }
+        .ttd-box .ttd-role {
+            font-size: 9px; color: var(--text-muted);
+        }
+
         /* ── Print ──────────────────────────────── */
         @media print {
             .pub-topbar, .pub-footer, .no-print, .tab-bar { display: none !important; }

@@ -1,9 +1,7 @@
 <?php
-// login.php
 session_start();
 require_once 'config/database.php';
 
-// Jika sudah login, langsung alihkan ke dashboard
 if (isset($_SESSION['user_id'])) {
     header("Location: dashboard.php");
     exit();
@@ -28,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['nama'] = $user['nama'];
                 $_SESSION['role'] = $user['role'];
-
                 header("Location: dashboard.php");
                 exit();
             } else {
@@ -45,324 +42,240 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Uangkas Kelas</title>
-    <!-- Tailwind CSS via CDN -->
+    <title>Login — Uangkas Kelas</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
-                    }
-                }
-            }
-        }
+        tailwind.config = { theme: { extend: { fontFamily: { jakarta: ['Plus Jakarta Sans', 'sans-serif'] } } } }
     </script>
-    <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
-        * { box-sizing: border-box; }
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #6366f1;
+            --card-bg: #ffffff;
+            --card-text: #1e293b;
+            --card-sub: #64748b;
+            --input-bg: #f8fafc;
+            --input-border: #e2e8f0;
+            --input-text: #1e293b;
+            --hint-bg: #eef2ff;
+            --hint-text: #4338ca;
+            --error-bg: #fef2f2;
+            --error-text: #b91c1c;
+            --error-border: #fecaca;
+        }
 
+        [data-theme="dark"] {
+            --card-bg: #1e293b;
+            --card-text: #f1f5f9;
+            --card-sub: #94a3b8;
+            --input-bg: #0f172a;
+            --input-border: rgba(255,255,255,0.1);
+            --input-text: #f1f5f9;
+            --hint-bg: rgba(99,102,241,0.15);
+            --hint-text: #a5b4fc;
+            --error-bg: rgba(225,29,72,0.15);
+            --error-text: #fb7185;
+            --error-border: rgba(225,29,72,0.2);
+        }
+
+        * { box-sizing: border-box; }
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Animated gradient background */
         .login-bg {
-            min-height: 100vh;
-            min-height: 100dvh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            min-height: 100vh; min-height: 100dvh;
+            display: flex; align-items: center; justify-content: center;
             padding: 16px;
             position: relative;
-            background: linear-gradient(-45deg, #1e1b4b, #312e81, #3730a3, #1e40af, #0e7490);
+            background: linear-gradient(-45deg, #0f172a, #1e1b4b, #312e81, #1e40af);
             background-size: 400% 400%;
-            animation: gradientShift 18s ease infinite;
+            animation: gradient 20s ease infinite;
             overflow: hidden;
         }
-
-        @keyframes gradientShift {
-            0%   { background-position: 0% 50%; }
-            25%  { background-position: 100% 0%; }
-            50%  { background-position: 100% 100%; }
-            75%  { background-position: 0% 100%; }
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
-        /* Decorative grid overlay */
         .login-bg::before {
             content: '';
-            position: absolute;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            position: absolute; inset: 0;
+            background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
             background-size: 60px 60px;
             pointer-events: none;
         }
 
-        /* Floating orbs */
         .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            pointer-events: none;
-            opacity: 0.4;
+            position: absolute; border-radius: 50%;
+            filter: blur(100px); pointer-events: none; opacity: 0.35;
         }
-        .orb-1 {
-            width: 400px; height: 400px;
-            background: #6366f1;
-            top: -100px; right: -100px;
-            animation: float1 12s ease-in-out infinite;
-        }
-        .orb-2 {
-            width: 350px; height: 350px;
-            background: #06b6d4;
-            bottom: -80px; left: -80px;
-            animation: float2 15s ease-in-out infinite;
-        }
-        .orb-3 {
-            width: 200px; height: 200px;
-            background: #a78bfa;
-            top: 50%; left: 50%;
-            animation: float3 10s ease-in-out infinite;
-        }
-
+        .orb-1 { width: 450px; height: 450px; background: var(--primary); top: -120px; right: -120px; animation: float1 14s ease-in-out infinite; }
+        .orb-2 { width: 380px; height: 380px; background: #06b6d4; bottom: -100px; left: -100px; animation: float2 16s ease-in-out infinite; }
         @keyframes float1 {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(40px, 30px); }
+            0%, 100% { transform: translate(0,0); }
+            50% { transform: translate(50px,30px); }
         }
         @keyframes float2 {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(-30px, -40px); }
-        }
-        @keyframes float3 {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.3); }
+            0%, 100% { transform: translate(0,0); }
+            50% { transform: translate(-40px,-50px); }
         }
 
-        /* Glass card */
         .login-card {
-            position: relative;
-            width: 100%;
-            max-width: 420px;
-            background: rgba(255, 255, 255, 0.92);
+            position: relative; width: 100%; max-width: 400px;
+            background: var(--card-bg);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            box-shadow:
-                0 20px 60px rgba(0,0,0,0.25),
-                0 0 0 1px rgba(255,255,255,0.1);
-            overflow: hidden;
-            z-index: 10;
-        }
-
-        /* Subtle glass shine */
-        .login-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+            border: 1px solid rgba(255,255,255,0.12);
+            box-shadow: 0 25px 70px rgba(0,0,0,0.35);
+            overflow: hidden; z-index: 10;
+            transition: background 0.3s ease;
         }
 
         .login-header {
-            padding: 40px 36px 0;
-            text-align: center;
+            padding: 36px 32px 0; text-align: center;
         }
         .login-icon {
-            width: 64px; height: 64px;
-            border-radius: 18px;
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
-            color: #fff;
-            font-size: 26px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            width: 60px; height: 60px; border-radius: 16px;
+            background: linear-gradient(135deg, var(--primary), #7c3aed);
+            color: #fff; font-size: 24px;
+            display: inline-flex; align-items: center; justify-content: center;
             box-shadow: 0 8px 24px rgba(79,70,229,0.35);
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
         .login-header h1 {
-            font-size: 24px;
-            font-weight: 800;
-            color: #1e293b;
-            margin: 0;
-            letter-spacing: -0.5px;
+            font-size: 22px; font-weight: 800;
+            color: var(--card-text); margin: 0; letter-spacing: -0.4px;
         }
         .login-header p {
-            font-size: 14px;
-            color: #94a3b8;
-            margin: 6px 0 0;
+            font-size: 13px; color: var(--card-sub); margin: 4px 0 0;
         }
 
-        .login-form {
-            padding: 28px 36px 36px;
-        }
+        .login-form { padding: 24px 32px 32px; }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+        .form-group { margin-bottom: 18px; }
         .form-group label {
-            display: block;
-            font-size: 12px;
-            font-weight: 700;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
+            display: block; font-size: 11px; font-weight: 700;
+            color: var(--card-sub); text-transform: uppercase;
+            letter-spacing: 0.5px; margin-bottom: 6px;
         }
-        .input-wrap {
-            position: relative;
-        }
+        .input-wrap { position: relative; }
         .input-wrap .icon {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #94a3b8;
-            font-size: 14px;
-            pointer-events: none;
+            position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+            color: #94a3b8; font-size: 14px; pointer-events: none;
         }
         .input-wrap input {
-            width: 100%;
-            padding: 12px 14px 12px 42px;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 14px;
+            width: 100%; padding: 12px 14px 12px 42px;
+            border: 1.5px solid var(--input-border);
+            border-radius: 12px; font-size: 14px;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            color: #1e293b;
-            background: rgba(248,250,252,0.8);
-            transition: all 0.2s ease;
-            outline: none;
+            color: var(--input-text);
+            background: var(--input-bg);
+            transition: all 0.2s ease; outline: none;
         }
-        .input-wrap input::placeholder {
-            color: #cbd5e1;
-        }
+        .input-wrap input::placeholder { color: #94a3b8; }
         .input-wrap input:focus {
-            border-color: #6366f1;
-            background: #fff;
-            box-shadow: 0 0 0 4px rgba(99,102,241,0.1);
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 4px rgba(99,102,241,0.12);
         }
 
         .input-wrap .toggle-pw {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #94a3b8;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 4px;
-            font-size: 14px;
+            position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+            color: #94a3b8; background: none; border: none;
+            cursor: pointer; padding: 4px; font-size: 14px;
             transition: color 0.15s;
         }
-        .input-wrap .toggle-pw:hover { color: #4f46e5; }
+        .input-wrap .toggle-pw:hover { color: var(--primary-light); }
 
         .btn-login {
-            width: 100%;
-            padding: 13px;
-            background: linear-gradient(135deg, #4f46e5, #6366f1);
-            color: #fff;
-            font-size: 14px;
-            font-weight: 700;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            width: 100%; padding: 13px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: #fff; font-size: 14px; font-weight: 700;
+            font-family: inherit; border: none; border-radius: 12px;
+            cursor: pointer; transition: all 0.2s ease;
             box-shadow: 0 8px 20px rgba(79,70,229,0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .btn-login:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 10px 28px rgba(79,70,229,0.4);
-        }
-        .btn-login:active {
-            transform: translateY(0) scale(0.98);
-        }
+        .btn-login:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(79,70,229,0.4); }
+        .btn-login:active { transform: translateY(0) scale(0.98); }
 
         .login-hint {
-            margin-top: 24px;
-            padding: 16px;
-            background: rgba(238,242,255,0.7);
-            border: 1px solid rgba(99,102,241,0.15);
-            border-radius: 12px;
-            font-size: 12px;
-            color: #4338ca;
-            line-height: 1.6;
-        }
-        .login-hint strong {
-            font-weight: 700;
-        }
-        .login-hint .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2px 16px;
-            margin-top: 6px;
+            margin-top: 20px; padding: 14px;
+            background: var(--hint-bg);
+            border: 1px solid rgba(99,102,241,0.12);
+            border-radius: 12px; font-size: 12px;
+            color: var(--hint-text); line-height: 1.6;
+            text-align: center; transition: background 0.3s ease;
         }
 
         .error-alert {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            display: flex; align-items: center; gap: 10px;
             padding: 12px 16px;
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            border-radius: 12px;
-            color: #b91c1c;
-            font-size: 13px;
-            margin-bottom: 20px;
+            background: var(--error-bg);
+            border: 1px solid var(--error-border);
+            border-radius: 12px; color: var(--error-text);
+            font-size: 13px; margin-bottom: 18px; transition: background 0.3s ease;
         }
-        .error-alert i {
-            font-size: 16px;
-            flex-shrink: 0;
+        .error-alert i { font-size: 16px; flex-shrink: 0; }
+
+        /* ── Theme Toggle ── */
+        .theme-toggle {
+            position: fixed; top: 20px; right: 20px; z-index: 20;
+            width: 40px; height: 40px; border-radius: 12px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #fff; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; transition: 0.2s ease;
         }
+        .theme-toggle:hover { background: rgba(255,255,255,0.2); }
+        .theme-toggle:active { transform: scale(0.92); }
+
+        /* ── Back link ── */
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            color: rgba(255,255,255,0.6); text-decoration: none;
+            font-size: 12px; font-weight: 600; margin-bottom: 16px;
+            transition: 0.15s ease;
+        }
+        .back-link:hover { color: rgba(255,255,255,0.9); }
 
         @media (max-width: 480px) {
             .login-header { padding: 28px 20px 0; }
             .login-form { padding: 20px; }
             .login-header h1 { font-size: 20px; }
-            .login-header p { font-size: 12px; }
-            .login-icon { width: 52px; height: 52px; font-size: 22px; }
+            .login-icon { width: 52px; height: 52px; font-size: 20px; }
             .login-card { max-width: 360px; border-radius: 16px; }
-            .login-hint .grid { grid-template-columns: 1fr; gap: 4px; }
-            .input-wrap input { padding: 11px 14px 11px 38px; font-size: 13px; }
-            .btn-login { padding: 14px; }
-        }
-
-        @media (max-width: 360px) {
-            .login-header { padding: 24px 16px 0; }
-            .login-form { padding: 16px; }
         }
     </style>
 </head>
 <body>
+    <button class="theme-toggle" id="themeToggle" aria-label="Ganti tema">
+        <i id="themeIcon" class="fa-solid fa-moon"></i>
+    </button>
+
     <div class="login-bg">
-        <!-- Floating orbs -->
         <div class="orb orb-1"></div>
         <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
 
-        <!-- Login Card -->
+        <div style="position:absolute;top:24px;left:24px;z-index:20">
+            <a href="index.php" class="back-link"><i class="fa-solid fa-arrow-left"></i> Kembali ke Beranda</a>
+        </div>
+
         <div class="login-card">
             <div class="login-header">
                 <div class="login-icon"><i class="fa-solid fa-wallet"></i></div>
                 <h1>Uangkas Kelas</h1>
-                <p>Aplikasi Keuangan Kas Kelas yang Aman &amp; Profesional</p>
+                <p>Panel Bendahara — Kelola Kas dengan Cermat</p>
             </div>
 
             <div class="login-form">
@@ -379,8 +292,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="input-wrap">
                             <span class="icon"><i class="fa-solid fa-user"></i></span>
                             <input type="text" name="username" id="username" required
-                                   placeholder="Masukkan username"
-                                   autocomplete="username">
+                                   placeholder="Masukkan username" autocomplete="username">
                         </div>
                     </div>
 
@@ -389,8 +301,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="input-wrap">
                             <span class="icon"><i class="fa-solid fa-lock"></i></span>
                             <input type="password" name="password" id="password" required
-                                   placeholder="••••••••"
-                                   autocomplete="current-password">
+                                   placeholder="••••••••" autocomplete="current-password">
                             <button type="button" class="toggle-pw" id="togglePassword" tabindex="-1">
                                 <i class="fa-solid fa-eye" id="eyeIcon"></i>
                             </button>
@@ -398,33 +309,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
 
                     <button type="submit" class="btn-login">
-                        Masuk ke Sistem
+                        Masuk ke Panel
                         <i class="fa-solid fa-arrow-right" style="font-size:12px"></i>
                     </button>
                 </form>
 
-                <div class="login-hint" style="text-align:center">
-                    <i class="fa-solid fa-shield-halved" style="margin-right:6px;color:var(--primary-400)"></i>
-                    <strong>Akses khusus Bendahara Kelas</strong>
-                    <div style="margin-top:8px;font-size:11px;color:var(--text-muted)">Login: <strong>admin</strong> / <strong>adminpassword</strong></div>
+                <div class="login-hint">
+                    <i class="fa-solid fa-shield-halved" style="margin-right:6px"></i>
+                    <strong>Akses khusus Bendahara</strong>
+                    <div style="margin-top:4px;font-size:11px;opacity:0.7">Login: <strong>admin</strong> / <strong>adminpassword</strong></div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        const togglePassword = document.querySelector('#togglePassword');
-        const password = document.querySelector('#password');
-        const eyeIcon = document.querySelector('#eyeIcon');
+        (function() {
+            const html = document.documentElement;
+            const btn = document.getElementById('themeToggle');
+            const icon = document.getElementById('themeIcon');
+            const stored = localStorage.getItem('theme');
 
-        if (togglePassword && password) {
-            togglePassword.addEventListener('click', function () {
-                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-                password.setAttribute('type', type);
-                eyeIcon.classList.toggle('fa-eye');
-                eyeIcon.classList.toggle('fa-eye-slash');
+            function setTheme(t) {
+                html.setAttribute('data-theme', t);
+                localStorage.setItem('theme', t);
+                if (icon) icon.className = t === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+            }
+            if (stored) setTheme(stored);
+            else if (window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
+            if (btn) btn.addEventListener('click', function() {
+                setTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
             });
-        }
+
+            const togglePassword = document.querySelector('#togglePassword');
+            const password = document.querySelector('#password');
+            const eyeIcon = document.querySelector('#eyeIcon');
+            if (togglePassword && password) {
+                togglePassword.addEventListener('click', function() {
+                    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                    password.setAttribute('type', type);
+                    eyeIcon.classList.toggle('fa-eye');
+                    eyeIcon.classList.toggle('fa-eye-slash');
+                });
+            }
+        })();
     </script>
 </body>
 </html>

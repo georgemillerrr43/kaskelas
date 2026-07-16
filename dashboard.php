@@ -291,22 +291,22 @@ function formatRupiah($angka) {
 </div>
 
 <!-- Info Banner -->
-<div class="bg-gradient-to-r from-indigo-50 to-violet-50 border border-indigo-100 rounded-xl md:rounded-2xl p-4 md:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-    <div class="flex items-start gap-3 md:gap-4">
-        <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 text-white flex items-center justify-center text-base md:text-lg flex-shrink-0 shadow-md shadow-indigo-500/20">
+<div class="card-hover card" style="padding:20px 24px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;margin-top:28px;background:var(--tab-active-bg);border-color:rgba(99,102,241,0.15)">
+    <div style="display:flex;align-items:flex-start;gap:14px">
+        <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--primary-500),#8b5cf6);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;box-shadow:0 4px 14px rgba(99,102,241,0.25)">
             <i class="fa-solid fa-graduation-cap"></i>
         </div>
-        <div class="min-w-0">
-            <h4 class="font-bold text-indigo-900 text-sm md:text-base">Butuh Bantuan atau Ingin Mencatat Kas?</h4>
-            <p class="text-xs md:text-sm text-indigo-700/80 mt-0.5">Bendahara dapat menambahkan data siswa atau mencatat kas mingguan dengan navigasi cepat di sebelah kiri.</p>
+        <div>
+            <h4 style="font-size:14px;font-weight:800;color:var(--text);margin:0 0 2px">Butuh Bantuan atau Ingin Mencatat Kas?</h4>
+            <p style="font-size:12px;color:var(--text-muted);margin:0">Bendahara dapat menambahkan data siswa atau mencatat kas mingguan melalui menu di atas.</p>
         </div>
     </div>
-    <div class="flex items-center gap-3 flex-shrink-0">
+    <div style="display:flex;gap:8px;flex-shrink:0">
             <a href="transaksi.php?action=add" class="btn btn-primary btn-sm">
                 <i class="fa-solid fa-plus"></i> Catat Transaksi
             </a>
         <a href="rekap.php" class="btn btn-secondary btn-sm">
-            <i class="fa-solid fa-table-cells"></i> Lihat Matriks Rekap
+            <i class="fa-solid fa-table-cells"></i> Matriks Rekap
         </a>
     </div>
 </div>

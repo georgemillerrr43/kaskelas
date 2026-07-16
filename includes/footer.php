@@ -2,58 +2,66 @@
 
         <!-- Footer -->
         <footer class="app-footer">
-            <span>
-                &copy; <?= date('Y') ?> <strong style="color:#475569">Uangkas Kelas</strong>. Hak Cipta Dilindungi.
-            </span>
-            <span>
-                Dibuat oleh <strong style="color:var(--primary-600)">Joji</strong> &mdash; Transparansi keuangan kelas yang akurat &amp; aman.
-            </span>
+            <span>&copy; <?= date('Y') ?> <strong>Uangkas Kelas</strong>. Hak Cipta Dilindungi.</span>
+            <span>Panel <strong style="color:var(--primary-600)">Bendahara</strong> &mdash; Transparansi keuangan kelas.</span>
         </footer>
+    </div>
 
-    </div><!-- end .main-area -->
-</div><!-- end .app-shell -->
+    <script>
+    (function() {
+        /* ── Theme ── */
+        const html = document.documentElement;
+        const btn = document.getElementById('themeBtn');
+        const icon = document.getElementById('themeIcon');
+        const stored = localStorage.getItem('theme');
 
-<!-- Mobile Sidebar Toggle -->
-<script>
-(function() {
-    const btn = document.getElementById('mobileMenuToggle');
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebarOverlay');
-    const icon = document.getElementById('menuIcon');
-
-    function open() {
-        sidebar.classList.add('open');
-        overlay.classList.add('active');
-        if (icon) icon.classList.replace('fa-bars', 'fa-xmark');
-        document.body.style.overflow = 'hidden';
-        document.body.style.position = 'fixed';
-        document.body.style.width = '100%';
-    }
-    function close() {
-        sidebar.classList.remove('open');
-        overlay.classList.remove('active');
-        if (icon) icon.classList.replace('fa-xmark', 'fa-bars');
-        document.body.style.overflow = '';
-        document.body.style.position = '';
-        document.body.style.width = '';
-    }
-
-    if (btn) btn.addEventListener('click', function() {
-        sidebar.classList.contains('open') ? close() : open();
-    });
-    if (overlay) overlay.addEventListener('click', close);
-
-    const links = sidebar ? sidebar.querySelectorAll('.sb-link, .sb-logout') : [];
-    links.forEach(function(link) {
-        link.addEventListener('click', function() {
-            if (window.innerWidth <= 768) close();
+        function setTheme(t) {
+            html.setAttribute('data-theme', t);
+            localStorage.setItem('theme', t);
+            if (icon) icon.className = t === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        }
+        if (stored) setTheme(stored);
+        else if (window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
+        if (btn) btn.addEventListener('click', function() {
+            setTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
         });
-    });
 
-    window.addEventListener('resize', function() {
-        if (window.innerWidth > 768 && sidebar && sidebar.classList.contains('open')) close();
-    });
-})();
-</script>
+        /* ── Mobile Drawer ── */
+        const toggle = document.getElementById('drawerToggle');
+        const drawer = document.getElementById('mobileDrawer');
+        const overlay = document.getElementById('drawerOverlay');
+        function openDrawer() { drawer.classList.add('open'); overlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
+        function closeDrawer() { drawer.classList.remove('open'); overlay.classList.remove('open'); document.body.style.overflow = ''; }
+        if (toggle) toggle.addEventListener('click', openDrawer);
+        if (overlay) overlay.addEventListener('click', closeDrawer);
+
+        /* ── Tabs ── */
+        document.querySelectorAll('.tab-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const target = btn.getAttribute('data-tab');
+                document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                document.querySelectorAll('.tab-pane').forEach(function(p) { p.classList.remove('active'); });
+                const pane = document.getElementById('pane-' + target);
+                if (pane) pane.classList.add('active');
+            });
+        });
+
+        /* ── Filter select auto-submit ── */
+        const ff = document.getElementById('filterForm');
+        if (ff) ff.querySelectorAll('.filter-select').forEach(function(s) {
+            s.addEventListener('change', function() { ff.submit(); });
+        });
+
+        /* ── Search ── */
+        const si = document.getElementById('searchInput');
+        if (si) si.addEventListener('input', function() {
+            const q = si.value.toLowerCase().trim();
+            document.querySelectorAll('.searchable-row').forEach(function(r) {
+                r.style.display = r.textContent.toLowerCase().indexOf(q) > -1 ? '' : 'none';
+            });
+        });
+    })();
+    </script>
 </body>
 </html>

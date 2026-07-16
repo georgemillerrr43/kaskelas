@@ -327,19 +327,11 @@ $nama_bulan = [
 </div>
 
 <!-- Modal Dialog Input Transaksi -->
-<div id="transactionModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-    <!-- Backdrop -->
-    <div class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm -z-10" onclick="toggleTransactionModal(false)"></div>
-    <!-- Modal Card -->
-    <div class="relative bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-200 scale-95 opacity-0" id="modalCard">
-        <!-- Modal Header -->
-        <div class="px-6 py-4" style="background:linear-gradient(135deg,#1e1b4b,#312e81);">
-            <div class="flex items-center justify-between">
-                <h3 class="font-bold text-base text-white"><i class="fa-solid fa-wallet mr-2"></i> Catat Transaksi Baru</h3>
-                <button onclick="toggleTransactionModal(false)" class="text-indigo-200 hover:text-white transition-colors">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
+<div id="transactionModal" class="modal-overlay">
+    <div class="modal-card" id="modalCard">
+        <div class="modal-header" style="background:linear-gradient(135deg,var(--primary-600),#7c3aed)">
+            <h3 style="color:#fff"><i class="fa-solid fa-wallet mr-2"></i> Catat Transaksi Baru</h3>
+            <button onclick="toggleTransactionModal(false)" class="modal-close" style="color:rgba(255,255,255,0.7);background:rgba(255,255,255,0.1)"><i class="fa-solid fa-xmark"></i></button>
         </div>
 
         <form action="transaksi.php" method="POST" id="transactionForm" class="p-6 space-y-5">
@@ -448,21 +440,11 @@ $nama_bulan = [
     // 1. Toggles modal visibility
     function toggleTransactionModal(show) {
         const modal = document.getElementById('transactionModal');
-        const card = document.getElementById('modalCard');
         if (!modal) return;
-
         if (show) {
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                card.classList.remove('scale-95', 'opacity-0');
-                card.classList.add('scale-100', 'opacity-100');
-            }, 10);
+            modal.classList.add('open');
         } else {
-            card.classList.remove('scale-100', 'opacity-100');
-            card.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 200);
+            modal.classList.remove('open');
         }
     }
 
