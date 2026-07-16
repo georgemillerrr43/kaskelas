@@ -1,8 +1,5 @@
 <?php
-// includes/header-public.php — Public header, no login required
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+if (session_status() === PHP_SESSION_NONE) session_start();
 $is_logged_in = isset($_SESSION['user_id']) && $_SESSION['role'] === 'admin';
 $current_page = basename($_SERVER['SCRIPT_NAME']);
 $user_nama = $_SESSION['nama'] ?? '';
@@ -31,21 +28,75 @@ $user_initial = $user_nama ? strtoupper(substr($user_nama, 0, 1)) : '';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
+        /* ── Design System ───────────────────────── */
         :root {
             --primary-400: #818cf8;
             --primary-500: #6366f1;
             --primary-600: #4f46e5;
             --surface: #ffffff;
             --surface-bg: #f8fafc;
+            --surface-card: #ffffff;
             --border: rgba(0,0,0,0.06);
+            --border-table: #e2e8f0;
+            --border-light: #f1f5f9;
             --text: #0f172a;
             --text-muted: #64748b;
+            --text-dim: #94a3b8;
+            --text-table: #334155;
             --income: #059669;
+            --income-bg: #ecfdf5;
             --expense: #e11d48;
+            --expense-bg: #fff1f2;
+            --tab-hover: #f1f5f9;
+            --tab-active-bg: #eef2ff;
+            --tab-active-text: #4f46e5;
+            --radius-sm: 8px;
             --radius: 12px;
             --radius-lg: 16px;
+            --radius-xl: 20px;
             --sa-bottom: env(safe-area-inset-bottom, 0px);
+            --shadow-card: 0 1px 3px rgba(0,0,0,0.04);
+            --shadow-elevated: 0 4px 20px rgba(0,0,0,0.06);
+            --topbar-bg: rgba(255,255,255,0.8);
+            --hero-bg: transparent;
+            --footer-bg: #ffffff;
+            --scrollbar-thumb: #cbd5e1;
+            --input-bg: #ffffff;
+            --input-border: #e2e8f0;
         }
+
+        /* ── Dark Mode ──────────────────────────── */
+        [data-theme="dark"] {
+            --primary-400: #a5b4fc;
+            --primary-500: #818cf8;
+            --primary-600: #6366f1;
+            --surface: #0f172a;
+            --surface-bg: #020617;
+            --surface-card: #1e293b;
+            --border: rgba(255,255,255,0.08);
+            --border-table: rgba(255,255,255,0.08);
+            --border-light: rgba(255,255,255,0.04);
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            --text-table: #cbd5e1;
+            --income: #34d399;
+            --income-bg: rgba(5,150,105,0.15);
+            --expense: #fb7185;
+            --expense-bg: rgba(225,29,72,0.15);
+            --tab-hover: rgba(255,255,255,0.05);
+            --tab-active-bg: rgba(99,102,241,0.15);
+            --tab-active-text: #a5b4fc;
+            --shadow-card: 0 1px 3px rgba(0,0,0,0.2);
+            --shadow-elevated: 0 4px 24px rgba(0,0,0,0.3);
+            --topbar-bg: rgba(15,23,42,0.85);
+            --hero-bg: transparent;
+            --footer-bg: #0f172a;
+            --scrollbar-thumb: #334155;
+            --input-bg: #1e293b;
+            --input-border: rgba(255,255,255,0.1);
+        }
+
         * { box-sizing: border-box; }
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -54,13 +105,14 @@ $user_initial = $user_nama ? strtoupper(substr($user_nama, 0, 1)) : '';
             overflow-x: hidden; width: 100%;
             color: var(--text);
             -webkit-font-smoothing: antialiased;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
-        /* ── Public Top Bar ───────────── */
+        /* ── Top Bar ────────────────────────────── */
         .pub-topbar {
-            background: rgba(255,255,255,0.8);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: var(--topbar-bg);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
             border-bottom: 1px solid var(--border);
             padding: 0 32px;
             height: 68px;
@@ -68,23 +120,36 @@ $user_initial = $user_nama ? strtoupper(substr($user_nama, 0, 1)) : '';
             align-items: center;
             justify-content: space-between;
             position: sticky; top: 0; z-index: 50;
+            transition: background 0.3s ease;
         }
-        .pub-brand {
-            display: flex; align-items: center; gap: 12px;
-        }
+        .pub-brand { display: flex; align-items: center; gap: 12px; }
         .pub-brand-mark {
             width: 40px; height: 40px; border-radius: 10px;
             background: linear-gradient(135deg, var(--primary-500), #8b5cf6);
             display: flex; align-items: center; justify-content: center;
             font-size: 17px; color: #fff;
             box-shadow: 0 6px 20px rgba(99,102,241,0.3);
+            flex-shrink: 0;
         }
         .pub-brand-text { line-height: 1.2; }
         .pub-brand-title { font-size: 16px; font-weight: 800; color: var(--text); letter-spacing: -0.3px; }
         .pub-brand-sub { font-size: 9px; font-weight: 600; color: var(--primary-400); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 1px; }
+        .pub-actions { display: flex; align-items: center; gap: 8px; }
 
-        .pub-actions { display: flex; align-items: center; gap: 10px; }
+        /* ── Theme Toggle ───────────────────────── */
+        .theme-btn {
+            width: 38px; height: 38px; border-radius: 10px;
+            background: var(--tab-hover);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.2s ease;
+            font-size: 15px;
+        }
+        .theme-btn:hover { background: var(--tab-active-bg); color: var(--tab-active-text); }
+        .theme-btn:active { transform: scale(0.92); }
 
+        /* ── Buttons ────────────────────────────── */
         .btn {
             display: inline-flex; align-items: center; justify-content: center;
             gap: 8px; padding: 10px 20px; border-radius: var(--radius);
@@ -97,56 +162,58 @@ $user_initial = $user_nama ? strtoupper(substr($user_nama, 0, 1)) : '';
             background: var(--primary-600); color: #fff;
             box-shadow: 0 4px 14px rgba(79,70,229,0.25);
         }
-        .btn-primary:hover { background: #4338ca; }
+        .btn-primary:hover { background: var(--primary-500); }
         .btn-outline {
             background: transparent; color: var(--text);
-            border: 1.5px solid #e2e8f0;
+            border: 1.5px solid var(--border-table);
         }
-        .btn-outline:hover { background: #f1f5f9; border-color: #cbd5e1; }
+        .btn-outline:hover { background: var(--tab-hover); }
+        .btn-soft {
+            background: var(--tab-active-bg); color: var(--tab-active-text);
+        }
+        .btn-soft:hover { filter: brightness(1.05); }
         .btn-sm { padding: 8px 16px; font-size: 12px; }
-        .btn-ghost {
-            background: transparent; color: var(--text-muted);
-            padding: 8px 14px; font-size: 13px; font-weight: 600;
-        }
-        .btn-ghost:hover { background: #f1f5f9; color: var(--text); border-radius: var(--radius); }
 
-        /* ── Page ──────────────────────── */
+        /* ── Pub Content ────────────────────────── */
         .pub-content { padding: 36px 32px; max-width: 1280px; margin: 0 auto; }
 
-        /* ── Hero ──────────────────────── */
+        /* ── Hero Section ───────────────────────── */
         .pub-hero {
             text-align: center;
-            padding: 60px 0 48px;
+            padding: 48px 0 36px;
         }
         .pub-hero h1 {
-            font-size: clamp(2rem, 4vw, 3.2rem);
+            font-size: clamp(1.6rem, 3.5vw, 2.8rem);
             font-weight: 800;
             color: var(--text);
-            letter-spacing: -1px;
-            margin: 0 0 12px;
+            letter-spacing: -0.8px;
+            margin: 0 0 10px;
             line-height: 1.15;
         }
         .pub-hero p {
-            font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+            font-size: clamp(0.85rem, 1.1vw, 1rem);
             color: var(--text-muted);
-            max-width: 560px;
-            margin: 0 auto 28px;
-            line-height: 1.6;
+            max-width: 520px;
+            margin: 0 auto 24px;
+            line-height: 1.65;
         }
+        .hero-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 
-        /* ── Stat Cards ────────────────── */
+        /* ── Stat Grid ──────────────────────────── */
         .stat-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
             gap: 14px;
-            margin-bottom: 36px;
+            margin-bottom: 32px;
         }
         .stat-card {
-            background: var(--surface);
+            background: var(--surface-card);
             border-radius: var(--radius-lg);
             border: 1px solid var(--border);
             padding: 22px 24px;
             text-align: center;
+            box-shadow: var(--shadow-card);
+            transition: background 0.3s ease;
         }
         .stat-label {
             font-size: 10px; font-weight: 700;
@@ -156,51 +223,83 @@ $user_initial = $user_nama ? strtoupper(substr($user_nama, 0, 1)) : '';
             margin-bottom: 6px;
         }
         .stat-value {
-            font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+            font-size: clamp(1.3rem, 2.2vw, 1.7rem);
             font-weight: 800;
             letter-spacing: -0.5px;
         }
 
-        /* ── Section Title ─────────────── */
-        .section-title {
-            font-size: 18px; font-weight: 800;
-            color: var(--text);
-            letter-spacing: -0.3px;
-            margin: 0 0 4px;
+        /* ── Tabs ───────────────────────────────── */
+        .tab-bar {
+            display: flex; gap: 4px;
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 4px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-card);
         }
-        .section-desc {
-            font-size: 12px; color: var(--text-muted);
-            margin: 0 0 20px;
+        .tab-btn {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
         }
+        .tab-btn:hover { background: var(--tab-hover); color: var(--text); }
+        .tab-btn.active {
+            background: var(--tab-active-bg);
+            color: var(--tab-active-text);
+            box-shadow: 0 1px 4px rgba(99,102,241,0.12);
+        }
+        .tab-count {
+            font-size: 10px; font-weight: 700;
+            background: var(--tab-hover);
+            padding: 1px 8px; border-radius: 99px;
+            line-height: 1.6;
+        }
+        .tab-btn.active .tab-count { background: rgba(99,102,241,0.2); }
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; }
 
-        /* ── Card ──────────────────────── */
+        /* ── Card ───────────────────────────────── */
         .card {
-            background: var(--surface);
+            background: var(--surface-card);
             border-radius: var(--radius-lg);
             border: 1px solid var(--border);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            box-shadow: var(--shadow-card);
+            transition: background 0.3s ease, box-shadow 0.3s ease;
         }
         .card-header {
             padding: 20px 24px;
             border-bottom: 1px solid var(--border);
+            display: flex; flex-wrap: wrap;
+            align-items: center; justify-content: space-between; gap: 12px;
         }
-        .card-body { padding: 24px; }
+        .card-title { font-size: 15px; font-weight: 800; color: var(--text); letter-spacing: -0.2px; margin: 0; }
+        .card-subtitle { font-size: 11px; color: var(--text-muted); margin: 2px 0 0; }
 
-        /* ── Table ─────────────────────── */
+        /* ── Table ──────────────────────────────── */
         .table-wrap {
             overflow-x: auto;
             width: 100%;
             -webkit-overflow-scrolling: touch;
         }
         .table-wrap::-webkit-scrollbar { height: 3px; }
-        .table-wrap::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+        .table-wrap::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 99px; }
         table.data-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 14px;
         }
         table.data-table thead th {
-            background: #f8fafc;
+            background: var(--surface-bg);
             color: var(--text-muted);
             font-size: 10px;
             font-weight: 700;
@@ -208,58 +307,18 @@ $user_initial = $user_nama ? strtoupper(substr($user_nama, 0, 1)) : '';
             letter-spacing: 0.5px;
             padding: 14px 16px;
             text-align: left;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid var(--border-table);
             white-space: nowrap;
         }
         table.data-table tbody td {
             padding: 12px 16px;
-            border-bottom: 1px solid #f1f5f9;
-            color: #334155;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-table);
         }
-        table.data-table tbody tr:hover { background: #f8fafc; }
+        table.data-table tbody tr:hover { background: var(--tab-hover); }
         table.data-table tbody tr:last-child td { border-bottom: none; }
 
-        /* ── Footer ────────────────────── */
-        .pub-footer {
-            background: var(--surface);
-            border-top: 1px solid var(--border);
-            padding: 20px 32px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .pub-footer span { font-size: 11px; color: var(--text-muted); }
-
-        /* ── Responsive ────────────────── */
-        @media (max-width: 768px) {
-            .pub-topbar { padding: 0 16px; height: 60px; }
-            .pub-content { padding: 20px 16px; }
-            .pub-hero { padding: 32px 0 24px; }
-            .pub-hero h1 { font-size: 1.6rem; }
-            .pub-footer { padding: 14px 16px calc(14px + var(--sa-bottom)); flex-direction: column; text-align: center; }
-        }
-        @media (max-width: 480px) {
-            .pub-content { padding: 14px 12px; }
-            .pub-hero { padding: 24px 0 20px; }
-            .pub-brand-sub { display: none; }
-            .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            .stat-card { padding: 16px; }
-        }
-
-        /* ── Print Styles ──────────────── */
-        @media print {
-            .pub-topbar, .pub-footer, .no-print { display: none !important; }
-            body { background: #fff; }
-            .pub-content { padding: 0; }
-            .stat-grid { break-inside: avoid; }
-            table.data-table thead th { background: #f1f5f9 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .badge-check {
-                -webkit-print-color-adjust: exact; print-color-adjust: exact;
-            }
-        }
-
+        /* ── Badge ──────────────────────────────── */
         .badge {
             display: inline-flex; align-items: center; gap: 4px;
             padding: 3px 10px; border-radius: 99px;
@@ -267,13 +326,86 @@ $user_initial = $user_nama ? strtoupper(substr($user_nama, 0, 1)) : '';
             text-transform: uppercase; letter-spacing: 0.3px;
             white-space: nowrap;
         }
-        .badge-income { background: #ecfdf5; color: var(--income); border: 1px solid rgba(5,150,105,0.15); }
-        .badge-expense { background: #fff1f2; color: var(--expense); border: 1px solid rgba(225,29,72,0.15); }
+
+        /* ── Legend ─────────────────────────────── */
+        .legend-box {
+            display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+            font-size: 12px; color: var(--text-muted); font-weight: 500;
+            background: var(--surface-bg);
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+        .legend-dot {
+            display: inline-block; width: 14px; height: 14px;
+            border-radius: 50%; vertical-align: middle; margin-right: 4px;
+        }
+
+        /* ── Footer ─────────────────────────────── */
+        .pub-footer {
+            background: var(--footer-bg);
+            border-top: 1px solid var(--border);
+            padding: 20px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            transition: background 0.3s ease;
+        }
+        .pub-footer span { font-size: 11px; color: var(--text-muted); }
+
+        /* ── Empty State ────────────────────────── */
+        .empty-icon { font-size: 32px; display: block; margin-bottom: 10px; }
+
+        /* ── Legend badges inside table ─────────── */
+        .status-dot {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 28px; height: 28px; border-radius: 50%;
+            font-size: 12px;
+        }
+
+        /* ── Responsive ─────────────────────────── */
+        @media (max-width: 768px) {
+            .pub-topbar { padding: 0 16px; height: 60px; }
+            .pub-content { padding: 20px 16px; }
+            .pub-hero { padding: 28px 0 24px; }
+            .pub-hero h1 { font-size: 1.4rem; }
+            .pub-footer { padding: 14px 16px calc(14px + var(--sa-bottom)); flex-direction: column; text-align: center; }
+            .tab-btn { font-size: 12px; padding: 10px 12px; }
+            .tab-btn span.tab-label { display: none; }
+        }
+        @media (max-width: 480px) {
+            .pub-content { padding: 14px 12px; }
+            .pub-hero { padding: 20px 0 16px; }
+            .pub-brand-sub { display: none; }
+            .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .stat-card { padding: 16px; }
+            .card-header { padding: 16px; }
+            table.data-table thead th { padding: 10px 10px; font-size: 9px; }
+            table.data-table tbody td { padding: 10px; font-size: 12px; }
+        }
+
+        /* ── Print ──────────────────────────────── */
+        @media print {
+            .pub-topbar, .pub-footer, .no-print, .tab-bar { display: none !important; }
+            body { background: #fff !important; }
+            .pub-content { padding: 0; max-width: 100%; }
+            .tab-pane { display: block !important; }
+            .card { break-inside: avoid; border: 1px solid #e2e8f0; box-shadow: none; }
+            .stat-grid { break-inside: avoid; }
+            table.data-table thead th { background: #f1f5f9 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .status-dot, .legend-dot { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            [data-theme="dark"] body { background: #fff !important; color: #000 !important; }
+            [data-theme="dark"] .card { background: #fff !important; border-color: #e2e8f0 !important; }
+            [data-theme="dark"] table.data-table tbody td { color: #334155 !important; }
+            [data-theme="dark"] .pub-content, [data-theme="dark"] .stat-card { background: #fff !important; }
+        }
     </style>
 </head>
 <body>
 
-<!-- Public Top Bar -->
+<!-- Top Bar -->
 <header class="pub-topbar">
     <div class="pub-brand">
         <div class="pub-brand-mark"><i class="fa-solid fa-wallet"></i></div>
@@ -283,6 +415,9 @@ $user_initial = $user_nama ? strtoupper(substr($user_nama, 0, 1)) : '';
         </div>
     </div>
     <div class="pub-actions">
+        <button id="themeToggle" class="theme-btn no-print" aria-label="Ganti tema">
+            <i id="themeIcon" class="fa-solid fa-moon"></i>
+        </button>
         <?php if ($is_logged_in): ?>
             <a href="dashboard.php" class="btn btn-primary btn-sm">
                 <i class="fa-solid fa-gauge-high"></i> Dashboard

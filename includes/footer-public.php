@@ -2,7 +2,7 @@
 
         <footer class="pub-footer">
             <span>
-                &copy; <?= date('Y') ?> <strong style="color:#475569">Uangkas Kelas</strong>. Hak Cipta Dilindungi.
+                &copy; <?= date('Y') ?> <strong>Uangkas Kelas</strong>. Hak Cipta Dilindungi.
             </span>
             <span>
                 Dikelola oleh <strong style="color:var(--primary-600)">Bendahara Kelas</strong> &mdash; Transparansi keuangan untuk semua.
@@ -10,24 +10,79 @@
         </footer>
 
         <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // ── Print button ──
-            const btn = document.getElementById('printBtn');
+        (function() {
+            /* ── Theme ────────────────────────────────── */
+            const html = document.documentElement;
+            const btn = document.getElementById('themeToggle');
+            const icon = document.getElementById('themeIcon');
+            const stored = localStorage.getItem('theme');
+
+            function setTheme(theme) {
+                html.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                if (icon) {
+                    icon.className = theme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+                }
+            }
+
+            if (stored) {
+                setTheme(stored);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                setTheme('dark');
+            }
+
             if (btn) {
                 btn.addEventListener('click', function() {
-                    window.print();
+                    const current = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                    setTheme(current);
                 });
             }
 
-            // ── Filter form submit on change ──
-            const selects = document.querySelectorAll('.filter-select');
+            /* ── Tabs ─────────────────────────────────── */
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const panes = document.querySelectorAll('.tab-pane');
+
+            tabBtns.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    const target = btn.getAttribute('data-tab');
+                    tabBtns.forEach(function(b) { b.classList.remove('active'); });
+                    btn.classList.add('active');
+                    panes.forEach(function(p) { p.classList.remove('active'); });
+                    const pane = document.getElementById('pane-' + target);
+                    if (pane) pane.classList.add('active');
+                });
+            });
+
+            /* ── Filter select auto-submit ────────────── */
             const filterForm = document.getElementById('filterForm');
-            if (selects.length && filterForm) {
+            const selects = document.querySelectorAll('.filter-select');
+            if (filterForm && selects.length) {
                 selects.forEach(function(s) {
                     s.addEventListener('change', function() { filterForm.submit(); });
                 });
             }
-        });
+
+            /* ── Print ────────────────────────────────── */
+            const printBtn = document.getElementById('printBtn');
+            if (printBtn) {
+                printBtn.addEventListener('click', function() {
+                    /* Ensure the active tab is visible for print */
+                    window.print();
+                });
+            }
+
+            /* ── Search ───────────────────────────────── */
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const q = searchInput.value.toLowerCase().trim();
+                    document.querySelectorAll('.searchable-row').forEach(function(row) {
+                        const text = row.textContent.toLowerCase();
+                        row.style.display = text.indexOf(q) > -1 ? '' : 'none';
+                    });
+                });
+            }
+        })();
         </script>
     </body>
     </html>
