@@ -382,23 +382,40 @@ $user_initial = $user_nama ? strtoupper(substr($user_nama, 0, 1)) : '';
 
         /* ── Responsive ─────────────────────────── */
         @media (max-width: 768px) {
-            .pub-topbar { padding: 0 16px; height: 60px; }
-            .pub-content { padding: 20px 16px; }
-            .pub-hero { padding: 28px 0 24px; }
-            .pub-hero h1 { font-size: 1.4rem; }
-            .pub-footer { padding: 14px 16px calc(14px + var(--sa-bottom)); flex-direction: column; text-align: center; }
-            .tab-btn { font-size: 12px; padding: 10px 12px; }
+            .pub-topbar { padding: 0 12px; height: 56px; gap: 6px; }
+            .pub-content { padding: 16px 12px; }
+            .pub-hero { padding: 24px 0 20px; }
+            .pub-hero h1 { font-size: 1.3rem; }
+            .pub-hero p { font-size: 0.85rem; margin-bottom: 16px; }
+            .pub-nav { gap: 0; }
+            .pub-nav-link { padding: 6px 10px; font-size: 12px; }
+            .pub-nav-link span { display: none; }
+            .pub-brand-mark { width: 34px; height: 34px; font-size: 14px; }
+            .pub-brand-title { font-size: 14px; }
+            .pub-footer { padding: 12px 16px calc(12px + var(--sa-bottom)); flex-direction: column; text-align: center; }
+            .tab-btn { font-size: 12px; padding: 8px 10px; }
             .tab-btn span.tab-label { display: none; }
+            .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .stat-card { padding: 14px; }
+            .stat-value { font-size: clamp(1rem, 3vw, 1.3rem); }
+            .card-header { padding: 14px 16px; flex-direction: column; align-items: stretch; }
+            table.data-table thead th,
+            table.data-table tbody td { padding: 8px 6px; font-size: 10px; }
+            .hero-actions { flex-direction: column; align-items: center; }
         }
         @media (max-width: 480px) {
-            .pub-content { padding: 14px 12px; }
-            .pub-hero { padding: 20px 0 16px; }
+            .pub-content { padding: 12px 10px; }
+            .pub-hero { padding: 16px 0 14px; }
+            .pub-hero h1 { font-size: 1.15rem; }
             .pub-brand-sub { display: none; }
-            .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            .stat-card { padding: 16px; }
-            .card-header { padding: 16px; }
-            table.data-table thead th { padding: 10px 10px; font-size: 9px; }
-            table.data-table tbody td { padding: 10px; font-size: 12px; }
+            .pub-nav-link { padding: 5px 8px; font-size: 11px; }
+            pub-nav-link i { font-size: 13px; }
+            .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .stat-card { padding: 12px; }
+            .stat-value { font-size: 1rem; }
+            .card-header { padding: 12px 14px; }
+            table.data-table thead th { padding: 6px 4px; font-size: 8px; }
+            table.data-table tbody td { padding: 6px 4px; font-size: 10px; }
         }
 
         /* ── TTD ─────────────────────────────────── */
