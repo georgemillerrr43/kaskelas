@@ -207,6 +207,11 @@ $count_riwayat = count($semua_transaksi);
 <script>
 // ── PDF SHARED: load signature first ──────────────────────
 function loadSigAndRun(callback) {
+    // ensure jspdf loaded
+    if (typeof window.jspdf === 'undefined') {
+        alert('Library PDF belum selesai dimuat. Coba refresh halaman.');
+        return;
+    }
     var sigImg = new Image();
     sigImg.crossOrigin = "anonymous";
     sigImg.src = 'assets/images/ttd.svg';

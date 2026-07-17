@@ -75,6 +75,9 @@ try {
             <?php endfor; ?>
         </select>
     </form>
+    <button onclick="exportRekapPDF()" class="btn btn-primary btn-sm no-print">
+        <i class="fa-solid fa-file-pdf"></i> Export PDF
+    </button>
 </div>
 
 <!-- Legend -->
@@ -166,4 +169,115 @@ try {
     </div>
 </div>
 
+<script>
+function loadSigAndRun(callback) {
+    var sigImg = new Image();
+    sigImg.crossOrigin = "anonymous";
+    sigImg.src = 'assets/images/ttd.svg';
+    sigImg.onload = function() {
+        var c = document.createElement('canvas');
+        c.width = 300; c.height = 120;
+        c.getContext('2d').drawImage(sigImg, 0, 0, 300, 120);
+        try { callback(c.toDataURL('image/png')); }
+        catch(e) { callback(null); }
+    };
+    sigImg.onerror = function() { callback(null); };
+}
+function exportRekapPDF() { loadSigAndRun(function(d) { genRekapPDF(d); }); }
+
+function genRekapPDF(sigImgData) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const PW = 210, PH = 297, ML = 14, MR = 14;
+    const C = {
+        white:[255,255,255], pageGray:[245,247,250], borderGray:[200,210,220],
+        headerBg:[240,243,248], headerText:[20,25,35], subText:[70,80,95],
+        dimText:[145,155,170], rowAlt:[247,249,252], black:[15,20,30],
+        accentBlue:[75,70,225], incomeText:[4,120,87], incomeBg:[235,252,240],
+        expText:[190,18,60], expBg:[255,240,242],
+    };
+    doc.setFillColor(...C.pageGray); doc.rect(0,0,PW,PH,'F');
+    doc.setFillColor(...C.white); doc.roundedRect(10,10,PW-20,PH-20,3,3,'F');
+    doc.setFillColor(...C.accentBlue); doc.rect(10,10,PW-20,3.5,'F');
+
+    const tx = ML+2; let y = 20;
+    doc.setFont('helvetica','bold'); doc.setFontSize(14); doc.setTextColor(...C.black);
+    doc.text('REKAP KAS MINGGUAN', tx, y+4);
+    doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(...C.subText);
+    const bulan = document.getElementById('bulan');
+    const tahun = document.getElementById('tahun');
+    const bulanTxt = bulan ? bulan.options[bulan.selectedIndex].text : '';
+    const tahunTxt = tahun ? tahun.value : '';
+    doc.text('Periode: '+bulanTxt+' '+tahunTxt+' — Sistem Informasi Uangkas Kelas', tx, y+9);
+    const now=new Date(), tglCetak=now.toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});
+    const jamCetak=now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})+' WIB';
+    doc.setFont('helvetica','bold'); doc.setFontSize(7.5); doc.setTextColor(...C.subText);
+    doc.text('Tanggal Cetak', PW-12, y+2, {align:'right'});
+    doc.setFont('helvetica','normal'); doc.setTextColor(...C.black);
+    doc.text(tglCetak+'  '+jamCetak, PW-12, y+6.5, {align:'right'});
+    doc.setDrawColor(...C.black); doc.setLineWidth(0.7);
+    doc.line(tx, y+13, PW-12, y+13);
+    doc.setLineWidth(0.2); doc.line(tx, y+14, PW-12, y+14);
+
+    // data
+    const table=document.querySelector('.data-table');
+    const rows=[]; const tbody=table?.querySelector('tbody');
+    if(tbody){tbody.querySelectorAll('tr').forEach(function(tr){
+        const tds=tr.querySelectorAll('td'); if(tds.length<7)return;
+        const no=(tds[0].innerText||'').trim();
+        const nama=(tds[1].innerText||'').trim().replace(/\s+/g,' ');
+        const w=[];
+        for(let i=2;i<=6;i++){
+            const paid=tds[i].querySelector('.fa-check');
+            w.push(paid ? (tds[i].querySelector('span:last-child')?.innerText||'').trim() : '-');
+        }
+        rows.push([no,nama, ...w, (tds[7]?.innerText||'').trim()]);
+    });}
+
+    doc.autoTable({
+        startY: y+22, margin:{left:tx,right:12},
+        head:[[{content:'No',styles:{halign:'center'}},{content:'Nama Siswa'},{content:'Mg1',styles:{halign:'center'}},{content:'Mg2',styles:{halign:'center'}},{content:'Mg3',styles:{halign:'center'}},{content:'Mg4',styles:{halign:'center'}},{content:'Mg5',styles:{halign:'center'}},{content:'Total',styles:{halign:'center'}}]],
+        body:rows,
+        theme:'grid',
+        headStyles:{fillColor:C.headerBg,textColor:C.headerText,fontStyle:'bold',fontSize:7,lineColor:C.borderGray,lineWidth:0.25,cellPadding:{top:3,bottom:3,left:2,right:2}},
+        columnStyles:{
+            0:{halign:'center',cellWidth:12,fontStyle:'bold',textColor:C.subText},
+            1:{cellWidth:58},
+            2:{halign:'center',cellWidth:20},
+            3:{halign:'center',cellWidth:20},
+            4:{halign:'center',cellWidth:20},
+            5:{halign:'center',cellWidth:20},
+            6:{halign:'center',cellWidth:20},
+            7:{halign:'center',cellWidth:28,fontStyle:'bold'},
+        },
+        styles:{font:'helvetica',fontSize:7,cellPadding:{top:2.5,bottom:2.5,left:2,right:2},lineColor:C.borderGray,lineWidth:0.2,valign:'middle',textColor:C.black},
+        didParseCell:function(data){if(data.section==='body'&&data.row.index%2===1)data.cell.styles.fillColor=C.rowAlt;}
+    });
+
+    // TTD
+    let ttdY=doc.lastAutoTable.finalY+12;
+    if(ttdY+42>PH-18){doc.addPage(); ttdY=25;}
+    const cx=PW-42;
+    doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(...C.subText);
+    doc.text('Mengetahui,',cx,ttdY,{align:'center'});
+    doc.text('Bendahara Kelas',cx,ttdY+4,{align:'center'});
+    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...C.black);
+    doc.text('Rizky perdana putra sam',cx,ttdY+9,{align:'center'});
+    if(sigImgData){try{doc.addImage(sigImgData,'PNG',cx-22,ttdY+11,44,20);}catch(e){}}
+    doc.setDrawColor(...C.borderGray); doc.setLineWidth(0.4);
+    doc.line(cx-24,ttdY+34,cx+24,ttdY+34);
+
+    // footer
+    for(let p=1;p<=doc.internal.getNumberOfPages();p++){
+        doc.setPage(p);
+        doc.setDrawColor(...C.borderGray); doc.setLineWidth(0.3);
+        doc.line(tx,PH-14,PW-12,PH-14);
+        doc.setFont('helvetica','normal');doc.setFontSize(6.5);doc.setTextColor(...C.dimText);
+        doc.text('Uangkas Kelas — Laporan Resmi Keuangan Kelas — Dicetak '+tglCetak,tx,PH-9.5);
+        doc.text('Hal. '+p+'/'+doc.internal.getNumberOfPages(),PW-12,PH-9.5,{align:'right'});
+        doc.setFillColor(...C.accentBlue); doc.rect(10,PH-8,PW-20,2,'F');
+    }
+    doc.save('Rekap_Kas_'+bulanTxt+'_'+tahunTxt+'.pdf');
+}
+</script>
 <?php require_once 'includes/footer.php'; ?>
