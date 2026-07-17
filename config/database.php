@@ -69,10 +69,8 @@ try {
         $stmt_insert = $pdo->prepare("INSERT INTO users (username, password, nama, role) VALUES (?, ?, ?, ?)");
         $stmt_insert->execute(['admin', $admin_pass, 'Bendahara Kelas', 'admin']);
     }
-    
-    // 8. Auto-seed data anggota default jika tabel `anggota` masih kosong
-    $stmt_m = $pdo->query("SELECT COUNT(*) FROM anggota");
-    if ($stmt_m->fetchColumn() == 0) {
+    // 8. [DINONAKTIFKAN] Auto-seed data contoh — user kelola manual via UI
+    /*
         $stmt_insert_m = $pdo->prepare("INSERT INTO anggota (nis, nama, jenis_kelamin) VALUES (?, ?, ?)");
         $stmt_insert_m->execute(['10001', 'Ahmad Dhani', 'L']);
         $stmt_insert_m->execute(['10002', 'Budi Utomo', 'L']);
@@ -92,6 +90,7 @@ try {
             $stmt_t->execute(['2026-06-10', 'pengeluaran', 75000.00, 'Pembelian Sapu dan Ember Kelas', NULL, NULL, NULL, NULL, $admin_id]);
         }
     }
+    */
 } catch (PDOException $e) {
     die("Kesalahan Koneksi Database: " . $e->getMessage());
 }
