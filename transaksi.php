@@ -796,83 +796,65 @@ $nama_bulan = [
         // ══════════════════════════════════════════════════════════════
         //  RINGKASAN / SUMMARY BOX
         // ══════════════════════════════════════════════════════════════
-        const afterTableY = doc.lastAutoTable.finalY + 6;
-        const sumW = 90;
-        const sumX = PW - MR - 2 - sumW;
-        const rowH = 8;
-        const summaryHeight = 7 + (3 * rowH); // Total summary area height is 31mm
-        
+        const afterTableY = doc.lastAutoTable.finalY + 8;
+        const sumW = CW;
+        const sumX = ML + 2;
+        const rowH = 7;
+        const summaryHeight = 10 + (3 * rowH);
+
         let sy = afterTableY;
 
-        // Check if summary box fits on the current page. If not, add a new page.
         if (sy + summaryHeight > PH - 20) {
             doc.addPage();
-            // Draw background & container on the new page
             doc.setFillColor(...C.pageGray);
             doc.rect(0, 0, PW, PH, 'F');
             doc.setFillColor(...C.white);
             doc.roundedRect(10, 10, PW - 20, PH - 20, 3, 3, 'F');
             doc.setFillColor(...C.accentBlue);
-            doc.rect(10, 10, PW - 20, 4, 'F');
-            
-            sy = 20; // reset start Y to top area of the new page
+            doc.rect(10, 10, PW - 20, 3.5, 'F');
+            sy = 20;
         }
 
-        // Summary title
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(7.5);
         doc.setTextColor(...C.subText);
-        doc.text('RINGKASAN PERIODE', sumX, sy + 4.5);
+        doc.text('RINGKASAN KEUANGAN', sumX, sy + 4);
         sy += 7;
 
-        // Summary box
         const sumItems = [
-            { label: 'Total Pemasukan',       value: `+Rp ${totalPemasukan.toLocaleString('id-ID')}`,  color: C.incomeText, bg: C.incomeBg },
-            { label: 'Total Pengeluaran',     value: `-Rp ${totalPengeluaran.toLocaleString('id-ID')}`, color: C.expText,    bg: C.expBg },
-            { label: 'Saldo Akhir (Bersih)',  value: `Rp ${Math.abs(saldoAkhir).toLocaleString('id-ID')}${isSurplus ? '' : ' (Defisit)'}`, color: isSurplus ? C.accentBlue : C.expText, bg: C.accentLtBg },
+            { label: 'Total Pemasukan',     value: `+Rp ${totalPemasukan.toLocaleString('id-ID')}`,  color: C.incomeText, bg: C.incomeBg },
+            { label: 'Total Pengeluaran',   value: `-Rp ${totalPengeluaran.toLocaleString('id-ID')}`, color: C.expText,    bg: C.expBg },
+            { label: 'Saldo Akhir (Bersih)', value: `Rp ${Math.abs(saldoAkhir).toLocaleString('id-ID')}${isSurplus ? '' : ' (Defisit)'}`, color: isSurplus ? C.accentBlue : C.expText, bg: [238,242,255] },
         ];
 
         sumItems.forEach((item, idx) => {
-            const isLast = idx === sumItems.length - 1;
-            // Box background
             doc.setFillColor(...item.bg);
             doc.setDrawColor(...C.borderGray);
             doc.setLineWidth(0.3);
-            if (isLast) {
-                doc.setFillColor(...C.accentLtBg);
-            }
             doc.rect(sumX, sy, sumW, rowH, 'FD');
-
-            // Label
-            doc.setFont('helvetica', isLast ? 'bold' : 'normal');
-            doc.setFontSize(7.5);
+            doc.setFont('helvetica', idx === 2 ? 'bold' : 'normal');
+            doc.setFontSize(7);
             doc.setTextColor(...C.subText);
-            doc.text(item.label, sumX + 4, sy + 5.2);
-
-            // Value (right aligned)
+            doc.text(item.label, sumX + 3, sy + 5);
             doc.setFont('helvetica', 'bold');
-            doc.setFontSize(isLast ? 8.5 : 8);
+            doc.setFontSize(idx === 2 ? 8 : 7.5);
             doc.setTextColor(...item.color);
-            doc.text(item.value, sumX + sumW - 4, sy + 5.2, { align: 'right' });
-
+            doc.text(item.value, sumX + sumW - 3, sy + 5, { align: 'right' });
             sy += rowH;
         });
 
         // ── Total rows count ──────────────────────────────────────────
         doc.setFont('helvetica', 'normal');
-        doc.setFontSize(7.5);
+        doc.setFontSize(7);
         doc.setTextColor(...C.dimText);
-        // Note: we draw this on whichever page the summary box was placed
-        doc.text(`Jumlah baris data: ${rows.length} transaksi`, ML + 2, sy - (3 * rowH) - 3);
+        doc.text(`Jumlah baris data: ${rows.length} transaksi`, ML + 2, afterTableY - 2);
 
         // ══════════════════════════════════════════════════════════════
 // ==================================================================
         // TTD / TANDA TANGAN AREA
         // ==================================================================
         let ttdY = sy + 12;
-
-        // 1. Cek page break — estimasi tinggi: teks (5) + spasi (2) + nama (5) + spasi (2) + img (24) + spasi (2) + garis (1) = ~41
-        const ttdHeight = 44;
+        const ttdHeight = 42;
         if (ttdY + ttdHeight > PH - 18) {
             doc.addPage();
             doc.setFillColor(...C.pageGray);
@@ -880,37 +862,30 @@ $nama_bulan = [
             doc.setFillColor(...C.white);
             doc.roundedRect(10, 10, PW - 20, PH - 20, 3, 3, 'F');
             doc.setFillColor(...C.accentBlue);
-            doc.rect(10, 10, PW - 20, 4, 'F');
+            doc.rect(10, 10, PW - 20, 3.5, 'F');
             ttdY = 22;
         }
 
-        // 2. Blok TTD — posisi kanan, lebih proporsional
         const centerX = PW - MR - 28;
 
-        // "Mengetahui,"
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(8);
         doc.setTextColor(...C.subText);
         doc.text('Mengetahui,', centerX, ttdY, { align: 'center' });
-
-        // Jabatan
         doc.text('Bendahara Kelas', centerX, ttdY + 4, { align: 'center' });
 
-        // Nama lengkap di atas TTD
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(9);
         doc.setTextColor(...C.black);
-        doc.text('Rizky perdana putra sam', centerX, ttdY + 9.5, { align: 'center' });
+        doc.text('Rizky perdana putra sam', centerX, ttdY + 9, { align: 'center' });
 
-        // Gambar TTD (diperbesar, proporsional)
         if (sigImgData) {
-            doc.addImage(sigImgData, 'PNG', centerX - 28, ttdY + 11, 56, 24);
+            try { doc.addImage(sigImgData, 'PNG', centerX - 22, ttdY + 11, 44, 20); } catch(e) {}
         }
 
-        // Garis bawah
         doc.setDrawColor(...C.borderGray);
         doc.setLineWidth(0.4);
-        doc.line(centerX - 26, ttdY + 39, centerX + 26, ttdY + 39);
+        doc.line(centerX - 24, ttdY + 34, centerX + 24, ttdY + 34);
     
         // ══════════════════════════════════════════════════════════════
         //  PAGE FOOTER — all pages
