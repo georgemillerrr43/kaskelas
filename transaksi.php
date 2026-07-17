@@ -95,9 +95,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_type']) && $_P
 }
 
 // 2. Tangani Penghapusan Transaksi (Hanya Admin)
-if (isset($_GET['action']) && $_GET['action'] === 'delete') {
-    $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-    if ($id > 0) {
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+if ($id > 0) {
         try {
             $stmt = $pdo->prepare("DELETE FROM transaksi WHERE id = ?");
             $stmt->execute([$id]);
