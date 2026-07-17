@@ -56,15 +56,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form method="POST" style="display:flex;flex-direction:column;gap:16px">
             <div>
                 <label class="input-label">Password Lama</label>
-                <input type="password" name="password_lama" required class="input" placeholder="Password saat ini">
+                <div style="position:relative">
+                    <input type="password" name="password_lama" id="pwLama" required class="input" placeholder="Password saat ini" style="padding-right:40px">
+                    <button type="button" onclick="togglePW('pwLama',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;padding:4px;font-size:14px">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
             </div>
             <div>
                 <label class="input-label">Password Baru</label>
-                <input type="password" name="password_baru" required class="input" placeholder="Minimal 6 karakter">
+                <div style="position:relative">
+                    <input type="password" name="password_baru" id="pwBaru" required class="input" placeholder="Minimal 6 karakter" style="padding-right:40px">
+                    <button type="button" onclick="togglePW('pwBaru',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;padding:4px;font-size:14px">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
             </div>
             <div>
                 <label class="input-label">Konfirmasi Password Baru</label>
-                <input type="password" name="password_konfirmasi" required class="input" placeholder="Ulangi password baru">
+                <div style="position:relative">
+                    <input type="password" name="password_konfirmasi" id="pwKonfirm" required class="input" placeholder="Ulangi password baru" style="padding-right:40px">
+                    <button type="button" onclick="togglePW('pwKonfirm',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;padding:4px;font-size:14px">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
             </div>
             <button type="submit" class="btn btn-primary" style="width:100%">
                 <i class="fa-solid fa-floppy-disk"></i> Simpan Password
@@ -74,3 +89,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <?php require_once 'includes/footer.php'; ?>
+<script>
+function togglePW(id, btn) {
+    var inp = document.getElementById(id);
+    var icon = btn.querySelector('i');
+    if (inp.type === 'password') {
+        inp.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        inp.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+</script>
