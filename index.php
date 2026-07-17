@@ -103,11 +103,11 @@ $count_riwayat = count($semua_transaksi);
                     <tr>
                         <th style="width:40px;text-align:center">No</th>
                         <th style="min-width:150px;border-right:1px solid var(--border-table)">Nama Siswa</th>
-                        <th style="width:85px;text-align:center">Mg 1</th>
-                        <th style="width:85px;text-align:center">Mg 2</th>
-                        <th style="width:85px;text-align:center">Mg 3</th>
-                        <th style="width:85px;text-align:center">Mg 4</th>
-                        <th style="width:85px;text-align:center">Mg 5</th>
+                        <th style="width:95px;text-align:center">Mg 1</th>
+                        <th style="width:95px;text-align:center">Mg 2</th>
+                        <th style="width:95px;text-align:center">Mg 3</th>
+                        <th style="width:95px;text-align:center">Mg 4</th>
+                        <th style="width:95px;text-align:center">Mg 5</th>
                         <th style="width:100px;border-left:1px solid var(--border-table);text-align:center;background:var(--surface-bg)">Total</th>
                     </tr>
                 </thead>
@@ -128,17 +128,17 @@ $count_riwayat = count($semua_transaksi);
                                 $paid = isset($payments[$m['id']][$w]);
                                 $amt = $paid ? $payments[$m['id']][$w] : 0;
                             ?>
-                                <td style="text-align:center;white-space:nowrap;padding:8px 4px">
+                                <td style="text-align:center;padding:8px 6px;white-space:nowrap">
                                     <?php if ($paid): ?>
-                                        <div style="display:flex;flex-direction:row;align-items:center;gap:6px;justify-content:center;white-space:nowrap;width:100%">
-                                            <span class="status-dot" style="background:var(--income-bg);color:var(--income);width:20px;height:20px;font-size:9px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center"><i class="fa-solid fa-check"></i></span>
-                                            <span style="font-size:10px;font-weight:700;color:var(--income);white-space:nowrap;display:inline-block"><?= number_format($amt,0,',','.') ?></span>
-                                        </div>
+                                        <span style="display:inline-flex;align-items:center;gap:5px;white-space:nowrap">
+                                            <span class="status-dot" style="background:var(--income-bg);color:var(--income);width:22px;height:22px;font-size:10px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;border-radius:50%"><i class="fa-solid fa-check"></i></span>
+                                            <span style="font-size:10px;font-weight:700;color:var(--income);white-space:nowrap"><?= number_format($amt,0,',','.') ?></span>
+                                        </span>
                                     <?php else: ?>
-                                        <div style="display:flex;flex-direction:row;align-items:center;gap:6px;justify-content:center;white-space:nowrap;width:100%">
-                                            <span class="status-dot" style="background:var(--surface-bg);color:var(--text-dim);width:20px;height:20px;font-size:9px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center"><i class="fa-solid fa-minus"></i></span>
-                                            <span style="font-size:10px;color:var(--text-dim);white-space:nowrap;display:inline-block">-</span>
-                                        </div>
+                                        <span style="display:inline-flex;align-items:center;gap:5px;white-space:nowrap">
+                                            <span class="status-dot" style="background:var(--surface-bg);color:var(--text-dim);width:22px;height:22px;font-size:10px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;border-radius:50%"><i class="fa-solid fa-minus"></i></span>
+                                            <span style="font-size:10px;color:var(--text-dim);white-space:nowrap">-</span>
+                                        </span>
                                     <?php endif; ?>
                                 </td>
                             <?php endfor; ?>
@@ -205,6 +205,24 @@ $count_riwayat = count($semua_transaksi);
 </div>
 
 <script>
+// ── PDF SHARED: load signature first ──────────────────────
+function loadSigAndRun(callback) {
+    const sigImg = new Image();
+    sigImg.crossOrigin = "anonymous";
+    sigImg.src = 'assets/images/ttd.svg';
+    sigImg.onload = function() {
+        const c = document.createElement('canvas');
+        c.width = 300; c.height = 120;
+        c.getContext('2d').drawImage(sigImg, 0, 0, 300, 120);
+        try { callback(c.toDataURL('image/png')); }
+        catch(e) { callback(null); }
+    };
+    sigImg.onerror = function() { callback(null); };
+}
+
+function exportSiswaPDF() { loadSigAndRun(function(d) { genSiswaPDF(d); }); }
+function exportRiwayatPDF() { loadSigAndRun(function(d) { genRiwayatPDF(d); }); }
+
 // ── PDF EXPORT — DAFTAR SISWA ──────────────────────────
 function genSiswaPDF(sigImgData) {
     const { jsPDF } = window.jspdf;
