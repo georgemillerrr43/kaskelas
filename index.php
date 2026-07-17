@@ -103,11 +103,11 @@ $count_riwayat = count($semua_transaksi);
                     <tr>
                         <th style="width:40px;text-align:center">No</th>
                         <th style="min-width:150px;border-right:1px solid var(--border-table)">Nama Siswa</th>
-                        <th style="width:72px;text-align:center">Mg 1</th>
-                        <th style="width:72px;text-align:center">Mg 2</th>
-                        <th style="width:72px;text-align:center">Mg 3</th>
-                        <th style="width:72px;text-align:center">Mg 4</th>
-                        <th style="width:72px;text-align:center">Mg 5</th>
+                        <th style="width:85px;text-align:center">Mg 1</th>
+                        <th style="width:85px;text-align:center">Mg 2</th>
+                        <th style="width:85px;text-align:center">Mg 3</th>
+                        <th style="width:85px;text-align:center">Mg 4</th>
+                        <th style="width:85px;text-align:center">Mg 5</th>
                         <th style="width:100px;border-left:1px solid var(--border-table);text-align:center;background:var(--surface-bg)">Total</th>
                     </tr>
                 </thead>
@@ -128,17 +128,17 @@ $count_riwayat = count($semua_transaksi);
                                 $paid = isset($payments[$m['id']][$w]);
                                 $amt = $paid ? $payments[$m['id']][$w] : 0;
                             ?>
-                                <td style="text-align:center;white-space:nowrap">
+                                <td style="text-align:center;white-space:nowrap;padding:8px 4px">
                                     <?php if ($paid): ?>
-                                        <span style="display:inline-flex;flex-direction:row;align-items:center;gap:4px;justify-content:center;white-space:nowrap">
-                                            <span class="status-dot" style="background:var(--income-bg);color:var(--income);width:22px;height:22px;font-size:10px;flex-shrink:0"><i class="fa-solid fa-check"></i></span>
-                                            <span style="font-size:9px;font-weight:700;color:var(--income);white-space:nowrap"><?= number_format($amt,0,',','.') ?></span>
-                                        </span>
+                                        <div style="display:flex;flex-direction:row;align-items:center;gap:6px;justify-content:center;white-space:nowrap;width:100%">
+                                            <span class="status-dot" style="background:var(--income-bg);color:var(--income);width:20px;height:20px;font-size:9px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center"><i class="fa-solid fa-check"></i></span>
+                                            <span style="font-size:10px;font-weight:700;color:var(--income);white-space:nowrap;display:inline-block"><?= number_format($amt,0,',','.') ?></span>
+                                        </div>
                                     <?php else: ?>
-                                        <span style="display:inline-flex;flex-direction:row;align-items:center;gap:4px;justify-content:center;white-space:nowrap">
-                                            <span class="status-dot" style="background:var(--surface-bg);color:var(--text-dim);width:22px;height:22px;font-size:10px;flex-shrink:0"><i class="fa-solid fa-minus"></i></span>
-                                            <span style="font-size:9px;color:var(--text-dim);white-space:nowrap">-</span>
-                                        </span>
+                                        <div style="display:flex;flex-direction:row;align-items:center;gap:6px;justify-content:center;white-space:nowrap;width:100%">
+                                            <span class="status-dot" style="background:var(--surface-bg);color:var(--text-dim);width:20px;height:20px;font-size:9px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center"><i class="fa-solid fa-minus"></i></span>
+                                            <span style="font-size:10px;color:var(--text-dim);white-space:nowrap;display:inline-block">-</span>
+                                        </div>
                                     <?php endif; ?>
                                 </td>
                             <?php endfor; ?>
@@ -206,19 +206,6 @@ $count_riwayat = count($semua_transaksi);
 
 <script>
 // ── PDF EXPORT — DAFTAR SISWA ──────────────────────────
-function exportSiswaPDF() {
-    const sigImg = new Image();
-    sigImg.crossOrigin = "anonymous";
-    sigImg.src = 'assets/images/ttd.svg';
-    sigImg.onload = function() {
-        const c = document.createElement('canvas');
-        c.width = 300; c.height = 120;
-        c.getContext('2d').drawImage(sigImg, 0, 0, 300, 120);
-        try { genSiswaPDF(c.toDataURL('image/png')); } catch(e) { genSiswaPDF(null); }
-    };
-    sigImg.onerror = function() { genSiswaPDF(null); };
-}
-
 function genSiswaPDF(sigImgData) {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF('l', 'mm', 'a4');
@@ -293,39 +280,43 @@ function genSiswaPDF(sigImgData) {
         theme: 'grid',
         headStyles: {fillColor:C.headerBg, textColor:C.headerText, fontStyle:'bold', fontSize:8, lineColor:C.borderGray, lineWidth:0.25, cellPadding:{top:4,bottom:4,left:3,right:3}},
         columnStyles: {
-            0: {halign:'center', cellWidth:10, fontStyle:'bold', textColor:C.subText},
-            1: {cellWidth:70},
-            2: {halign:'center', cellWidth:22},
-            3: {halign:'center', cellWidth:22},
-            4: {halign:'center', cellWidth:22},
-            5: {halign:'center', cellWidth:22},
-            6: {halign:'center', cellWidth:22},
-            7: {halign:'center', cellWidth:30, fontStyle:'bold'},
+            0: {halign:'center', cellWidth:15, fontStyle:'bold', textColor:C.subText},
+            1: {cellWidth:95},
+            2: {halign:'center', cellWidth:25},
+            3: {halign:'center', cellWidth:25},
+            4: {halign:'center', cellWidth:25},
+            5: {halign:'center', cellWidth:25},
+            6: {halign:'center', cellWidth:25},
+            7: {halign:'center', cellWidth:35, fontStyle:'bold'},
         },
-        styles: {font:'helvetica', fontSize:7.5, cellPadding:{top:3,bottom:3,left:3,right:3}, lineColor:C.borderGray, lineWidth:0.2, valign:'middle', textColor:C.black},
+        styles: {font:'helvetica', fontSize:8, cellPadding:{top:3.5,bottom:3.5,left:3,right:3}, lineColor:C.borderGray, lineWidth:0.2, valign:'middle', textColor:C.black},
         didParseCell: function(data) {
             if (data.section==='body' && data.row.index%2===1) data.cell.styles.fillColor=C.rowAlt;
         }
     });
 
-    // TTD
-    let ttdY = doc.lastAutoTable.finalY + 10;
-    if (ttdY + 44 > PH - 14) { doc.addPage(); ttdY = 20; }
+    // TTD Layout Fixed
+    let ttdY = doc.lastAutoTable.finalY + 12;
+    if (ttdY + 46 > PH - 16) { doc.addPage(); ttdY = 25; }
 
-    const cx = PW - 38;
-    doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(...C.subText);
+    const cx = PW - 42;
+    doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(...C.subText);
     doc.text('Mengetahui,', cx, ttdY, {align:'center'});
-    doc.text('Bendahara Kelas', cx, ttdY+4, {align:'center'});
+    doc.text('Bendahara Kelas', cx, ttdY+4.5, {align:'center'});
 
-    // Nama di atas TTD
-    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...C.black);
-    doc.text('Rizky perdana putra sam', cx, ttdY+9.5, {align:'center'});
-
+    // Signature Image Area
     if (sigImgData) {
-        try { doc.addImage(sigImgData, 'PNG', cx-28, ttdY+11.5, 56, 24); } catch(e) {}
+        try { doc.addImage(sigImgData, 'PNG', cx-20, ttdY+7, 40, 18); } catch(e) {}
     }
+    
+    // Nama Bendahara ditaruh di bawah area TTD
+    const namaY = ttdY + 31;
+    doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(...C.black);
+    doc.text('Rizky perdana putra sam', cx, namaY, {align:'center'});
+
+    // Underline Garis Nama Bendahara
     doc.setDrawColor(...C.borderGray); doc.setLineWidth(0.4);
-    doc.line(cx-26, ttdY+39.5, cx+26, ttdY+39.5);
+    doc.line(cx-25, namaY+1.5, cx+25, namaY+1.5);
 
     // Footer
     const pg = doc.internal.getNumberOfPages();
@@ -339,20 +330,6 @@ function genSiswaPDF(sigImgData) {
         doc.setFillColor(...C.accentBlue); doc.rect(8, PH-8, PW-16, 2, 'F');
     }
     doc.save('Daftar_Siswa_'+bulan+'_'+tahun+'.pdf');
-}
-
-// ── PDF EXPORT — RIWAYAT ───────────────────────────────
-function exportRiwayatPDF() {
-    const sigImg = new Image();
-    sigImg.crossOrigin = "anonymous";
-    sigImg.src = 'assets/images/ttd.svg';
-    sigImg.onload = function() {
-        const c = document.createElement('canvas');
-        c.width = 300; c.height = 120;
-        c.getContext('2d').drawImage(sigImg, 0, 0, 300, 120);
-        try { genRiwayatPDF(c.toDataURL('image/png')); } catch(e) { genRiwayatPDF(null); }
-    };
-    sigImg.onerror = function() { genRiwayatPDF(null); };
 }
 
 function genRiwayatPDF(sigImgData) {
@@ -454,7 +431,7 @@ function genRiwayatPDF(sigImgData) {
         {label:'Total Pengeluaran', val:'-Rp '+totalPengeluaran.toLocaleString('id-ID'), c:C.expText, bg:C.expBg},
         {label:'Saldo Akhir', val:'Rp '+Math.abs(saldo).toLocaleString('id-ID')+(saldo<0?' (Defisit)':''), c:saldo>=0?C.accentBlue:C.expText, bg:[238,242,255]},
     ];
-    if (sumY + 30 > PH-20) { doc.addPage(); sumY = 20; }
+    if (sumY + 30 > PH-25) { doc.addPage(); sumY = 20; }
     doc.setFont('helvetica','bold'); doc.setFontSize(7.5); doc.setTextColor(...C.subText);
     doc.text('RINGKASAN', tx+70, sumY+2);
     sumItems.forEach(function(item, i) {
@@ -466,23 +443,27 @@ function genRiwayatPDF(sigImgData) {
         doc.text(item.val, tx+146, sumY+8.5+i*7, {align:'right'});
     });
 
-    // TTD
+    // TTD Layout Fixed
     let ttdY = sumY + 30;
-    if (ttdY + 44 > PH - 14) { doc.addPage(); ttdY = 20; }
+    if (ttdY + 46 > PH - 16) { doc.addPage(); ttdY = 25; }
     const cx = PW - MR - 25;
-    doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(...C.subText);
+    doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(...C.subText);
     doc.text('Mengetahui,', cx, ttdY, {align:'center'});
-    doc.text('Bendahara Kelas', cx, ttdY+4, {align:'center'});
+    doc.text('Bendahara Kelas', cx, ttdY+4.5, {align:'center'});
 
-    // Nama di atas TTD
-    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...C.black);
-    doc.text('Rizky perdana putra sam', cx, ttdY+9.5, {align:'center'});
-
+    // Signature Image Area
     if (sigImgData) {
-        try { doc.addImage(sigImgData, 'PNG', cx-28, ttdY+11.5, 56, 24); } catch(e) {}
+        try { doc.addImage(sigImgData, 'PNG', cx-20, ttdY+7, 40, 18); } catch(e) {}
     }
+    
+    // Nama Bendahara di bawah TTD
+    const namaY = ttdY + 31;
+    doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(...C.black);
+    doc.text('Rizky perdana putra sam', cx, namaY, {align:'center'});
+
+    // Underline Garis Nama Bendahara
     doc.setDrawColor(...C.borderGray); doc.setLineWidth(0.4);
-    doc.line(cx-26, ttdY+39.5, cx+26, ttdY+39.5);
+    doc.line(cx-25, namaY+1.5, cx+25, namaY+1.5);
 
     // Row count
     doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(...C.dimText);
@@ -501,6 +482,3 @@ function genRiwayatPDF(sigImgData) {
     }
     doc.save('Riwayat_Transaksi_Kas_Kelas.pdf');
 }
-</script>
-
-<?php require_once 'includes/footer-public.php'; ?>
