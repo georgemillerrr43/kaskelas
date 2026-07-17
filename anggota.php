@@ -115,10 +115,10 @@ try {
     <!-- Form Tambah/Edit (Admin only) -->
     <?php if ($user_role === 'admin'): ?>
         <div class="lg:col-span-1 card p-5 md:p-6">
-            <h3 class="font-bold text-slate-800 text-sm md:text-base mb-1">
+            <h3 style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:4px">
                 <?= $edit_mode ? 'Edit Data Anggota' : 'Tambah Anggota Baru' ?>
             </h3>
-            <p class="text-xs text-slate-400 mb-4 md:mb-5">
+            <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px">
                 <?= $edit_mode ? 'Ubah informasi anggota kelas terpilih.' : 'Daftarkan nama siswa baru ke dalam sistem kas kelas.' ?>
             </p>
 
@@ -140,12 +140,12 @@ try {
                 <div>
                     <label class="input-label mb-2">Jenis Kelamin</label>
                     <div class="flex gap-4">
-                        <label class="inline-flex items-center text-sm font-medium text-slate-700 cursor-pointer">
+                        <label class="inline-flex items-center text-sm font-medium" style="color:var(--text);cursor:pointer">
                             <input type="radio" name="jenis_kelamin" value="L" required <?= $edit_jenis_kelamin === 'L' ? 'checked' : '' ?>
                                    class="w-4 h-4 text-indigo-600 border-slate-300 focus:ring-indigo-500 mr-2">
                             Laki-laki
                         </label>
-                        <label class="inline-flex items-center text-sm font-medium text-slate-700 cursor-pointer">
+                        <label class="inline-flex items-center text-sm font-medium" style="color:var(--text);cursor:pointer">
                             <input type="radio" name="jenis_kelamin" value="P" required <?= $edit_jenis_kelamin === 'P' ? 'checked' : '' ?>
                                    class="w-4 h-4 text-indigo-600 border-slate-300 focus:ring-indigo-500 mr-2">
                             Perempuan
@@ -169,11 +169,11 @@ try {
     <div class="lg:col-span-2 card overflow-hidden">
         <div class="card-header flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-                <h4 class="font-bold text-slate-800 text-sm md:text-base">Daftar Anggota</h4>
-                <p class="text-xs text-slate-400">Total: <strong><?= count($anggota_list) ?></strong> siswa</p>
+                <h4 style="font-size:14px;font-weight:800;color:var(--text)">Daftar Anggota</h4>
+                <p style="font-size:12px;color:var(--text-muted)">Total: <strong><?= count($anggota_list) ?></strong> siswa</p>
             </div>
             <div class="relative w-full sm:w-56 md:w-64">
-                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 text-xs">
+                <span style="position:absolute;top:0;bottom:0;left:0;display:flex;align-items:center;padding-left:12px;color:var(--text-muted);font-size:12px;pointer-events:none">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </span>
                 <input type="text" id="searchInput"
@@ -200,16 +200,16 @@ try {
                 <tbody>
                     <?php if (empty($anggota_list)): ?>
                         <tr>
-                            <td colspan="6" class="text-center py-12 text-slate-400">
-                                <i class="fa-solid fa-users-slash text-4xl mb-3 text-slate-300 block"></i>
+                            <td colspan="6" style="text-align:center;padding:48px 16px;color:var(--text-dim)">
+                                <i class="fa-solid fa-users-slash" style="font-size:32px;display:block;margin-bottom:10px;color:var(--text-dim)"></i>
                                 Belum ada data anggota kelas.
                             </td>
                         </tr>
                     <?php else: ?>
                         <?php $no = 1; foreach ($anggota_list as $member): ?>
                             <tr>
-                                <td class="text-center font-semibold text-slate-400 text-xs"><?= $no++ ?></td>
-                                <td class="font-mono text-xs text-slate-600"><?= htmlspecialchars($member['nis'] ?? '-') ?></td>
+                                <td style="text-align:center;font-weight:600;color:var(--text-dim);font-size:12px"><?= $no++ ?></td>
+                                <td class="font-mono text-xs" style="color:var(--text-muted)"><?= htmlspecialchars($member['nis'] ?? '-') ?></td>
                                 <td class="font-semibold"><?= htmlspecialchars($member['nama']) ?></td>
                                 <td class="text-center">
                                     <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold <?= $member['jenis_kelamin'] === 'L' ? 'bg-indigo-50 text-indigo-700' : 'bg-pink-50 text-pink-700' ?>">
@@ -217,18 +217,18 @@ try {
                                         <?= $member['jenis_kelamin'] === 'L' ? 'Laki-laki' : 'Perempuan' ?>
                                     </span>
                                 </td>
-                                <td class="text-xs text-slate-400"><?= date('d/m/Y', strtotime($member['created_at'])) ?></td>
+                                <td style="font-size:12px;color:var(--text-muted)"><?= date('d/m/Y', strtotime($member['created_at'])) ?></td>
                                 <?php if (true): ?>
                                     <td class="text-center">
                                         <div class="flex items-center justify-center gap-2">
                                             <a href="anggota.php?action=edit&id=<?= $member['id'] ?>"
-                                               class="w-7 h-7 rounded-lg bg-slate-100 hover:bg-indigo-50 text-slate-500 hover:text-indigo-600 flex items-center justify-center text-xs transition"
+                                               style="width:28px;height:28px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;text-decoration:none;transition:0.15s;color:var(--text-muted);background:var(--surface-bg)" onmouseenter="this.style.background='var(--tab-active-bg)';this.style.color='var(--tab-active-text)'" onmouseleave="this.style.background='var(--surface-bg)';this.style.color='var(--text-muted)'"
                                                title="Edit data">
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </a>
                                             <a href="anggota.php?action=delete&id=<?= $member['id'] ?>"
                                                onclick="return confirm('Apakah Anda yakin ingin menghapus siswa ini? Transaksi yang terkait akan tetap tersimpan tapi tidak terikat nama siswa.')"
-                                               class="w-7 h-7 rounded-lg bg-slate-100 hover:bg-rose-50 text-slate-500 hover:text-rose-600 flex items-center justify-center text-xs transition"
+                                               style="width:28px;height:28px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;text-decoration:none;transition:0.15s;color:var(--text-muted);background:var(--surface-bg)" onmouseenter="this.style.background='var(--expense-bg)';this.style.color='var(--expense)'" onmouseleave="this.style.background='var(--surface-bg)';this.style.color='var(--text-muted)'"
                                                title="Hapus data">
                                                 <i class="fa-solid fa-trash-can"></i>
                                             </a>

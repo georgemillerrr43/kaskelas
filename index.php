@@ -130,14 +130,14 @@ $count_riwayat = count($semua_transaksi);
                             ?>
                                 <td style="text-align:center">
                                     <?php if ($paid): ?>
-                                        <span style="display:inline-flex;flex-direction:column;align-items:center">
+                                        <span style="display:inline-flex;flex-direction:row;align-items:center;gap:3px;justify-content:center">
                                             <span class="status-dot" style="background:var(--income-bg);color:var(--income)"><i class="fa-solid fa-check"></i></span>
-                                            <span style="font-size:8px;font-weight:700;color:var(--income);margin-top:2px"><?= number_format($amt,0,',','.') ?></span>
+                                            <span style="font-size:8px;font-weight:700;color:var(--income)"><?= number_format($amt,0,',','.') ?></span>
                                         </span>
                                     <?php else: ?>
-                                        <span style="display:inline-flex;flex-direction:column;align-items:center">
+                                        <span style="display:inline-flex;flex-direction:row;align-items:center;gap:3px;justify-content:center">
                                             <span class="status-dot" style="background:var(--surface-bg);color:var(--text-dim)"><i class="fa-solid fa-minus"></i></span>
-                                            <span style="font-size:8px;color:var(--text-dim);margin-top:2px">-</span>
+                                            <span style="font-size:8px;color:var(--text-dim)">-</span>
                                         </span>
                                     <?php endif; ?>
                                 </td>
@@ -212,8 +212,8 @@ function exportSiswaPDF() {
     sigImg.src = 'assets/images/ttd.svg';
     sigImg.onload = function() {
         const c = document.createElement('canvas');
-        c.width = 200; c.height = 80;
-        c.getContext('2d').drawImage(sigImg, 0, 0, 200, 80);
+        c.width = 300; c.height = 120;
+        c.getContext('2d').drawImage(sigImg, 0, 0, 300, 120);
         try { genSiswaPDF(c.toDataURL('image/png')); } catch(e) { genSiswaPDF(null); }
     };
     sigImg.onerror = function() { genSiswaPDF(null); };
@@ -317,13 +317,15 @@ function genSiswaPDF(sigImgData) {
     doc.text('Mengetahui,', cx, ttdY, {align:'center'});
     doc.text('Bendahara Kelas', cx, ttdY+4, {align:'center'});
 
+    // Nama di atas TTD
+    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...C.black);
+    doc.text('Rizky perdana putra sam', cx, ttdY+9.5, {align:'center'});
+
     if (sigImgData) {
-        try { doc.addImage(sigImgData, 'PNG', cx-17.5, ttdY+6, 35, 15); } catch(e) {}
+        try { doc.addImage(sigImgData, 'PNG', cx-25, ttdY+11, 50, 22); } catch(e) {}
     }
     doc.setDrawColor(...C.borderGray); doc.setLineWidth(0.3);
-    doc.line(cx-25, ttdY+26, cx+25, ttdY+26);
-    doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor(...C.black);
-    doc.text('Bendahara Kelas', cx, ttdY+31, {align:'center'});
+    doc.line(cx-25, ttdY+38, cx+25, ttdY+38);
 
     // Footer
     const pg = doc.internal.getNumberOfPages();
@@ -346,8 +348,8 @@ function exportRiwayatPDF() {
     sigImg.src = 'assets/images/ttd.svg';
     sigImg.onload = function() {
         const c = document.createElement('canvas');
-        c.width = 200; c.height = 80;
-        c.getContext('2d').drawImage(sigImg, 0, 0, 200, 80);
+        c.width = 300; c.height = 120;
+        c.getContext('2d').drawImage(sigImg, 0, 0, 300, 120);
         try { genRiwayatPDF(c.toDataURL('image/png')); } catch(e) { genRiwayatPDF(null); }
     };
     sigImg.onerror = function() { genRiwayatPDF(null); };
@@ -471,13 +473,16 @@ function genRiwayatPDF(sigImgData) {
     const cx = PW - MR - 25;
     doc.text('Mengetahui,', cx, ttdY, {align:'center'});
     doc.text('Bendahara Kelas', cx, ttdY+4, {align:'center'});
+
+    // Nama di atas TTD
+    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...C.black);
+    doc.text('Rizky perdana putra sam', cx, ttdY+9.5, {align:'center'});
+
     if (sigImgData) {
-        try { doc.addImage(sigImgData, 'PNG', cx-17.5, ttdY+6, 35, 15); } catch(e) {}
+        try { doc.addImage(sigImgData, 'PNG', cx-25, ttdY+11, 50, 22); } catch(e) {}
     }
     doc.setDrawColor(...C.borderGray); doc.setLineWidth(0.3);
-    doc.line(cx-25, ttdY+26, cx+25, ttdY+26);
-    doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor(...C.black);
-    doc.text('Bendahara Kelas', cx, ttdY+31, {align:'center'});
+    doc.line(cx-25, ttdY+38, cx+25, ttdY+38);
 
     // Row count
     doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(...C.dimText);

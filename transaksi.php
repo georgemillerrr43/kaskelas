@@ -209,7 +209,7 @@ $nama_bulan = [
                 </select>
             </div>
             <div class="flex items-end">
-                <button type="submit" class="btn btn-sm" style="background:#1e293b;color:#fff;width:100%;border:none">
+                <button type="submit" class="btn btn-sm" style="background:var(--primary-600);color:#fff;width:100%;border:none">
                     <i class="fa-solid fa-filter"></i> Terapkan Filter
                 </button>
             </div>
@@ -230,27 +230,27 @@ $nama_bulan = [
         <div class="card p-3 md:p-4 flex items-center justify-between card-hover">
             <div class="min-w-0">
                 <div class="input-label mb-0.5">Pemasukan Terfilter</div>
-                <span class="text-sm md:text-base font-bold text-emerald-600 truncate block">Rp <?= number_format($total_pemasukan_filter, 0, ',', '.') ?></span>
+                <span style="font-size:14px;font-weight:bold;color:var(--income);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">Rp <?= number_format($total_pemasukan_filter, 0, ',', '.') ?></span>
             </div>
-            <div class="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-emerald-50 text-emerald-500 flex items-center justify-center text-xs md:text-sm flex-shrink-0 ml-2">
+            <div style="width:32px;height:32px;border-radius:8px;background:var(--income-bg);color:var(--income);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-left:8px">
                 <i class="fa-solid fa-arrow-down-long"></i>
             </div>
         </div>
         <div class="card p-3 md:p-4 flex items-center justify-between card-hover">
             <div class="min-w-0">
                 <div class="input-label mb-0.5">Pengeluaran Terfilter</div>
-                <span class="text-sm md:text-base font-bold text-rose-600 truncate block">Rp <?= number_format($total_pengeluaran_filter, 0, ',', '.') ?></span>
+                <span style="font-size:14px;font-weight:bold;color:var(--expense);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">Rp <?= number_format($total_pengeluaran_filter, 0, ',', '.') ?></span>
             </div>
-            <div class="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center text-xs md:text-sm flex-shrink-0 ml-2">
+            <div style="width:32px;height:32px;border-radius:8px;background:var(--expense-bg);color:var(--expense);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-left:8px">
                 <i class="fa-solid fa-arrow-up-long"></i>
             </div>
         </div>
         <div class="card p-3 md:p-4 flex items-center justify-between card-hover">
             <div class="min-w-0">
                 <div class="input-label mb-0.5">Saldo Hasil Filter</div>
-                <span class="text-sm md:text-base font-bold truncate block <?= $saldo_filter >= 0 ? 'text-indigo-600' : 'text-rose-600' ?>">Rp <?= number_format($saldo_filter, 0, ',', '.') ?></span>
+                <span style="font-size:14px;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;color:<?= $saldo_filter >= 0 ? 'var(--primary-600)' : 'var(--expense)' ?>">Rp <?= number_format($saldo_filter, 0, ',', '.') ?></span>
             </div>
-            <div class="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-indigo-50 text-indigo-500 flex items-center justify-center text-xs md:text-sm flex-shrink-0 ml-2">
+            <div style="width:32px;height:32px;border-radius:8px;background:var(--income-bg);color:var(--income);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-left:8px">
                 <i class="fa-solid fa-calculator"></i>
             </div>
         </div>
@@ -259,8 +259,8 @@ $nama_bulan = [
     <!-- Ledger Table -->
     <div class="card overflow-hidden">
         <div class="card-header">
-            <h4 class="font-bold text-slate-800 text-base">Riwayat Transaksi Kas</h4>
-            <p class="text-xs text-slate-400 mt-0.5">Ditemukan <strong><?= count($transactions) ?></strong> transaksi berdasarkan filter</p>
+            <h4 class="font-bold" style="color:var(--text);font-size:14px">Riwayat Transaksi Kas</h4>
+            <p style="font-size:12px;color:var(--text-muted);margin-top:2px">Ditemukan <strong><?= count($transactions) ?></strong> transaksi berdasarkan filter</p>
         </div>
 
         <div class="table-wrap">
@@ -279,15 +279,15 @@ $nama_bulan = [
                 <tbody>
                     <?php if (empty($transactions)): ?>
                         <tr>
-                            <td colspan="7" class="text-center py-16 text-slate-400">
-                                <i class="fa-solid fa-receipt text-4xl mb-3 text-slate-300 block"></i>
+                            <td colspan="7" style="text-align:center;padding:60px 16px;color:var(--text-dim)">
+                                <i class="fa-solid fa-receipt" style="font-size:32px;display:block;margin-bottom:10px;color:var(--text-dim)"></i>
                                 Tidak ada data transaksi yang cocok dengan filter.
                             </td>
                         </tr>
                     <?php else: ?>
                         <?php $no = 1; foreach ($transactions as $trans): ?>
                             <tr>
-                                <td class="text-center font-semibold text-slate-400 text-xs"><?= $no++ ?></td>
+                                <td style="text-align:center;font-weight:600;color:var(--text-dim);font-size:12px"><?= $no++ ?></td>
                                 <td class="font-medium"><?= date('d/m/Y', strtotime($trans['tanggal'])) ?></td>
                                 <td class="text-center">
                                     <span class="badge <?= $trans['jenis'] === 'pemasukan' ? 'badge-income' : 'badge-expense' ?>">
@@ -303,16 +303,16 @@ $nama_bulan = [
                                         </span>
                                     <?php endif; ?>
                                 </td>
-                                <td class="font-medium text-slate-700">
+                                <td class="font-medium" style="color:var(--text-muted)">
                                     <?= htmlspecialchars($trans['nama_anggota'] ?? '-') ?>
                                 </td>
-                                <td class="text-right font-mono font-bold <?= $trans['jenis'] === 'pemasukan' ? 'text-emerald-600' : 'text-rose-600' ?>">
+                                <td class="text-right font-mono font-bold" style="color:<?= $trans['jenis'] === 'pemasukan' ? 'var(--income)' : 'var(--expense)' ?>">
                                     <?= $trans['jenis'] === 'pemasukan' ? '+' : '-' ?>Rp <?= number_format($trans['jumlah'], 0, ',', '.') ?>
                                 </td>
                                     <td class="text-center">
                                         <a href="transaksi.php?action=delete&id=<?= $trans['id'] ?>"
                                            onclick="return confirm('Apakah Anda yakin ingin menghapus data transaksi ini? Penghapusan akan memicu perubahan pada saldo saat ini.')"
-                                           class="inline-flex w-7 h-7 rounded-lg bg-slate-100 hover:bg-rose-50 text-slate-500 hover:text-rose-600 items-center justify-center text-xs transition"
+                                           style="display:inline-flex;width:28px;height:28px;border-radius:8px;align-items:center;justify-content:center;font-size:12px;text-decoration:none;transition:0.15s;color:var(--text-muted);background:var(--surface-bg)" onmouseenter="this.style.background='var(--expense-bg)';this.style.color='var(--expense)'" onmouseleave="this.style.background='var(--surface-bg)';this.style.color='var(--text-muted)'"
                                            title="Hapus Transaksi">
                                             <i class="fa-solid fa-trash-can"></i>
                                         </a>
@@ -352,16 +352,16 @@ $nama_bulan = [
             </div>
 
             <!-- Dues Section -->
-            <div id="duesSection" class="p-4 bg-indigo-50/50 rounded-xl border border-indigo-100/50 space-y-3">
-                <label class="inline-flex items-center text-xs font-semibold text-indigo-900 cursor-pointer gap-2">
+            <div id="duesSection" style="padding:16px;border-radius:12px;border:1px solid var(--border);background:var(--surface-bg)">
+                <label style="display:inline-flex;align-items:center;font-size:12px;font-weight:600;color:var(--text);cursor:pointer;gap:8px">
                     <input type="checkbox" name="is_kas" id="is_kas" value="1" onchange="toggleDuesForm()"
-                           class="w-4 h-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500">
+                           style="width:16px;height:16px;accent-color:var(--primary-600)">
                     Apakah ini pembayaran kas mingguan siswa?
                 </label>
 
-                <div id="duesFields" class="hidden space-y-3 pt-3 border-t border-indigo-100/50">
+                <div id="duesFields" class="hidden space-y-3 pt-3" style="border-top:1px solid var(--border)">
                     <div>
-                        <label for="anggota_id" class="input-label" style="color:#312e81">Pilih Siswa</label>
+                        <label for="anggota_id" class="input-label" style="color:var(--text)">Pilih Siswa</label>
                         <select name="anggota_id" id="anggota_id" class="input text-xs font-semibold select">
                             <option value="">-- Pilih Anggota --</option>
                             <?php foreach ($anggota_list as $member): ?>
@@ -407,7 +407,7 @@ $nama_bulan = [
             <div>
                 <label for="jumlah" class="input-label">Jumlah (Rupiah)</label>
                 <div class="relative">
-                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 font-bold text-sm">Rp</span>
+                    <span style="position:absolute;top:0;bottom:0;left:0;display:flex;align-items:center;padding-left:12px;color:var(--text-muted);font-weight:bold;font-size:14px;pointer-events:none">Rp</span>
                     <input type="number" name="jumlah" id="jumlah" required min="100" step="100"
                            class="input pl-10 text-sm font-semibold"
                            placeholder="Contoh: 2000" value="2000">
@@ -536,14 +536,14 @@ $nama_bulan = [
         sigImg.crossOrigin = "anonymous";
         // Use relative path for subfolders and root domain compatibility
         sigImg.src = 'assets/images/ttd.svg';
-        
+
         sigImg.onload = function() {
             // Create a canvas to convert SVG to standard PNG base64 data URL
             const canvas = document.createElement('canvas');
-            canvas.width = 200;
-            canvas.height = 80;
+            canvas.width = 300;
+            canvas.height = 120;
             const ctx = canvas.getContext('2d');
-            ctx.drawImage(sigImg, 0, 0, 200, 80);
+            ctx.drawImage(sigImg, 0, 0, 300, 120);
             try {
                 const pngDataUrl = canvas.toDataURL('image/png');
                 generatePDF(pngDataUrl);
@@ -898,24 +898,24 @@ $nama_bulan = [
         doc.setFontSize(8);
         doc.setTextColor(...C.subText);
         doc.text('Mengetahui,', centerX, ttdY, { align: 'center' });
-        doc.text('Ketua Kelas (KM)', centerX, ttdY + 4, { align: 'center' });
+        doc.text('Bendahara Kelas', centerX, ttdY + 4, { align: 'center' });
 
-        // 4. Gambar Tanda Tangan
-        if (sigImgData) {
-            doc.addImage(sigImgData, 'PNG', centerX - 17.5, ttdY + 6, 35, 15);
-        }
-
-        // 5. Garis Bawah (Underline)
-        doc.setDrawColor(...C.borderGray);
-        doc.setLineWidth(0.3);
-        const lineY = ttdY + 28; // Jarak garis dari atas
-        doc.line(centerX - 25, lineY, centerX + 25, lineY); // Tarik garis simetris kiri-kanan
-
-        // 6. Nama Lengkap (Bold)
+        // 4. Nama di Atas TTD
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(8.5);
         doc.setTextColor(...C.black);
-        doc.text('Rizky perdana putra sam', centerX, lineY + 5, { align: 'center' });
+        doc.text('Rizky perdana putra sam', centerX, ttdY + 9.5, { align: 'center' });
+
+        // 5. Gambar Tanda Tangan (diperbesar)
+        if (sigImgData) {
+            doc.addImage(sigImgData, 'PNG', centerX - 25, ttdY + 11, 50, 22);
+        }
+
+        // 6. Garis Bawah (Underline)
+        doc.setDrawColor(...C.borderGray);
+        doc.setLineWidth(0.3);
+        const lineY = ttdY + 38; // Jarak garis dari atas
+        doc.line(centerX - 25, lineY, centerX + 25, lineY); // Tarik garis simetris kiri-kanan
     
         // ══════════════════════════════════════════════════════════════
         //  PAGE FOOTER — all pages

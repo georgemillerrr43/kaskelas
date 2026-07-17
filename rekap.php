@@ -54,19 +54,19 @@ try {
 <!-- Header Filter -->
 <div class="card p-4 md:p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-5 md:mb-6">
     <div class="min-w-0">
-        <h4 class="font-bold text-slate-800 text-sm md:text-base">Rekap Kas Mingguan</h4>
-        <p class="text-xs text-slate-400">Status iuran mingguan per siswa (Mg 1 - Mg 5)</p>
+        <h4 style="font-size:14px;font-weight:800;color:var(--text);margin:0">Rekap Kas Mingguan</h4>
+        <p style="font-size:12px;color:var(--text-muted);margin:4px 0 0">Status iuran mingguan per siswa (Mg 1 - Mg 5)</p>
     </div>
 
-    <form method="GET" action="rekap.php" class="flex flex-wrap items-center gap-2 md:gap-3">
+    <form method="GET" action="rekap.php" style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
         <select name="bulan" id="bulan" onchange="this.form.submit()"
-                class="input select text-xs" style="width:auto;min-width:120px">
+                style="padding:8px 12px;border:1px solid var(--input-border);border-radius:8px;font-size:12px;font-weight:600;font-family:inherit;background:var(--input-bg);color:var(--text);outline:none;cursor:pointer;min-width:120px;width:auto;appearance:none">
             <?php foreach ($nama_bulan as $num => $name): ?>
                 <option value="<?= $num ?>" <?= $num === $bulan_aktif ? 'selected' : '' ?>><?= $name ?></option>
             <?php endforeach; ?>
         </select>
         <select name="tahun" id="tahun" onchange="this.form.submit()"
-                class="input select text-xs" style="width:auto;min-width:90px">
+                style="padding:8px 12px;border:1px solid var(--input-border);border-radius:8px;font-size:12px;font-weight:600;font-family:inherit;background:var(--input-bg);color:var(--text);outline:none;cursor:pointer;min-width:90px;width:auto;appearance:none">
             <?php
             $current_y = (int)date('Y');
             for ($y = $current_y - 3; $y <= $current_y + 2; $y++):
@@ -78,14 +78,14 @@ try {
 </div>
 
 <!-- Legend -->
-<div class="flex flex-wrap gap-3 items-center mb-5 text-xs text-slate-500 font-medium bg-indigo-50/60 p-3 md:p-4 border border-indigo-100/50 rounded-xl">
-    <span class="font-semibold text-indigo-900"><i class="fa-solid fa-circle-info mr-1"></i> Keterangan:</span>
-    <span class="inline-flex items-center gap-1.5">
-        <span class="w-4 h-4 md:w-5 md:h-5 rounded-full bg-emerald-500 flex items-center justify-center"><i class="fa-solid fa-check text-white text-[8px] md:text-[9px]"></i></span>
+<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:12px;color:var(--text-muted);font-weight:500;background:var(--surface-bg);padding:10px 14px;border-radius:10px;border:1px solid var(--border);margin-bottom:20px">
+    <span style="font-weight:700;color:var(--text)"><i class="fa-solid fa-circle-info mr-1" style="color:var(--primary-400)"></i> Keterangan:</span>
+    <span style="display:inline-flex;align-items:center;gap:5px">
+        <span style="width:16px;height:16px;border-radius:50%;background:var(--income);display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-check" style="color:#fff;font-size:8px"></i></span>
         Lunas
     </span>
-    <span class="inline-flex items-center gap-1.5">
-        <span class="w-4 h-4 md:w-5 md:h-5 rounded-full bg-slate-200 flex items-center justify-center"><i class="fa-solid fa-minus text-slate-400 text-[8px] md:text-[9px]"></i></span>
+    <span style="display:inline-flex;align-items:center;gap:5px">
+        <span style="width:16px;height:16px;border-radius:50%;background:var(--border-table);display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-minus" style="color:var(--text-dim);font-size:8px"></i></span>
         Belum Bayar
     </span>
 </div>
@@ -97,35 +97,32 @@ try {
             <thead>
                 <tr>
                     <th class="text-center" style="width:40px">No</th>
-                    <th style="min-width:150px;border-right:1px solid #e2e8f0">Nama Siswa</th>
-                    <th class="text-center" style="width:80px;background:#fafaff">Mgg 1</th>
-                    <th class="text-center" style="width:80px;background:#fafaff">Mgg 2</th>
-                    <th class="text-center" style="width:80px;background:#fafaff">Mgg 3</th>
-                    <th class="text-center" style="width:80px;background:#fafaff">Mgg 4</th>
-                    <th class="text-center" style="width:80px;background:#fafaff">Mgg 5</th>
-                    <th class="text-center" style="width:100px;border-left:1px solid #e2e8f0;background:#f8faff">Total</th>
+                    <th style="min-width:150px;border-right:1px solid var(--border-table)">Nama Siswa</th>
+                    <th class="text-center" style="width:80px;background:var(--surface-bg)">Mgg 1</th>
+                    <th class="text-center" style="width:80px;background:var(--surface-bg)">Mgg 2</th>
+                    <th class="text-center" style="width:80px;background:var(--surface-bg)">Mgg 3</th>
+                    <th class="text-center" style="width:80px;background:var(--surface-bg)">Mgg 4</th>
+                    <th class="text-center" style="width:80px;background:var(--surface-bg)">Mgg 5</th>
+                    <th class="text-center" style="width:100px;border-left:1px solid var(--border-table);background:var(--surface-bg)">Total</th>
                 </tr>
             </thead>
             <tbody>
                 <?php if (empty($anggota_list)): ?>
                     <tr>
-                        <td colspan="8" class="text-center py-16 text-slate-400">
-                            <i class="fa-solid fa-users-slash text-4xl mb-3 text-slate-300 block"></i>
+                        <td colspan="8" style="text-align:center;padding:60px 16px;color:var(--text-dim)">
+                            <i class="fa-solid fa-users-slash" style="font-size:32px;display:block;margin-bottom:10px;color:var(--text-dim)"></i>
                             Tidak ada data siswa terdaftar. Tambahkan anggota terlebih dahulu.
                         </td>
                     </tr>
                 <?php else: ?>
                     <?php $no = 1; $i = 0; foreach ($anggota_list as $member): ?>
-                        <?php
-                        $row_class = $i % 2 === 1 ? 'bg-slate-50/40' : '';
-                        $i++;
-                        ?>
-                        <tr class="hover:bg-indigo-50/30 transition duration-100 <?= $row_class ?>">
-                            <td class="text-center font-semibold text-slate-400 text-xs"><?= $no++ ?></td>
-                            <td style="border-right:1px solid #e2e8f0">
-                                <span class="font-semibold text-slate-800"><?= htmlspecialchars($member['nama']) ?></span>
+                        <?php $i++; ?>
+                        <tr style="<?= $i % 2 === 0 ? 'background:var(--surface-bg)' : '' ?>">
+                            <td style="text-align:center;font-weight:600;color:var(--text-dim);font-size:12px"><?= $no++ ?></td>
+                            <td style="border-right:1px solid var(--border-table)">
+                                <span style="font-weight:600;color:var(--text)"><?= htmlspecialchars($member['nama']) ?></span>
                                 <?php if ($member['nis']): ?>
-                                    <span class="block text-[9px] text-slate-400 font-mono font-medium">NIS: <?= htmlspecialchars($member['nis']) ?></span>
+                                    <span style="display:block;font-size:9px;color:var(--text-dim);font-family:monospace;font-weight:500">NIS: <?= htmlspecialchars($member['nis']) ?></span>
                                 <?php endif; ?>
                             </td>
 
@@ -136,28 +133,28 @@ try {
                                 $amount = $paid ? $payments[$member['id']][$w] : 0;
                                 if ($paid) $total_paid_this_month += $amount;
                             ?>
-                                <td class="text-center px-2 md:px-3 py-3 group whitespace-nowrap">
+                                <td style="text-align:center;padding:8px 16px;white-space:nowrap">
                                     <?php if ($paid): ?>
-                                        <div class="inline-flex flex-col items-center" title="Lunas Rp <?= number_format($amount, 0, ',', '.') ?>">
-                                            <span class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs md:text-sm font-bold group-hover:scale-110 transition-transform duration-150 shadow-sm">
+                                        <div style="display:inline-flex;flex-direction:column;align-items:center">
+                                            <span style="width:28px;height:28px;border-radius:50%;background:var(--income-bg);color:var(--income);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold">
                                                 <i class="fa-solid fa-check"></i>
                                             </span>
-                                            <span class="whitespace-nowrap text-[8px] md:text-[9px] text-emerald-600 font-bold mt-1"><?= number_format($amount, 0, ',', '.') ?></span>
+                                            <span style="white-space:nowrap;font-size:8px;color:var(--income);font-weight:bold;margin-top:2px"><?= number_format($amount, 0, ',', '.') ?></span>
                                         </div>
                                     <?php else: ?>
-                                        <div class="inline-flex flex-col items-center" title="Belum membayar">
-                                            <span class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-slate-100 text-slate-300 flex items-center justify-center text-xs md:text-sm group-hover:bg-rose-50 group-hover:text-rose-300 transition-all duration-150">
+                                        <div style="display:inline-flex;flex-direction:column;align-items:center">
+                                            <span style="width:28px;height:28px;border-radius:50%;background:var(--surface-bg);color:var(--text-dim);display:flex;align-items:center;justify-content:center;font-size:12px">
                                                 <i class="fa-solid fa-minus"></i>
                                             </span>
-                                            <span class="whitespace-nowrap text-[8px] md:text-[9px] text-slate-300 font-medium mt-1">-</span>
+                                            <span style="white-space:nowrap;font-size:8px;color:var(--text-dim);font-weight:500;margin-top:2px">-</span>
                                         </div>
                                     <?php endif; ?>
                                 </td>
                             <?php endfor; ?>
 
                             <!-- Total Bulan Ini -->
-                            <td class="text-center font-bold whitespace-nowrap" style="border-left:1px solid #e2e8f0;background:#fafaff">
-                                    <span class="inline-block px-2 md:px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-lg text-[10px] md:text-xs font-bold border border-indigo-100 whitespace-nowrap">
+                            <td style="text-align:center;font-weight:bold;white-space:nowrap;border-left:1px solid var(--border-table);background:var(--surface-bg)">
+                                <span style="display:inline-block;padding:6px 12px;background:var(--tab-active-bg);color:var(--tab-active-text);border-radius:8px;font-size:11px;font-weight:bold;border:1px solid rgba(99,102,241,0.15);white-space:nowrap">
                                     Rp <?= number_format($total_paid_this_month, 0, ',', '.') ?>
                                 </span>
                             </td>

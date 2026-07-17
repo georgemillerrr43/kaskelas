@@ -122,13 +122,13 @@ function formatRupiah($angka) {
     <!-- Card Pemasukan -->
     <div class="card p-4 md:p-5 flex items-center justify-between card-hover">
         <div class="space-y-1 min-w-0">
-            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Total Pemasukan</span>
-            <h3 class="text-lg md:text-xl font-bold text-emerald-600 truncate"><?= formatRupiah($total_pemasukan) ?></h3>
-            <span class="text-[10px] text-emerald-500 font-semibold flex items-center gap-1">
+            <span style="font-size:10px;font-weight:bold;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;display:block">Total Pemasukan</span>
+            <h3 style="font-size:1.5rem;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--income)"><?= formatRupiah($total_pemasukan) ?></h3>
+            <span style="font-size:10px;color:var(--income);font-weight:600;display:flex;align-items:center;gap:4px">
                 <i class="fa-solid fa-arrow-trend-up"></i> Akumulasi Masuk
             </span>
         </div>
-        <div class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center text-base md:text-lg flex-shrink-0 ml-3">
+        <div style="width:40px;height:40px;border-radius:12px;background:var(--income-bg);color:var(--income);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;margin-left:12px">
             <i class="fa-solid fa-circle-arrow-down"></i>
         </div>
     </div>
@@ -136,13 +136,13 @@ function formatRupiah($angka) {
     <!-- Card Pengeluaran -->
     <div class="card p-4 md:p-5 flex items-center justify-between card-hover">
         <div class="space-y-1 min-w-0">
-            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Total Pengeluaran</span>
-            <h3 class="text-lg md:text-xl font-bold text-rose-600 truncate"><?= formatRupiah($total_pengeluaran) ?></h3>
-            <span class="text-[10px] text-rose-500 font-semibold flex items-center gap-1">
+            <span style="font-size:10px;font-weight:bold;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;display:block">Total Pengeluaran</span>
+            <h3 style="font-size:1.5rem;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--expense)"><?= formatRupiah($total_pengeluaran) ?></h3>
+            <span style="font-size:10px;color:var(--expense);font-weight:600;display:flex;align-items:center;gap:4px">
                 <i class="fa-solid fa-arrow-trend-down"></i> Uang Terpakai
             </span>
         </div>
-        <div class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center text-base md:text-lg flex-shrink-0 ml-3">
+        <div style="width:40px;height:40px;border-radius:12px;background:var(--expense-bg);color:var(--expense);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;margin-left:12px">
             <i class="fa-solid fa-circle-arrow-up"></i>
         </div>
     </div>
@@ -150,13 +150,13 @@ function formatRupiah($angka) {
     <!-- Card Saldo Sisa -->
     <div class="card p-4 md:p-5 flex items-center justify-between card-hover">
         <div class="space-y-1 min-w-0">
-            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Saldo Saat Ini</span>
-            <h3 class="text-lg md:text-xl font-bold truncate <?= $saldo_kas >= 0 ? 'text-indigo-600' : 'text-rose-600' ?>"><?= formatRupiah($saldo_kas) ?></h3>
-            <span class="text-[10px] font-semibold flex items-center gap-1">
+            <span style="font-size:10px;font-weight:bold;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;display:block">Saldo Saat Ini</span>
+            <h3 style="font-size:1.5rem;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:<?= $saldo_kas >= 0 ? 'var(--primary-600)' : 'var(--expense)' ?>"><?= formatRupiah($saldo_kas) ?></h3>
+            <span style="font-size:10px;font-weight:600;display:flex;align-items:center;gap:4px">
                 <?php if ($saldo_kas < 0): ?>
-                    <span class="text-rose-500"><i class="fa-solid fa-triangle-exclamation"></i> Saldo Defisit</span>
+                    <span style="color:var(--expense)"><i class="fa-solid fa-triangle-exclamation"></i> Saldo Defisit</span>
                 <?php else: ?>
-                    <span class="text-indigo-500"><i class="fa-solid fa-scale-balanced"></i> Bersih & Akurat</span>
+                    <span style="color:var(--primary-400)"><i class="fa-solid fa-scale-balanced"></i> Bersih & Akurat</span>
                 <?php endif; ?>
             </span>
         </div>
@@ -169,9 +169,9 @@ function formatRupiah($angka) {
     <div class="card p-4 md:p-5 card-hover">
         <div class="flex items-start justify-between mb-3">
             <div class="min-w-0">
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Kas Minggu Ini</span>
-                <h3 class="text-lg md:text-xl font-bold text-slate-800">
-                    <?= $siswa_lunas_minggu_ini ?> <span class="text-xs font-semibold text-slate-400">/ <?= $total_anggota ?></span>
+                <span style="font-size:10px;font-weight:bold;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;display:block">Kas Minggu Ini</span>
+                <h3 style="font-size:1.5rem;font-weight:bold;color:var(--text)">
+                    <?= $siswa_lunas_minggu_ini ?> <span style="font-size:12px;font-weight:600;color:var(--text-muted)">/ <?= $total_anggota ?></span>
                 </h3>
             </div>
             <div class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center text-base md:text-lg flex-shrink-0 ml-3">
@@ -182,12 +182,12 @@ function formatRupiah($angka) {
         $pct = $total_anggota > 0 ? min(100, ($siswa_lunas_minggu_ini / $total_anggota) * 100) : 0;
         ?>
         <!-- Progress bar -->
-        <div class="w-full bg-slate-100 rounded-full h-2">
+        <div style="width:100%;background:var(--border-light);border-radius:99px;height:8px">
             <div class="bg-gradient-to-r from-indigo-500 to-violet-500 h-2 rounded-full transition-all duration-500 shadow-sm" style="width: <?= $pct ?>%"></div>
         </div>
         <div class="flex items-center justify-between mt-1.5">
-            <span class="text-[10px] text-slate-400 font-semibold"><?= round($pct) ?>% terkumpul</span>
-            <span class="text-[10px] text-slate-400 font-semibold">Minggu <?= $current_w ?>, <?= $nama_bulan[$current_m] ?> <?= $current_y ?></span>
+            <span style="font-size:10px;color:var(--text-muted);font-weight:600"><?= round($pct) ?>% terkumpul</span>
+            <span style="font-size:10px;color:var(--text-muted);font-weight:600">Minggu <?= $current_w ?>, <?= $nama_bulan[$current_m] ?> <?= $current_y ?></span>
         </div>
     </div>
 </div>
@@ -199,27 +199,27 @@ function formatRupiah($angka) {
     <div class="lg:col-span-2 card p-4 md:p-6 flex flex-col">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4 mb-4">
             <div class="min-w-0">
-                <h4 class="font-bold text-slate-800 text-sm md:text-base">Grafik Analisis Keuangan</h4>
-                <p class="text-[11px] text-slate-400 truncate" id="chartSubtitle">Pemasukan vs Pengeluaran Bulanan (<?= $tahun_aktif ?>)</p>
+                <h4 style="font-size:14px;font-weight:800;color:var(--text)">Grafik Analisis Keuangan</h4>
+                <p style="font-size:11px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="chartSubtitle">Pemasukan vs Pengeluaran Bulanan (<?= $tahun_aktif ?>)</p>
             </div>
 
             <div class="flex flex-wrap items-center gap-3">
                 <!-- Tab Switcher -->
-                <div class="flex items-center gap-1 bg-slate-100 p-0.5 rounded-xl">
+                <div style="display:flex;align-items:center;gap:4px;background:var(--surface-bg);padding:3px;border-radius:12px">
                     <button type="button" id="btnChartBulan" onclick="switchChart('bulan')"
-                            class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-indigo-700 shadow-sm transition focus:outline-none">
+                            style="padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;background:var(--surface-card);color:var(--text);border:none;cursor:pointer;transition:0.15s">
                         Bulanan
                     </button>
                     <button type="button" id="btnChartMinggu" onclick="switchChart('minggu')"
-                            class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-slate-700 transition focus:outline-none">
+                            style="padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;background:transparent;color:var(--text-muted);border:none;cursor:pointer;transition:0.15s">
                         Mingguan
                     </button>
                 </div>
 
                 <!-- Filter Tahun -->
                 <form method="GET" action="dashboard.php" class="flex items-center gap-2">
-                    <label for="tahun" class="text-xs text-slate-500 font-semibold">Tahun:</label>
-                    <select name="tahun" id="tahun" onchange="this.form.submit()" class="text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium">
+                    <label for="tahun" style="font-size:12px;color:var(--text-muted);font-weight:600">Tahun:</label>
+                    <select name="tahun" id="tahun" onchange="this.form.submit()" style="font-size:12px;background:var(--surface-bg);border:1px solid var(--border-table);border-radius:8px;padding:6px 10px;outline:none;color:var(--text);font-weight:500;cursor:pointer">
                         <?php
                         $start_year = (int)date('Y') - 5;
                         $end_year = (int)date('Y') + 2;
@@ -247,8 +247,8 @@ function formatRupiah($angka) {
     <div class="card p-4 md:p-6 flex flex-col">
         <div class="border-b border-slate-100 pb-4 mb-4 flex items-center justify-between">
             <div>
-                <h4 class="font-bold text-slate-800 text-base">Transaksi Terbaru</h4>
-                <p class="text-xs text-slate-400">5 riwayat kas teranyar</p>
+                <h4 style="font-size:14px;font-weight:800;color:var(--text)">Transaksi Terbaru</h4>
+                <p style="font-size:12px;color:var(--text-muted)">5 riwayat kas teranyar</p>
             </div>
             <a href="transaksi.php" class="text-xs text-indigo-600 hover:text-indigo-700 hover:underline font-semibold transition flex items-center gap-1">
                 Semua <i class="fa-solid fa-angle-right text-[10px]"></i>
@@ -257,22 +257,22 @@ function formatRupiah($angka) {
 
         <div class="flex-grow space-y-1 overflow-y-auto">
             <?php if (empty($recent_transactions)): ?>
-                <div class="text-center py-12 text-slate-400 text-sm">
-                    <i class="fa-solid fa-receipt text-3xl mb-3 text-slate-300 block"></i>
+                <div style="text-align:center;padding:48px 16px;color:var(--text-muted);font-size:14px">
+                    <i class="fa-solid fa-receipt" style="font-size:32px;margin-bottom:12px;display:block;color:var(--text-dim)"></i>
                     Belum ada transaksi dicatat.
                 </div>
             <?php else: ?>
                 <?php foreach ($recent_transactions as $trans): ?>
-                    <div class="flex items-start justify-between gap-3 p-3 hover:bg-slate-50 rounded-xl transition duration-150">
+                    <div class="flex items-start justify-between gap-3 p-3 rounded-xl transition duration-150" style="transition:0.15s" onmouseenter="this.style.background='var(--tab-hover)'" onmouseleave="this.style.background=''">
                         <div class="flex items-center gap-3 min-w-0">
                             <div class="w-9 h-9 rounded-lg flex items-center justify-center text-sm flex-shrink-0 <?= $trans['jenis'] === 'pemasukan' ? 'bg-emerald-50 text-emerald-500' : 'bg-rose-50 text-rose-500' ?>">
                                 <i class="fa-solid <?= $trans['jenis'] === 'pemasukan' ? 'fa-arrow-down-long' : 'fa-arrow-up-long' ?>"></i>
                             </div>
                             <div class="min-w-0">
-                                <span class="block text-sm font-semibold text-slate-800 truncate" title="<?= htmlspecialchars($trans['keterangan']) ?>">
+                                <span style="display:block;font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="<?= htmlspecialchars($trans['keterangan']) ?>">
                                     <?= htmlspecialchars($trans['keterangan']) ?>
                                 </span>
-                                <span class="block text-[10px] text-slate-400 mt-0.5">
+                                <span style="display:block;font-size:10px;color:var(--text-muted);margin-top:2px">
                                     <i class="fa-regular fa-calendar mr-1"></i><?= date('d M Y', strtotime($trans['tanggal'])) ?>
                                     &middot; <?= htmlspecialchars($trans['nama_petugas'] ?? 'Sistem') ?>
                                 </span>
@@ -325,23 +325,39 @@ function formatRupiah($angka) {
         const subtitle = document.getElementById('chartSubtitle');
 
         if (type === 'bulan') {
-            btnBulan.classList.add('bg-white', 'text-indigo-700', 'shadow-sm');
-            btnBulan.classList.remove('text-slate-500');
-            btnMinggu.classList.remove('bg-white', 'text-indigo-700', 'shadow-sm');
-            btnMinggu.classList.add('text-slate-500');
+            btnBulan.style.background = 'var(--surface-card)';
+            btnBulan.style.color = 'var(--text)';
+            btnMinggu.style.background = 'transparent';
+            btnMinggu.style.color = 'var(--text-muted)';
             containerBulan.classList.remove('hidden');
             containerMinggu.classList.add('hidden');
             subtitle.innerText = `Pemasukan vs Pengeluaran Bulanan (${tahunAktif})`;
         } else {
-            btnMinggu.classList.add('bg-white', 'text-indigo-700', 'shadow-sm');
-            btnMinggu.classList.remove('text-slate-500');
-            btnBulan.classList.remove('bg-white', 'text-indigo-700', 'shadow-sm');
-            btnBulan.classList.add('text-slate-500');
+            btnMinggu.style.background = 'var(--surface-card)';
+            btnMinggu.style.color = 'var(--text)';
+            btnBulan.style.background = 'transparent';
+            btnBulan.style.color = 'var(--text-muted)';
             containerMinggu.classList.remove('hidden');
             containerBulan.classList.add('hidden');
             subtitle.innerText = `Pemasukan vs Pengeluaran Mingguan (${namaBulanAktif} ${tahunAktif})`;
         }
     }
+
+    function getCSS(varName, fallback) {
+        return getComputedStyle(document.documentElement).getPropertyValue(varName).trim() || fallback;
+    }
+    // Read dynamic theme colors from CSS variables
+    const CHART_TEXT = getCSS('--text-muted', '#64748b');
+    const CHART_GRID = getCSS('--border-light', '#f1f5f9');
+    const CHART_TOOLTIP = '#0f172a';
+    const getIncomeColor = (alpha) => {
+        const c = getCSS('--income', '#059669');
+        return alpha < 1 ? c + Math.round(alpha*255).toString(16).padStart(2,'0') : c;
+    };
+    const getExpenseColor = (alpha) => {
+        const c = getCSS('--expense', '#e11d48');
+        return alpha < 1 ? c + Math.round(alpha*255).toString(16).padStart(2,'0') : c;
+    };
 
     document.addEventListener("DOMContentLoaded", function () {
         // ── Chart defaults ──
@@ -369,10 +385,10 @@ function formatRupiah($angka) {
                         data: <?= json_encode(array_values($monthly_income)) ?>,
                         backgroundColor: function(context) {
                             const c = context.chart;
-                            if (!c.chartArea) return 'rgba(5,150,105,0.7)';
-                            return createGradient(c.ctx, c.chartArea, 'rgba(5,150,105,0.35)', 'rgba(5,150,105,0.8)');
+                            if (!c.chartArea) return getIncomeColor(0.7);
+                            return createGradient(c.ctx, c.chartArea, getIncomeColor(0.35), getIncomeColor(0.8));
                         },
-                        borderColor: '#059669',
+                        borderColor: getIncomeColor(1),
                         borderWidth: 1,
                         borderRadius: 6,
                         barPercentage: 0.6,
@@ -383,10 +399,10 @@ function formatRupiah($angka) {
                         data: <?= json_encode(array_values($monthly_expense)) ?>,
                         backgroundColor: function(context) {
                             const c = context.chart;
-                            if (!c.chartArea) return 'rgba(225,29,72,0.7)';
-                            return createGradient(c.ctx, c.chartArea, 'rgba(225,29,72,0.35)', 'rgba(225,29,72,0.8)');
+                            if (!c.chartArea) return getExpenseColor(0.7);
+                            return createGradient(c.ctx, c.chartArea, getExpenseColor(0.35), getExpenseColor(0.8));
                         },
-                        borderColor: '#e11d48',
+                        borderColor: getExpenseColor(1),
                         borderWidth: 1,
                         borderRadius: 6,
                         barPercentage: 0.6,
@@ -402,7 +418,7 @@ function formatRupiah($angka) {
                         position: 'top',
                         labels: {
                             font: { size: 11, weight: '600' },
-                            color: '#475569',
+                            color: CHART_TEXT,
                             boxWidth: 12,
                             usePointStyle: true,
                             pointStyle: 'circle',
@@ -410,7 +426,7 @@ function formatRupiah($angka) {
                         }
                     },
                     tooltip: {
-                        backgroundColor: '#0f172a',
+                        backgroundColor: CHART_TOOLTIP,
                         titleFont: { size: 12, weight: '700' },
                         bodyFont: { size: 12 },
                         padding: 14,
@@ -425,13 +441,13 @@ function formatRupiah($angka) {
                     }
                 },
                 scales: {
-                    x: { grid: { display: false }, ticks: { font: { size: 10, weight: '500' }, color: '#94a3b8' } },
+                    x: { grid: { display: false }, ticks: { font: { size: 10, weight: '500' }, color: CHART_TEXT } },
                     y: {
                         border: { dash: [4, 4] },
-                        grid: { color: '#f1f5f9', drawBorder: false },
+                        grid: { color: CHART_GRID, drawBorder: false },
                         ticks: {
                             font: { size: 10 },
-                            color: '#94a3b8',
+                            color: CHART_TEXT,
                             callback: v => v >= 1000000 ? (v / 1000000) + 'M' : v >= 1000 ? (v / 1000) + 'rb' : v
                         }
                     }
@@ -451,10 +467,10 @@ function formatRupiah($angka) {
                         data: <?= json_encode(array_values($weekly_income)) ?>,
                         backgroundColor: function(context) {
                             const c = context.chart;
-                            if (!c.chartArea) return 'rgba(79,70,229,0.7)';
-                            return createGradient(c.ctx, c.chartArea, 'rgba(79,70,229,0.3)', 'rgba(79,70,229,0.8)');
+                            if (!c.chartArea) return getIncomeColor(0.7);
+                            return createGradient(c.ctx, c.chartArea, getIncomeColor(0.3), getIncomeColor(0.8));
                         },
-                        borderColor: '#4f46e5',
+                        borderColor: getIncomeColor(1),
                         borderWidth: 1,
                         borderRadius: 6,
                         barPercentage: 0.5,
@@ -465,10 +481,10 @@ function formatRupiah($angka) {
                         data: <?= json_encode(array_values($weekly_expense)) ?>,
                         backgroundColor: function(context) {
                             const c = context.chart;
-                            if (!c.chartArea) return 'rgba(225,29,72,0.7)';
-                            return createGradient(c.ctx, c.chartArea, 'rgba(225,29,72,0.3)', 'rgba(225,29,72,0.8)');
+                            if (!c.chartArea) return getExpenseColor(0.7);
+                            return createGradient(c.ctx, c.chartArea, getExpenseColor(0.3), getExpenseColor(0.8));
                         },
-                        borderColor: '#e11d48',
+                        borderColor: getExpenseColor(1),
                         borderWidth: 1,
                         borderRadius: 6,
                         barPercentage: 0.5,
@@ -484,7 +500,7 @@ function formatRupiah($angka) {
                         position: 'top',
                         labels: {
                             font: { size: 11, weight: '600' },
-                            color: '#475569',
+                            color: CHART_TEXT,
                             boxWidth: 12,
                             usePointStyle: true,
                             pointStyle: 'circle',
@@ -492,7 +508,7 @@ function formatRupiah($angka) {
                         }
                     },
                     tooltip: {
-                        backgroundColor: '#0f172a',
+                        backgroundColor: CHART_TOOLTIP,
                         titleFont: { size: 12, weight: '700' },
                         bodyFont: { size: 12 },
                         padding: 14,
@@ -507,10 +523,10 @@ function formatRupiah($angka) {
                     }
                 },
                 scales: {
-                    x: { grid: { display: false }, ticks: { font: { size: 10, weight: '500' }, color: '#94a3b8' } },
+                    x: { grid: { display: false }, ticks: { font: { size: 10, weight: '500' }, color: CHART_TEXT } },
                     y: {
                         border: { dash: [4, 4] },
-                        grid: { color: '#f1f5f9', drawBorder: false },
+                        grid: { color: CHART_GRID, drawBorder: false },
                         ticks: {
                             font: { size: 10 },
                             color: '#94a3b8',
