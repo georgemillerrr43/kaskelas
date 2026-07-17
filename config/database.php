@@ -52,7 +52,7 @@ try {
       `tahun` INT NULL COMMENT 'Tahun pembayaran uang kas',
       `created_by` INT NOT NULL,
       `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (`anggota_id`) REFERENCES `anggota`(`id`) ON DELETE SET NULL,
+      FOREIGN KEY (`anggota_id`) REFERENCES `anggota`(`id`) ON DELETE CASCADE,
       FOREIGN KEY (`created_by`) REFERENCES `users`(`id`) ON DELETE CASCADE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
@@ -60,6 +60,17 @@ try {
     $check_column = $pdo->query("SHOW COLUMNS FROM `transaksi` LIKE 'minggu'")->fetch();
     if (!$check_column) {
         $pdo->exec("ALTER TABLE `transaksi` ADD COLUMN `minggu` TINYINT NULL COMMENT '1-5 untuk uang kas mingguan' AFTER `anggota_id`");
+    }
+
+    // 6b. Migrasi kolom bukti (foto struk/bukti pengeluaran)
+    $check_bukti = $pdo->query("SHOW COLUMNS FROM `transaksi` LIKE 'bukti'")->fetch();
+    if (!$check_bukti) {
+        $pdo->exec("ALTER TABLE `transaksi` ADD COLUMN `bukti` VARCHAR(255) NULL COMMENT 'Path file bukti transaksi' AFTER `keterangan`");
+    }
+
+    // 6c. Buat folder uploads jika belum ada
+    if (!is_dir('assets/uploads')) {
+        mkdir('assets/uploads', 0755, true);
     }
 
     // 7. Auto-seed akun bendahara jika tabel `users` masih kosong

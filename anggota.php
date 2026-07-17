@@ -91,9 +91,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user_role === 'admin') {
     }
 }
 
-// Ambil semua daftar anggota
+// Ambil semua daftar anggota — dengan urutan pilihan
+$urutan = $_GET['urutan'] ?? 'nama'; // default abjad
+$order_clause = 'nama ASC';
+if ($urutan === 'nis') $order_clause = "CASE WHEN nis IS NULL OR nis = '' THEN 1 ELSE 0 END, CAST(nis AS UNSIGNED) ASC, nama ASC";
+else $order_clause = 'nama ASC';
+
 try {
-    $stmt = $pdo->query("SELECT * FROM anggota ORDER BY nama ASC");
+    $stmt = $pdo->query("SELECT * FROM anggota ORDER BY $order_clause");
     $anggota_list = $stmt->fetchAll();
 } catch (PDOException $e) {
     $error = 'Gagal memuat daftar anggota: ' . $e->getMessage();
@@ -168,9 +173,17 @@ try {
     <!-- Tabel Daftar Anggota -->
     <div class="lg:col-span-2 card overflow-hidden">
         <div class="card-header flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-                <h4 style="font-size:14px;font-weight:800;color:var(--text)">Daftar Anggota</h4>
-                <p style="font-size:12px;color:var(--text-muted)">Total: <strong><?= count($anggota_list) ?></strong> siswa</p>
+            <div class="flex items-center gap-2 flex-wrap">
+                <h4 style="font-size:14px;font-weight:800;color:var(--text);margin:0">Daftar Anggota</h4>
+                <p style="font-size:12px;color:var(--text-muted);margin:0">Total: <strong><?= count($anggota_list) ?></strong> siswa</p>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+                <a href="anggota.php?urutan=nama" class="btn btn-sm <?= $urutan === 'nama' ? 'btn-primary' : 'btn-secondary' ?>" style="font-size:11px;padding:5px 10px">
+                    <i class="fa-solid fa-sort-alpha-down"></i> Abjad
+                </a>
+                <a href="anggota.php?urutan=nis" class="btn btn-sm <?= $urutan === 'nis' ? 'btn-primary' : 'btn-secondary' ?>" style="font-size:11px;padding:5px 10px">
+                    <i class="fa-solid fa-sort-numeric-down"></i> NIS
+                </a>
             </div>
             <div class="relative w-full sm:w-56 md:w-64">
                 <span style="position:absolute;top:0;bottom:0;left:0;display:flex;align-items:center;padding-left:12px;color:var(--text-muted);font-size:12px;pointer-events:none">
@@ -227,7 +240,7 @@ try {
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </a>
                                             <a href="anggota.php?action=delete&id=<?= $member['id'] ?>"
-                                               onclick="return confirm('Apakah Anda yakin ingin menghapus siswa ini? Transaksi yang terkait akan tetap tersimpan tapi tidak terikat nama siswa.')"
+                                               onclick="return confirm('Apakah Anda yakin ingin menghapus siswa ini? Semua transaksi terkait siswa ini juga akan dihapus!')"
                                                style="width:28px;height:28px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;text-decoration:none;transition:0.15s;color:var(--text-muted);background:var(--surface-bg)" onmouseenter="this.style.background='var(--expense-bg)';this.style.color='var(--expense)'" onmouseleave="this.style.background='var(--surface-bg)';this.style.color='var(--text-muted)'"
                                                title="Hapus data">
                                                 <i class="fa-solid fa-trash-can"></i>

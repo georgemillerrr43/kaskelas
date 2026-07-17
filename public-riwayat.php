@@ -94,6 +94,11 @@ function fr($a) { return 'Rp ' . number_format($a, 0, ',', '.'); }
                         <td style="font-weight:500">
                             <?= htmlspecialchars($tr['keterangan']) ?>
                             <?php if ($tr['minggu']): ?><span style="display:block;font-size:9px;color:var(--primary-400);font-weight:600;margin-top:2px">Mg <?= $tr['minggu'] ?>, <?= $nama_bulan[$tr['bulan']]??'' ?> <?= $tr['tahun'] ?></span><?php endif; ?>
+                            <?php if (!empty($tr['bukti'])): ?>
+                                <span style="display:block;margin-top:3px">
+                                    <a href="<?= htmlspecialchars($tr['bukti']) ?>" target="_blank" style="font-size:10px;color:var(--primary-600);font-weight:600;text-decoration:none"><i class="fa-solid fa-image"></i> Bukti</a>
+                                </span>
+                            <?php endif; ?>
                         </td>
                         <td style="color:var(--text-muted);font-weight:500"><?= htmlspecialchars($tr['nama_anggota']??'-') ?></td>
                         <td style="text-align:right;font-weight:700;font-family:monospace;color:<?= $tr['jenis']==='pemasukan'?'var(--income)':'var(--expense)'?>"><?= $tr['jenis']==='pemasukan'?'+':'-' ?><?= number_format($tr['jumlah'],0,',','.') ?></td>

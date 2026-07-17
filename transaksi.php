@@ -25,7 +25,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_type']) && $_P
     $jenis = $_POST['jenis'] ?? 'pemasukan';
     $jumlah = (float)($_POST['jumlah'] ?? 0);
     $keterangan = trim($_POST['keterangan'] ?? '');
-    
+
+    // Handle file upload untuk pengeluaran
+    $bukti_path = null;
+    if ($jenis === 'pengeluaran' && isset($_FILES['bukti']) && $_FILES['bukti']['error'] === UPLOAD_ERR_OK) {
+        $allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+        $max_size = 2 * 1024 * 1024;
+        if (!in_array($_FILES['bukti']['type'], $allowed)) {
+            $error = 'File bukti harus berupa gambar (JPEG/PNG/WebP)!';
+        } elseif ($_FILES['bukti']['size'] > $max_size) {
+            $error = 'Ukuran file maksimal 2MB!';
+        } else {
+            $ext = pathinfo($_FILES['bukti']['name'], PATHINFO_EXTENSION);
+            $filename = 'bukti_' . time() . '_' . uniqid() . '.' . $ext;
+            $dest = 'assets/uploads/' . $filename;
+            if (move_uploaded_file($_FILES['bukti']['tmp_name'], $dest)) {
+                $bukti_path = $dest;
+            }
+        }
+    }
+
+    // if upload error, jangan lanjut
+    if ($error === '') {
     // Uang Kas Mingguan Anggota
     $is_kas = isset($_POST['is_kas']) ? (int)$_POST['is_kas'] : 0;
     $anggota_id = ($jenis === 'pemasukan' && $is_kas === 1) ? (int)$_POST['anggota_id'] : null;
@@ -54,12 +75,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_type']) && $_P
                 throw new Exception('Saldo kas tidak mencukupi untuk pengeluaran ini! Saldo kas saat ini: Rp ' . number_format($current_lock_balance, 0, ',', '.'));
             }
 
-            // Simpan Transaksi (Dengan Kolom `minggu`)
+            // Simpan Transaksi (Dengan Kolom `minggu` + `bukti`)
             $stmt = $pdo->prepare("
-                INSERT INTO transaksi (tanggal, jenis, jumlah, keterangan, anggota_id, minggu, bulan, tahun, created_by) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO transaksi (tanggal, jenis, jumlah, keterangan, bukti, anggota_id, minggu, bulan, tahun, created_by)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
-            $stmt->execute([$tanggal, $jenis, $jumlah, $keterangan, $anggota_id ?: null, $minggu ?: null, $bulan ?: null, $tahun ?: null, $_SESSION['user_id']]);
+            $stmt->execute([$tanggal, $jenis, $jumlah, $keterangan, $bukti_path, $anggota_id ?: null, $minggu ?: null, $bulan ?: null, $tahun ?: null, $_SESSION['user_id']]);
             
             $pdo->commit();
             $success = 'Transaksi berhasil dicatat ke database!';
@@ -273,13 +294,14 @@ $nama_bulan = [
                         <th>Keterangan</th>
                         <th style="width:180px">Pembayar</th>
                         <th class="text-right" style="width:140px">Jumlah</th>
+                        <th class="text-center" style="width:60px">Bukti</th>
                             <th class="text-center" style="width:80px">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($transactions)): ?>
                         <tr>
-                            <td colspan="7" style="text-align:center;padding:60px 16px;color:var(--text-dim)">
+                            <td colspan="8" style="text-align:center;padding:60px 16px;color:var(--text-dim)">
                                 <i class="fa-solid fa-receipt" style="font-size:32px;display:block;margin-bottom:10px;color:var(--text-dim)"></i>
                                 Tidak ada data transaksi yang cocok dengan filter.
                             </td>
@@ -300,6 +322,13 @@ $nama_bulan = [
                                     <?php if ($trans['minggu'] && $trans['bulan'] && $trans['tahun']): ?>
                                         <span class="block text-[10px] text-indigo-500 font-medium mt-0.5">
                                             <i class="fa-regular fa-calendar-check mr-0.5"></i> Kas Minggu <?= $trans['minggu'] ?>, <?= $nama_bulan[$trans['bulan']] ?> <?= $trans['tahun'] ?>
+                                        </span>
+                                    <?php endif; ?>
+                                    <?php if (!empty($trans['bukti'])): ?>
+                                        <span style="display:block;margin-top:4px">
+                                            <a href="#" onclick="window.open('<?= htmlspecialchars($trans['bukti']) ?>','_blank','width=800,height=600');return false" style="font-size:10px;color:var(--primary-600);font-weight:600;text-decoration:none">
+                                                <i class="fa-solid fa-image"></i> Lihat Bukti
+                                            </a>
                                         </span>
                                     <?php endif; ?>
                                 </td>
@@ -420,6 +449,20 @@ $nama_bulan = [
                           class="input text-sm"
                           placeholder="Keterangan singkat transaksi"></textarea>
             </div>
+
+            <!-- Upload bukti (khusus pengeluaran) -->
+            <div id="buktiSection" style="display:none">
+                <label for="bukti" class="input-label">Upload Bukti / Nota (Gambar)</label>
+                <input type="file" name="bukti" id="bukti" accept="image/jpeg,image/png,image/webp"
+                       class="input text-sm" style="padding:8px 12px">
+                <p style="font-size:10px;color:var(--text-dim);margin-top:4px">Format: JPEG/PNG/WebP. Maks 2MB.</p>
+            </div>
+
+            <script>
+            document.getElementById('jenis').addEventListener('change', function() {
+                document.getElementById('buktiSection').style.display = this.value === 'pengeluaran' ? 'block' : 'none';
+            });
+            </script>
 
             <button type="submit" class="btn btn-primary w-full py-3">
                 <i class="fa-solid fa-floppy-disk"></i> Simpan Transaksi
