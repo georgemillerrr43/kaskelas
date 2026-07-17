@@ -470,6 +470,9 @@ $user_initial = strtoupper(substr($user_nama, 0, 1));
             <a href="anggota.php" class="nav-link <?= $current_page === 'anggota.php' ? 'active' : '' ?>">
                 <i class="fa-solid fa-users"></i> Anggota
             </a>
+            <a href="ganti-password.php" class="nav-link <?= $current_page === 'ganti-password.php' ? 'active' : '' ?>">
+                <i class="fa-solid fa-key"></i> Password
+            </a>
         </div>
     </div>
     <div class="nav-right">
