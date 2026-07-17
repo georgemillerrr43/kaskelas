@@ -83,6 +83,12 @@
                 });
             }
         })();
+
+        /* ── Mobile Drawer Toggle ────────────── */
+        var h=document.getElementById('pubHamburger'),d=document.getElementById('pubMobileDrawer'),o=document.getElementById('pubDrawerOverlay');
+        function op(){if(d)d.classList.add('open');if(o)o.classList.add('open');document.body.style.overflow='hidden';}
+        function cl(){if(d)d.classList.remove('open');if(o)o.classList.remove('open');document.body.style.overflow='';}
+        if(h)h.addEventListener('click',op);if(o)o.addEventListener('click',cl);
         </script>
     </body>
     </html>

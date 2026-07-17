@@ -43,6 +43,28 @@ $user_initial = $user_nama ? strtoupper(substr($user_nama, 0, 1)) : '';
         .pub-nav-link:hover { background: var(--tab-hover); color: var(--text); }
         .pub-nav-link.active { background: var(--tab-active-bg); color: var(--tab-active-text); }
 
+        /* ── Mobile Drawer (Publik) ──────────────── */
+        .pub-drawer-overlay { position:fixed; inset:0; z-index:199; background:rgba(0,0,0,0.5); backdrop-filter:blur(6px); display:none; }
+        .pub-drawer-overlay.open { display:block; }
+        .pub-mobile-drawer {
+            position:fixed; top:0; left:0; bottom:0; width:280px; z-index:200;
+            background:var(--surface-card); border-right:1px solid var(--border);
+            transform:translateX(-100%); transition:transform 0.3s cubic-bezier(0.22,1,0.36,1);
+            display:flex; flex-direction:column;
+        }
+        .pub-mobile-drawer.open { transform:translateX(0); }
+        .pub-drawer-header { padding:20px 20px 16px; display:flex; align-items:center; gap:12px; border-bottom:1px solid var(--border); }
+        .pub-drawer-nav { flex:1; padding:12px; overflow-y:auto; }
+        .pub-drawer-link {
+            display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px;
+            text-decoration:none; font-size:13px; font-weight:600;
+            color:var(--text-muted); transition:0.15s ease; margin-bottom:2px;
+        }
+        .pub-drawer-link:hover { background:var(--tab-hover); color:var(--text); }
+        .pub-drawer-link.active { background:var(--tab-active-bg); color:var(--tab-active-text); }
+        .pub-drawer-footer { padding:12px; border-top:1px solid var(--border); }
+        .pub-hamburger { display:none; }
+
         /* ── Design System ───────────────────────── */
         :root {
             --primary-400: #818cf8;
@@ -387,9 +409,8 @@ $user_initial = $user_nama ? strtoupper(substr($user_nama, 0, 1)) : '';
             .pub-hero { padding: 24px 0 20px; }
             .pub-hero h1 { font-size: 1.3rem; }
             .pub-hero p { font-size: 0.85rem; margin-bottom: 16px; }
-            .pub-nav { gap: 0; }
-            .pub-nav-link { padding: 6px 10px; font-size: 12px; }
-            .pub-nav-link span { display: none; }
+            .pub-nav { display: none; }
+            .pub-hamburger { display: flex !important; }
             .pub-brand-mark { width: 34px; height: 34px; font-size: 14px; }
             .pub-brand-title { font-size: 14px; }
             .pub-footer { padding: 12px 16px calc(12px + var(--sa-bottom)); flex-direction: column; text-align: center; }
@@ -480,6 +501,9 @@ $user_initial = $user_nama ? strtoupper(substr($user_nama, 0, 1)) : '';
                 <i class="fa-solid fa-clock-rotate-left"></i> <span>Riwayat</span>
             </a>
         </nav>
+        <button id="pubHamburger" class="pub-hamburger theme-btn no-print" aria-label="Buka menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
         <button id="themeToggle" class="theme-btn no-print" aria-label="Ganti tema">
             <i id="themeIcon" class="fa-solid fa-moon"></i>
         </button>
@@ -494,5 +518,39 @@ $user_initial = $user_nama ? strtoupper(substr($user_nama, 0, 1)) : '';
         <?php endif; ?>
     </div>
 </header>
+
+<!-- ══ MOBILE DRAWER (Publik) ══ -->
+<div class="pub-drawer-overlay" id="pubDrawerOverlay"></div>
+<div class="pub-mobile-drawer" id="pubMobileDrawer">
+    <div class="pub-drawer-header">
+        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--primary-500),#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;flex-shrink:0;box-shadow:0 6px 20px rgba(99,102,241,0.3)"><i class="fa-solid fa-wallet"></i></div>
+        <div>
+            <div style="font-size:14px;font-weight:800;color:var(--text)">Uangkas Kelas</div>
+            <div style="font-size:9px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Informasi Publik</div>
+        </div>
+    </div>
+    <div class="pub-drawer-nav">
+        <a href="index.php" class="pub-drawer-link <?= $current_page === 'index.php' ? 'active' : '' ?>">
+            <i class="fa-solid fa-house"></i> Beranda
+        </a>
+        <a href="public-rekap.php" class="pub-drawer-link <?= $current_page === 'public-rekap.php' ? 'active' : '' ?>">
+            <i class="fa-solid fa-table-cells-large"></i> Rekap Kas
+        </a>
+        <a href="public-riwayat.php" class="pub-drawer-link <?= $current_page === 'public-riwayat.php' ? 'active' : '' ?>">
+            <i class="fa-solid fa-clock-rotate-left"></i> Riwayat Transaksi
+        </a>
+    </div>
+    <div class="pub-drawer-footer">
+        <?php if ($is_logged_in): ?>
+            <a href="dashboard.php" style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;text-decoration:none;font-size:13px;font-weight:600;color:var(--text-muted)">
+                <i class="fa-solid fa-gauge-high"></i> Dashboard Bendahara
+            </a>
+        <?php else: ?>
+            <a href="login.php" style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;text-decoration:none;font-size:13px;font-weight:600;color:var(--primary-600)">
+                <i class="fa-solid fa-lock"></i> Login Bendahara
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
 
 <main class="pub-content">
