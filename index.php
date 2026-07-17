@@ -207,30 +207,46 @@ $count_riwayat = count($semua_transaksi);
 <script>
 // ── PDF SHARED: load signature first ──────────────────────
 function loadSigAndRun(callback) {
-    // ensure jspdf loaded
-    if (typeof window.jspdf === 'undefined') {
-        alert('Library PDF belum selesai dimuat. Coba refresh halaman.');
+    try {
+        // Test jspdf
+        if (typeof window.jspdf === 'undefined') {
+            alert('Library PDF gagal dimuat dari CDN. Cek koneksi internet lalu refresh halaman.');
+            return;
+        }
+        // Test autotable
+        var testDoc = new window.jspdf.jsPDF('p', 'mm', 'a4');
+        if (typeof testDoc.autoTable !== 'function') {
+            alert('Plugin tabel PDF gagal dimuat. Cek koneksi internet lalu refresh halaman.');
+            return;
+        }
+    } catch(e) {
+        alert('Error library PDF: ' + e.message);
         return;
     }
+    // Load TTD signature
     var sigImg = new Image();
     sigImg.crossOrigin = "anonymous";
     sigImg.src = 'assets/images/ttd.svg';
     sigImg.onload = function() {
-        var c = document.createElement('canvas');
-        c.width = 300; c.height = 120;
-        c.getContext('2d').drawImage(sigImg, 0, 0, 300, 120);
-        try { callback(c.toDataURL('image/png')); }
-        catch(e) { callback(null); }
+        try {
+            var c = document.createElement('canvas');
+            c.width = 300; c.height = 120;
+            c.getContext('2d').drawImage(sigImg, 0, 0, 300, 120);
+            callback(c.toDataURL('image/png'));
+        } catch(e) {
+            callback(null);
+        }
     };
-    sigImg.onerror = function() { callback(null); };
+    sigImg.onerror = function() {
+        callback(null); // TTD gagal load, lanjut tanpa TTD
+    };
 }
-function exportSiswaPDF() { loadSigAndRun(function(d) { genSiswaPDF(d); }); }
-function exportRiwayatPDF() { loadSigAndRun(function(d) { genRiwayatPDF(d); }); }
+function exportSiswaPDF() { loadSigAndRun(function(d) { try { genSiswaPDF(d); } catch(e) { alert('Gagal generate PDF: ' + e.message); } }); }
+function exportRiwayatPDF() { loadSigAndRun(function(d) { try { genRiwayatPDF(d); } catch(e) { alert('Gagal generate PDF: ' + e.message); } }); }
 
 // ── PDF EXPORT — DAFTAR SISWA ──────────────────────────
 function genSiswaPDF(sigImgData) {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('p', 'mm', 'a4');
+    const doc = new window.jspdf.jsPDF('p', 'mm', 'a4');
     const PW = 210, PH = 297, ML = 14, MR = 14;
     const C = {
         white:[255,255,255], pageGray:[245,247,250], borderGray:[200,210,220],
@@ -321,8 +337,7 @@ function genSiswaPDF(sigImgData) {
 }
 
 function genRiwayatPDF(sigImgData) {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('p', 'mm', 'a4');
+    const doc = new window.jspdf.jsPDF('p', 'mm', 'a4');
     const PW = 210, PH = 297, ML = 14, MR = 14, CW = PW - ML - MR;
     const C = {
         white:[255,255,255], pageGray:[245,247,250], borderGray:[200,210,220],

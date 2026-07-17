@@ -559,8 +559,7 @@ $nama_bulan = [
     }
 
     function generatePDF(sigImgData) {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF('p', 'mm', 'a4');
+        const doc = new window.jspdf.jsPDF('p', 'mm', 'a4');
         const PW = 210, PH = 297;
         const ML = 14, MR = 14;
         const CW = PW - ML - MR; // content width

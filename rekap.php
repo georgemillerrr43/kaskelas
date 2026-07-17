@@ -186,8 +186,7 @@ function loadSigAndRun(callback) {
 function exportRekapPDF() { loadSigAndRun(function(d) { genRekapPDF(d); }); }
 
 function genRekapPDF(sigImgData) {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('p', 'mm', 'a4');
+    const doc = new window.jspdf.jsPDF('p', 'mm', 'a4');
     const PW = 210, PH = 297, ML = 14, MR = 14;
     const C = {
         white:[255,255,255], pageGray:[245,247,250], borderGray:[200,210,220],
