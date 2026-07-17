@@ -30,6 +30,19 @@ $user_initial = $user_nama ? strtoupper(substr($user_nama, 0, 1)) : '';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
+        /* ── Nav Links ───────────────────────────── */
+        .pub-nav { display: flex; align-items: center; gap: 2px; }
+        .pub-nav-link {
+            display: flex; align-items: center; gap: 6px;
+            padding: 8px 14px; border-radius: 10px;
+            text-decoration: none;
+            font-size: 13px; font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.15s ease;
+        }
+        .pub-nav-link:hover { background: var(--tab-hover); color: var(--text); }
+        .pub-nav-link.active { background: var(--tab-active-bg); color: var(--tab-active-text); }
+
         /* ── Design System ───────────────────────── */
         :root {
             --primary-400: #818cf8;
@@ -439,6 +452,17 @@ $user_initial = $user_nama ? strtoupper(substr($user_nama, 0, 1)) : '';
         </div>
     </div>
     <div class="pub-actions">
+        <nav class="pub-nav no-print">
+            <a href="index.php" class="pub-nav-link <?= $current_page === 'index.php' ? 'active' : '' ?>">
+                <i class="fa-solid fa-house"></i> <span>Beranda</span>
+            </a>
+            <a href="public-rekap.php" class="pub-nav-link <?= $current_page === 'public-rekap.php' ? 'active' : '' ?>">
+                <i class="fa-solid fa-table-cells-large"></i> <span>Rekap</span>
+            </a>
+            <a href="public-riwayat.php" class="pub-nav-link <?= $current_page === 'public-riwayat.php' ? 'active' : '' ?>">
+                <i class="fa-solid fa-clock-rotate-left"></i> <span>Riwayat</span>
+            </a>
+        </nav>
         <button id="themeToggle" class="theme-btn no-print" aria-label="Ganti tema">
             <i id="themeIcon" class="fa-solid fa-moon"></i>
         </button>
