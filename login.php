@@ -318,12 +318,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <i class="fa-solid fa-arrow-right" style="font-size:12px"></i>
                     </button>
                 </form>
-
-                <div class="login-hint">
-                    <i class="fa-solid fa-shield-halved" style="margin-right:6px"></i>
-                    <strong>Akses khusus Bendahara</strong>
-                    <div style="margin-top:4px;font-size:11px;opacity:0.7">Login: <strong>admin</strong> / <strong>adminpassword</strong></div>
-                </div>
             </div>
         </div>
     </div>
