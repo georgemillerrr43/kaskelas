@@ -277,8 +277,10 @@ function genSiswaPDF(sigImgData) {
 
     // data
     const table=document.querySelector('#pane-siswa .data-table');
-    const rows=[]; const tbody=table?.querySelector('tbody');
-    if(tbody){tbody.querySelectorAll('tr').forEach(function(tr){
+    if (!table) { alert('Tabel Daftar Siswa tidak ditemukan. Buka tab Daftar Siswa dulu.'); return; }
+    const rows=[]; const tbody=table.querySelector('tbody');
+    if (!tbody) { alert('Data tabel kosong.'); return; }
+    tbody.querySelectorAll('tr').forEach(function(tr){
         const tds=tr.querySelectorAll('td'); if(tds.length<7)return;
         const no=(tds[0].innerText||'').trim();
         const nama=(tds[1].innerText||'').trim().replace(/\s+/g,' ');
@@ -367,9 +369,11 @@ function genRiwayatPDF(sigImgData) {
 
     // data
     const table=document.querySelector('#pane-riwayat .data-table');
+    if (!table) { alert('Tabel Riwayat tidak ditemukan. Buka tab Riwayat dulu.'); return; }
     const rows=[]; let totalPemasukan=0,totalPengeluaran=0;
-    const tbody=table?.querySelector('tbody');
-    if(tbody){tbody.querySelectorAll('tr').forEach(function(tr){
+    const tbody=table.querySelector('tbody');
+    if (!tbody) { alert('Data riwayat kosong.'); return; }
+    tbody.querySelectorAll('tr').forEach(function(tr){
         const tds=tr.querySelectorAll('td'); if(tds.length<6)return;
         const no=(tds[0].innerText||'').trim();
         const tanggal=(tds[1].innerText||'').trim();
