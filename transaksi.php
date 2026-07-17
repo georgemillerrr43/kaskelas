@@ -869,53 +869,48 @@ $nama_bulan = [
 // ==================================================================
         // TTD / TANDA TANGAN AREA
         // ==================================================================
-        let ttdY = sy + 10;
-        const ttdHeight = 45; // Estimasi tinggi keseluruhan blok tanda tangan
+        let ttdY = sy + 12;
 
-        // 1. Cek Page Break (Jika tidak muat, buat halaman baru)
-        if (ttdY + ttdHeight > PH - 20) {
+        // 1. Cek page break — estimasi tinggi: teks (5) + spasi (2) + nama (5) + spasi (2) + img (24) + spasi (2) + garis (1) = ~41
+        const ttdHeight = 44;
+        if (ttdY + ttdHeight > PH - 18) {
             doc.addPage();
-            
-            // Render ulang background dan bingkai di halaman baru
             doc.setFillColor(...C.pageGray);
             doc.rect(0, 0, PW, PH, 'F');
-            
             doc.setFillColor(...C.white);
             doc.roundedRect(10, 10, PW - 20, PH - 20, 3, 3, 'F');
-            
             doc.setFillColor(...C.accentBlue);
             doc.rect(10, 10, PW - 20, 4, 'F');
-            
-            ttdY = 25; // Reset titik Y di halaman baru
+            ttdY = 22;
         }
 
-        // 2. Kalkulasi Titik Tengah (Center X) untuk Posisi Kanan
-        const blockWidth = 60; // Lebar perkiraan blok tanda tangan
-        const centerX = PW - MR - (blockWidth / 2); // Titik tengah blok di sisi kanan margin
+        // 2. Blok TTD — posisi kanan, lebih proporsional
+        const centerX = PW - MR - 28;
 
-        // 3. Teks "Mengetahui" & "Jabatan"
+        // "Mengetahui,"
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(8);
         doc.setTextColor(...C.subText);
         doc.text('Mengetahui,', centerX, ttdY, { align: 'center' });
+
+        // Jabatan
         doc.text('Bendahara Kelas', centerX, ttdY + 4, { align: 'center' });
 
-        // 4. Nama di Atas TTD
+        // Nama lengkap di atas TTD
         doc.setFont('helvetica', 'bold');
-        doc.setFontSize(8.5);
+        doc.setFontSize(9);
         doc.setTextColor(...C.black);
         doc.text('Rizky perdana putra sam', centerX, ttdY + 9.5, { align: 'center' });
 
-        // 5. Gambar Tanda Tangan (diperbesar)
+        // Gambar TTD (diperbesar, proporsional)
         if (sigImgData) {
-            doc.addImage(sigImgData, 'PNG', centerX - 25, ttdY + 11, 50, 22);
+            doc.addImage(sigImgData, 'PNG', centerX - 28, ttdY + 11, 56, 24);
         }
 
-        // 6. Garis Bawah (Underline)
+        // Garis bawah
         doc.setDrawColor(...C.borderGray);
-        doc.setLineWidth(0.3);
-        const lineY = ttdY + 38; // Jarak garis dari atas
-        doc.line(centerX - 25, lineY, centerX + 25, lineY); // Tarik garis simetris kiri-kanan
+        doc.setLineWidth(0.4);
+        doc.line(centerX - 26, ttdY + 39, centerX + 26, ttdY + 39);
     
         // ══════════════════════════════════════════════════════════════
         //  PAGE FOOTER — all pages

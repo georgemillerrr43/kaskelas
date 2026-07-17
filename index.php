@@ -128,16 +128,16 @@ $count_riwayat = count($semua_transaksi);
                                 $paid = isset($payments[$m['id']][$w]);
                                 $amt = $paid ? $payments[$m['id']][$w] : 0;
                             ?>
-                                <td style="text-align:center">
+                                <td style="text-align:center;white-space:nowrap">
                                     <?php if ($paid): ?>
-                                        <span style="display:inline-flex;flex-direction:row;align-items:center;gap:3px;justify-content:center">
-                                            <span class="status-dot" style="background:var(--income-bg);color:var(--income)"><i class="fa-solid fa-check"></i></span>
-                                            <span style="font-size:8px;font-weight:700;color:var(--income)"><?= number_format($amt,0,',','.') ?></span>
+                                        <span style="display:inline-flex;flex-direction:row;align-items:center;gap:4px;justify-content:center;white-space:nowrap">
+                                            <span class="status-dot" style="background:var(--income-bg);color:var(--income);width:22px;height:22px;font-size:10px;flex-shrink:0"><i class="fa-solid fa-check"></i></span>
+                                            <span style="font-size:9px;font-weight:700;color:var(--income);white-space:nowrap"><?= number_format($amt,0,',','.') ?></span>
                                         </span>
                                     <?php else: ?>
-                                        <span style="display:inline-flex;flex-direction:row;align-items:center;gap:3px;justify-content:center">
-                                            <span class="status-dot" style="background:var(--surface-bg);color:var(--text-dim)"><i class="fa-solid fa-minus"></i></span>
-                                            <span style="font-size:8px;color:var(--text-dim)">-</span>
+                                        <span style="display:inline-flex;flex-direction:row;align-items:center;gap:4px;justify-content:center;white-space:nowrap">
+                                            <span class="status-dot" style="background:var(--surface-bg);color:var(--text-dim);width:22px;height:22px;font-size:10px;flex-shrink:0"><i class="fa-solid fa-minus"></i></span>
+                                            <span style="font-size:9px;color:var(--text-dim);white-space:nowrap">-</span>
                                         </span>
                                     <?php endif; ?>
                                 </td>
@@ -309,11 +309,11 @@ function genSiswaPDF(sigImgData) {
     });
 
     // TTD
-    let ttdY = doc.lastAutoTable.finalY + 8;
-    if (ttdY + 40 > PH - 12) { doc.addPage(); ttdY = 20; }
+    let ttdY = doc.lastAutoTable.finalY + 10;
+    if (ttdY + 44 > PH - 14) { doc.addPage(); ttdY = 20; }
 
+    const cx = PW - 38;
     doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(...C.subText);
-    const cx = PW - 40;
     doc.text('Mengetahui,', cx, ttdY, {align:'center'});
     doc.text('Bendahara Kelas', cx, ttdY+4, {align:'center'});
 
@@ -322,10 +322,10 @@ function genSiswaPDF(sigImgData) {
     doc.text('Rizky perdana putra sam', cx, ttdY+9.5, {align:'center'});
 
     if (sigImgData) {
-        try { doc.addImage(sigImgData, 'PNG', cx-25, ttdY+11, 50, 22); } catch(e) {}
+        try { doc.addImage(sigImgData, 'PNG', cx-28, ttdY+11.5, 56, 24); } catch(e) {}
     }
-    doc.setDrawColor(...C.borderGray); doc.setLineWidth(0.3);
-    doc.line(cx-25, ttdY+38, cx+25, ttdY+38);
+    doc.setDrawColor(...C.borderGray); doc.setLineWidth(0.4);
+    doc.line(cx-26, ttdY+39.5, cx+26, ttdY+39.5);
 
     // Footer
     const pg = doc.internal.getNumberOfPages();
@@ -468,9 +468,9 @@ function genRiwayatPDF(sigImgData) {
 
     // TTD
     let ttdY = sumY + 30;
-    if (ttdY + 40 > PH - 12) { doc.addPage(); ttdY = 20; }
-    doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(...C.subText);
+    if (ttdY + 44 > PH - 14) { doc.addPage(); ttdY = 20; }
     const cx = PW - MR - 25;
+    doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(...C.subText);
     doc.text('Mengetahui,', cx, ttdY, {align:'center'});
     doc.text('Bendahara Kelas', cx, ttdY+4, {align:'center'});
 
@@ -479,10 +479,10 @@ function genRiwayatPDF(sigImgData) {
     doc.text('Rizky perdana putra sam', cx, ttdY+9.5, {align:'center'});
 
     if (sigImgData) {
-        try { doc.addImage(sigImgData, 'PNG', cx-25, ttdY+11, 50, 22); } catch(e) {}
+        try { doc.addImage(sigImgData, 'PNG', cx-28, ttdY+11.5, 56, 24); } catch(e) {}
     }
-    doc.setDrawColor(...C.borderGray); doc.setLineWidth(0.3);
-    doc.line(cx-25, ttdY+38, cx+25, ttdY+38);
+    doc.setDrawColor(...C.borderGray); doc.setLineWidth(0.4);
+    doc.line(cx-26, ttdY+39.5, cx+26, ttdY+39.5);
 
     // Row count
     doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(...C.dimText);

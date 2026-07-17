@@ -133,21 +133,21 @@ try {
                                 $amount = $paid ? $payments[$member['id']][$w] : 0;
                                 if ($paid) $total_paid_this_month += $amount;
                             ?>
-                                <td style="text-align:center;padding:8px 16px;white-space:nowrap">
+                                <td style="text-align:center;padding:8px 12px;white-space:nowrap">
                                     <?php if ($paid): ?>
-                                        <div style="display:inline-flex;flex-direction:column;align-items:center">
-                                            <span style="width:28px;height:28px;border-radius:50%;background:var(--income-bg);color:var(--income);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold">
+                                        <span style="display:inline-flex;flex-direction:row;align-items:center;gap:4px;justify-content:center;white-space:nowrap">
+                                            <span style="width:22px;height:22px;border-radius:50%;background:var(--income-bg);color:var(--income);display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;flex-shrink:0">
                                                 <i class="fa-solid fa-check"></i>
                                             </span>
-                                            <span style="white-space:nowrap;font-size:8px;color:var(--income);font-weight:bold;margin-top:2px"><?= number_format($amount, 0, ',', '.') ?></span>
-                                        </div>
+                                            <span style="font-size:9px;color:var(--income);font-weight:700;white-space:nowrap"><?= number_format($amount, 0, ',', '.') ?></span>
+                                        </span>
                                     <?php else: ?>
-                                        <div style="display:inline-flex;flex-direction:column;align-items:center">
-                                            <span style="width:28px;height:28px;border-radius:50%;background:var(--surface-bg);color:var(--text-dim);display:flex;align-items:center;justify-content:center;font-size:12px">
+                                        <span style="display:inline-flex;flex-direction:row;align-items:center;gap:4px;justify-content:center;white-space:nowrap">
+                                            <span style="width:22px;height:22px;border-radius:50%;background:var(--surface-bg);color:var(--text-dim);display:inline-flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0">
                                                 <i class="fa-solid fa-minus"></i>
                                             </span>
-                                            <span style="white-space:nowrap;font-size:8px;color:var(--text-dim);font-weight:500;margin-top:2px">-</span>
-                                        </div>
+                                            <span style="font-size:9px;color:var(--text-dim);font-weight:500;white-space:nowrap">-</span>
+                                        </span>
                                     <?php endif; ?>
                                 </td>
                             <?php endfor; ?>
