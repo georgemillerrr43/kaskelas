@@ -22,12 +22,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user = $stmt->fetch();
 
             if ($user && password_verify($password, $user['password'])) {
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['username'] = $user['username'];
-                $_SESSION['nama'] = $user['nama'];
-                $_SESSION['role'] = $user['role'];
-                header("Location: dashboard.php");
-                exit();
+                // Hanya role admin (bendahara) yang boleh login
+                if ($user['role'] !== 'admin') {
+                    $error = 'Akses hanya untuk Bendahara. Login siswa tidak lagi didukung.';
+                } else {
+                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['username'] = $user['username'];
+                    $_SESSION['nama'] = $user['nama'];
+                    $_SESSION['role'] = $user['role'];
+                    header("Location: dashboard.php");
+                    exit();
+                }
             } else {
                 $error = 'Username atau password tidak cocok!';
             }
@@ -317,7 +322,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="login-hint">
                     <i class="fa-solid fa-shield-halved" style="margin-right:6px"></i>
                     <strong>Akses khusus Bendahara</strong>
-                    <div style="margin-top:4px;font-size:11px;opacity:0.7">Login: <strong>admin</strong> / <strong>adminpassword</strong></div>
+                    <div style="margin-top:4px;font-size:11px;opacity:0.7">Login: <strong>admin</strong> / <strong>adminpassword</strong> | <a href="ganti-password.php" style="color:inherit">Ganti Password</a></div>
                 </div>
             </div>
         </div>
