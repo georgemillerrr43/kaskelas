@@ -5,7 +5,7 @@
                 &copy; <?= date('Y') ?> <strong>Uangkas Kelas</strong>. Hak Cipta Dilindungi.
             </span>
             <span>
-                Dikelola oleh <strong style="color:var(--primary-600)">Bendahara Kelas</strong> &mdash; Transparansi keuangan untuk semua.
+                Transparansi keuangan untuk semua &mdash; Dibuat oleh <strong style="color:var(--primary-600)">Joji</strong> ❤️
             </span>
         </footer>
 

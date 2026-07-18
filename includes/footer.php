@@ -3,7 +3,7 @@
         <!-- Footer -->
         <footer class="app-footer">
             <span>&copy; <?= date('Y') ?> <strong>Uangkas Kelas</strong>. Hak Cipta Dilindungi.</span>
-            <span>Panel <strong style="color:var(--primary-600)">Bendahara</strong> &mdash; Transparansi keuangan kelas.</span>
+            <span>Panel <strong style="color:var(--primary-600)">Bendahara</strong> &mdash; Dibuat oleh <strong style="color:var(--primary-400)">Joji</strong> ❤️</span>
         </footer>
     </div>
 
