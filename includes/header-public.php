@@ -501,21 +501,21 @@ $user_initial = $user_nama ? strtoupper(substr($user_nama, 0, 1)) : '';
                 <i class="fa-solid fa-clock-rotate-left"></i> <span>Riwayat</span>
             </a>
         </nav>
-        <button id="pubHamburger" class="pub-hamburger theme-btn no-print" aria-label="Buka menu">
-            <i class="fa-solid fa-bars"></i>
-        </button>
         <button id="themeToggle" class="theme-btn no-print" aria-label="Ganti tema">
             <i id="themeIcon" class="fa-solid fa-moon"></i>
         </button>
         <?php if ($is_logged_in): ?>
-            <a href="dashboard.php" class="btn btn-primary btn-sm">
-                <i class="fa-solid fa-gauge-high"></i> Dashboard
+            <a href="dashboard.php" class="btn btn-primary btn-sm no-print">
+                <i class="fa-solid fa-gauge-high"></i> <span>Dashboard</span>
             </a>
         <?php else: ?>
-            <a href="login.php" class="btn btn-primary btn-sm">
-                <i class="fa-solid fa-lock"></i> Login Bendahara
+            <a href="login.php" class="btn btn-primary btn-sm no-print">
+                <i class="fa-solid fa-lock"></i> <span>Login Bendahara</span>
             </a>
         <?php endif; ?>
+        <button id="pubHamburger" class="pub-hamburger theme-btn no-print" aria-label="Buka menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
     </div>
 </header>
 
