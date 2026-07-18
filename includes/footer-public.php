@@ -2,11 +2,17 @@
 
         <footer class="pub-footer">
             <span>
-                &copy; <?= date('Y') ?> <strong>Uangkas Kelas</strong>. Hak Cipta Dilindungi.
+                &copy; <?= date('Y') ?> <strong>Uangkas Kelas</strong>. All rights reserved.
             </span>
             <span>
-                Transparansi keuangan untuk semua &mdash; Dibuat oleh <strong style="color:var(--primary-600)">Joji</strong> ❤️
+                Informasi keuangan transparan &mdash; Developed by <strong style="color:var(--primary-600)">Joji</strong>
             </span>
+            <div style="display:flex;gap:14px;font-size:11px;color:var(--text-muted);width:100%;justify-content:center;border-top:1px solid var(--border);padding-top:10px;margin-top:6px">
+                <a href="index.php" style="color:var(--text-muted);text-decoration:none">Beranda</a>
+                <a href="public-rekap.php" style="color:var(--text-muted);text-decoration:none">Rekap</a>
+                <a href="public-riwayat.php" style="color:var(--text-muted);text-decoration:none">Riwayat</a>
+                <a href="login.php" style="color:var(--primary-500);text-decoration:none;font-weight:600">Login Bendahara</a>
+            </div>
         </footer>
 
         <script>

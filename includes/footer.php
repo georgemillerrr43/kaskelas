@@ -2,8 +2,14 @@
 
         <!-- Footer -->
         <footer class="app-footer">
-            <span>&copy; <?= date('Y') ?> <strong>Uangkas Kelas</strong>. Hak Cipta Dilindungi.</span>
-            <span>Panel <strong style="color:var(--primary-600)">Bendahara</strong> &mdash; Dibuat oleh <strong style="color:var(--primary-400)">Joji</strong> ❤️</span>
+            <span>&copy; <?= date('Y') ?> <strong>Uangkas Kelas</strong>. All rights reserved.</span>
+            <span>Panel <strong style="color:var(--primary-600)">Bendahara</strong> &mdash; Developed by <strong style="color:var(--primary-400)">Joji</strong></span>
+            <div style="display:flex;gap:14px;font-size:11px;color:var(--text-muted);width:100%;justify-content:center;border-top:1px solid var(--border);padding-top:10px;margin-top:6px">
+                <a href="dashboard.php" style="color:var(--text-muted);text-decoration:none">Dashboard</a>
+                <a href="transaksi.php" style="color:var(--text-muted);text-decoration:none">Transaksi</a>
+                <a href="rekap.php" style="color:var(--text-muted);text-decoration:none">Rekap</a>
+                <a href="anggota.php" style="color:var(--text-muted);text-decoration:none">Anggota</a>
+            </div>
         </footer>
     </div>
 
