@@ -323,13 +323,6 @@ $nama_bulan = [
                                             <i class="fa-regular fa-calendar-check mr-0.5"></i> Kas Minggu <?= $trans['minggu'] ?>, <?= $nama_bulan[$trans['bulan']] ?> <?= $trans['tahun'] ?>
                                         </span>
                                     <?php endif; ?>
-                                    <?php if (!empty($trans['bukti'])): ?>
-                                        <span style="display:block;margin-top:4px">
-                                            <a href="#" onclick="window.open('<?= htmlspecialchars($trans['bukti']) ?>','_blank','width=800,height=600');return false" style="font-size:10px;color:var(--primary-600);font-weight:600;text-decoration:none">
-                                                <i class="fa-solid fa-image"></i> Lihat Bukti
-                                            </a>
-                                        </span>
-                                    <?php endif; ?>
                                 </td>
                                 <td class="font-medium" style="color:var(--text-muted)">
                                     <?= htmlspecialchars($trans['nama_anggota'] ?? '-') ?>
@@ -337,14 +330,25 @@ $nama_bulan = [
                                 <td class="text-right font-mono font-bold" style="color:<?= $trans['jenis'] === 'pemasukan' ? 'var(--income)' : 'var(--expense)' ?>">
                                     <?= $trans['jenis'] === 'pemasukan' ? '+' : '-' ?>Rp <?= number_format($trans['jumlah'], 0, ',', '.') ?>
                                 </td>
-                                    <td class="text-center">
-                                        <a href="transaksi.php?action=delete&id=<?= $trans['id'] ?>"
-                                           onclick="return confirm('Apakah Anda yakin ingin menghapus data transaksi ini? Penghapusan akan memicu perubahan pada saldo saat ini.')"
-                                           style="display:inline-flex;width:28px;height:28px;border-radius:8px;align-items:center;justify-content:center;font-size:12px;text-decoration:none;transition:0.15s;color:var(--text-muted);background:var(--surface-bg)" onmouseenter="this.style.background='var(--expense-bg)';this.style.color='var(--expense)'" onmouseleave="this.style.background='var(--surface-bg)';this.style.color='var(--text-muted)'"
-                                           title="Hapus Transaksi">
-                                            <i class="fa-solid fa-trash-can"></i>
+                                <td class="text-center">
+                                    <?php if (!empty($trans['bukti'])): ?>
+                                        <a href="<?= htmlspecialchars($trans['bukti']) ?>" target="_blank"
+                                           style="display:inline-flex;width:32px;height:32px;border-radius:8px;align-items:center;justify-content:center;font-size:12px;text-decoration:none;transition:0.15s;color:var(--primary-600);background:var(--tab-active-bg)"
+                                           title="Lihat Bukti">
+                                            <i class="fa-solid fa-image"></i>
                                         </a>
-                                    </td>
+                                    <?php else: ?>
+                                        <span style="color:var(--text-dim);font-size:10px">—</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="text-center">
+                                    <a href="transaksi.php?action=delete&id=<?= $trans['id'] ?>"
+                                       onclick="return confirm('Apakah Anda yakin ingin menghapus data transaksi ini? Penghapusan akan memicu perubahan pada saldo saat ini.')"
+                                       style="display:inline-flex;width:28px;height:28px;border-radius:8px;align-items:center;justify-content:center;font-size:12px;text-decoration:none;transition:0.15s;color:var(--text-muted);background:var(--surface-bg)" onmouseenter="this.style.background='var(--expense-bg)';this.style.color='var(--expense)'" onmouseleave="this.style.background='var(--surface-bg)';this.style.color='var(--text-muted)'"
+                                       title="Hapus Transaksi">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                    </a>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
