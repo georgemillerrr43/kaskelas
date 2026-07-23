@@ -26,21 +26,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_type']) && $_P
     $jumlah = (float)($_POST['jumlah'] ?? 0);
     $keterangan = trim($_POST['keterangan'] ?? '');
 
-    // Handle file upload untuk pengeluaran
+    // Handle file upload untuk pengeluaran (OPSIONAL)
     $bukti_path = null;
     if ($jenis === 'pengeluaran' && isset($_FILES['bukti']) && $_FILES['bukti']['error'] === UPLOAD_ERR_OK) {
-        $allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+        $allowed_mime = ['image/jpeg', 'image/png', 'image/webp'];
+        $allowed_ext  = ['jpg', 'jpeg', 'png', 'webp'];
         $max_size = 2 * 1024 * 1024;
-        if (!in_array($_FILES['bukti']['type'], $allowed)) {
+        $file_mime = $_FILES['bukti']['type'];
+        if (strpos($file_mime, 'image/') !== 0 && !in_array(strtolower(pathinfo($_FILES['bukti']['name'], PATHINFO_EXTENSION)), $allowed_ext)) {
             $error = 'File bukti harus berupa gambar (JPEG/PNG/WebP)!';
         } elseif ($_FILES['bukti']['size'] > $max_size) {
             $error = 'Ukuran file maksimal 2MB!';
         } else {
-            $ext = pathinfo($_FILES['bukti']['name'], PATHINFO_EXTENSION);
+            $ext = strtolower(pathinfo($_FILES['bukti']['name'], PATHINFO_EXTENSION));
             $filename = 'bukti_' . time() . '_' . uniqid() . '.' . $ext;
-            $dest = 'assets/uploads/' . $filename;
+            $dest = __DIR__ . '/assets/uploads/' . $filename;
             if (move_uploaded_file($_FILES['bukti']['tmp_name'], $dest)) {
-                $bukti_path = $dest;
+                $bukti_path = 'assets/uploads/' . $filename;
+            } else {
+                $error = 'Gagal menyimpan file bukti. Periksa izin folder uploads.';
             }
         }
     }
