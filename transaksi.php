@@ -362,7 +362,7 @@ $nama_bulan = [
             <button onclick="toggleTransactionModal(false)" class="modal-close" style="color:rgba(255,255,255,0.7);background:rgba(255,255,255,0.1)"><i class="fa-solid fa-xmark"></i></button>
         </div>
 
-        <form action="transaksi.php" method="POST" id="transactionForm" class="p-6 space-y-5">
+        <form action="transaksi.php" method="POST" id="transactionForm" class="p-6 space-y-5" enctype="multipart/form-data">
             <input type="hidden" name="action_type" value="add">
 
             <div class="grid grid-cols-2 gap-4">
