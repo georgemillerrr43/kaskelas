@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_type']) && $_P
             $error = $e->getMessage();
         }
     }
-}
+} // <-- nutup POST handler (line 23)
 
 // 2. Tangani Penghapusan Transaksi (Hanya Admin)
 if (isset($_GET['action']) && $_GET['action'] === 'delete' && $user_role === 'admin') {
