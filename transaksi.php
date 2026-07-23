@@ -381,12 +381,12 @@ $nama_bulan = [
 <div id="transactionModal" class="modal-overlay" onclick="if(event.target===this)toggleTransactionModal(false)">
     <div class="modal-card" id="modalCard">
         <!-- Header -->
-        <div class="modal-header" style="background:linear-gradient(135deg,var(--primary-600),#7c3aed);border-radius:16px 16px 0 0">
+        <div class="modal-header" style="border-bottom:1px solid var(--border);border-radius:16px 16px 0 0;background:var(--surface-card)">
             <div>
-                <h3 style="color:#fff;font-size:15px;font-weight:700;margin:0"><i class="fa-solid fa-wallet mr-2"></i> Catat Transaksi Baru</h3>
-                <p style="color:rgba(255,255,255,0.55);font-size:11px;margin:2px 0 0">Pemasukan / Pengeluaran kas kelas</p>
+                <h3 style="font-size:15px;font-weight:700;margin:0;color:var(--text)"><i class="fa-solid fa-wallet mr-2" style="color:var(--primary-500)"></i> Catat Transaksi Baru</h3>
+                <p style="color:var(--text-muted);font-size:11px;margin:2px 0 0">Pemasukan / Pengeluaran kas kelas</p>
             </div>
-            <button onclick="toggleTransactionModal(false)" class="modal-close" style="color:rgba(255,255,255,0.7);background:rgba(255,255,255,0.12);border-radius:10px;width:32px;height:32px;border:none;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center">
+            <button onclick="toggleTransactionModal(false)" class="modal-close" style="color:var(--text-muted);background:var(--tab-hover);border-radius:10px;width:32px;height:32px;border:none;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
