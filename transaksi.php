@@ -99,21 +99,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_type']) && $_P
 }
 
 // 2. Tangani Penghapusan Transaksi (Hanya Admin)
-$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-if ($id > 0) {
+if (isset($_GET['action']) && $_GET['action'] === 'delete' && $user_role === 'admin') {
+    $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+    if ($id > 0) {
         try {
+            // Hapus file bukti jika ada
+            $stmt = $pdo->prepare("SELECT bukti FROM transaksi WHERE id = ?");
+            $stmt->execute([$id]);
+            $trans_data = $stmt->fetch();
+            if ($trans_data && !empty($trans_data['bukti'])) {
+                $file_path = __DIR__ . '/' . $trans_data['bukti'];
+                if (file_exists($file_path)) @unlink($file_path);
+            }
+
             $stmt = $pdo->prepare("DELETE FROM transaksi WHERE id = ?");
             $stmt->execute([$id]);
-            $success = 'Transaksi berhasil dihapus dari riwayat!';
-            
-            // Rekalkulasi saldo aktual
-            $stmt_bal = $pdo->query("
-                SELECT 
-                    (SELECT COALESCE(SUM(jumlah), 0) FROM transaksi WHERE jenis = 'pemasukan') - 
-                    (SELECT COALESCE(SUM(jumlah), 0) FROM transaksi WHERE jenis = 'pengeluaran') 
-                AS saldo
-            ");
-            $actual_saldo_kas = (float)($stmt_bal->fetch()['saldo'] ?? 0);
+
+            // Redirect biar URL bersih dari params action=delete&id=N
+            header('Location: transaksi.php');
+            exit;
         } catch (PDOException $e) {
             $error = 'Gagal menghapus transaksi: ' . $e->getMessage();
         }
