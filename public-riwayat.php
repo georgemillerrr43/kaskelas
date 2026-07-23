@@ -96,7 +96,7 @@ function fr($a) { return 'Rp ' . number_format($a, 0, ',', '.'); }
                             <?php if ($tr['minggu']): ?><span style="display:block;font-size:9px;color:var(--primary-400);font-weight:600;margin-top:2px">Mg <?= $tr['minggu'] ?>, <?= $nama_bulan[$tr['bulan']]??'' ?> <?= $tr['tahun'] ?></span><?php endif; ?>
                             <?php if (!empty($tr['bukti'])): ?>
                                 <span style="display:block;margin-top:3px">
-                                    <a href="javascript:void(0)" onclick="window.open('<?= htmlspecialchars($tr['bukti']) ?>','_blank','width=900,height=650,scrollbars=yes')" style="font-size:10px;color:var(--primary-600);font-weight:600;text-decoration:none"><i class="fa-solid fa-image"></i> Bukti</a>
+                                    <a href="javascript:void(0)" onclick="previewBukti('<?= htmlspecialchars($tr['bukti']) ?>')" style="font-size:10px;color:var(--primary-600);font-weight:600;text-decoration:none"><i class="fa-solid fa-image"></i> Bukti</a>
                                 </span>
                             <?php endif; ?>
                         </td>
@@ -109,7 +109,36 @@ function fr($a) { return 'Rp ' . number_format($a, 0, ',', '.'); }
     </div>
 </div>
 
+<!-- Modal Preview Bukti -->
+<div id="buktiPreviewModal" class="modal-overlay" onclick="closeBuktiPreview(event)">
+    <div class="modal-card" style="max-width:700px;padding:16px" onclick="event.stopPropagation()">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <span style="font-size:13px;font-weight:700;color:var(--text)"><i class="fa-solid fa-image mr-2"></i> Bukti Transaksi</span>
+            <button onclick="closeBuktiPreview()" class="modal-close" style="width:30px;height:30px;border-radius:8px;border:none;background:var(--tab-hover);color:var(--text-muted);cursor:pointer;font-size:14px"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div style="background:var(--surface-bg);border-radius:10px;padding:12px;display:flex;align-items:center;justify-content:center;max-height:70vh;overflow:hidden">
+            <img id="buktiPreviewImg" src="" alt="Bukti Transaksi" style="max-width:100%;max-height:65vh;object-fit:contain;border-radius:6px">
+        </div>
+        <div style="margin-top:12px;text-align:center">
+            <a id="buktiDownloadLink" href="#" target="_blank" class="btn btn-outline btn-sm"><i class="fa-solid fa-download"></i> Buka di Tab Baru</a>
+        </div>
+    </div>
+</div>
+
 <script>
+function previewBukti(url) {
+    document.getElementById('buktiPreviewImg').src = url;
+    document.getElementById('buktiDownloadLink').href = url;
+    document.getElementById('buktiPreviewModal').classList.add('open');
+}
+function closeBuktiPreview(e) {
+    if (e && e.target !== e.currentTarget) return;
+    document.getElementById('buktiPreviewModal').classList.remove('open');
+}
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeBuktiPreview();
+});
+
 // search
 document.addEventListener('DOMContentLoaded',function(){
     var si=document.getElementById('searchInput');

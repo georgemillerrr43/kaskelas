@@ -276,7 +276,7 @@ function formatRupiah($angka) {
                                     <i class="fa-regular fa-calendar mr-1"></i><?= date('d M Y', strtotime($trans['tanggal'])) ?>
                                     &middot; <?= htmlspecialchars($trans['nama_petugas'] ?? 'Sistem') ?>
                                     <?php if (!empty($trans['bukti'])): ?>
-                                        &middot; <a href="javascript:void(0)" onclick="window.open('<?= htmlspecialchars($trans['bukti']) ?>','_blank','width=900,height=650,scrollbars=yes')" style="color:var(--primary-600);font-weight:600;text-decoration:none"><i class="fa-solid fa-image"></i> Foto</a>
+                                        &middot; <a href="javascript:void(0)" onclick="previewBukti('<?= htmlspecialchars($trans['bukti']) ?>')" style="color:var(--primary-600);font-weight:600;text-decoration:none"><i class="fa-solid fa-image"></i> Foto</a>
                                     <?php endif; ?>
                                 </span>
                             </div>
@@ -316,7 +316,37 @@ function formatRupiah($angka) {
 
 <!-- Chart.js Library -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Modal Preview Bukti -->
+<div id="buktiPreviewModal" class="modal-overlay" onclick="closeBuktiPreview(event)">
+    <div class="modal-card" style="max-width:700px;padding:16px" onclick="event.stopPropagation()">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <span style="font-size:13px;font-weight:700;color:var(--text)"><i class="fa-solid fa-image mr-2"></i> Bukti Transaksi</span>
+            <button onclick="closeBuktiPreview()" class="modal-close" style="width:30px;height:30px;border-radius:8px;border:none;background:var(--tab-hover);color:var(--text-muted);cursor:pointer;font-size:14px"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div style="background:var(--surface-bg);border-radius:10px;padding:12px;display:flex;align-items:center;justify-content:center;max-height:70vh;overflow:hidden">
+            <img id="buktiPreviewImg" src="" alt="Bukti Transaksi" style="max-width:100%;max-height:65vh;object-fit:contain;border-radius:6px">
+        </div>
+        <div style="margin-top:12px;text-align:center">
+            <a id="buktiDownloadLink" href="#" target="_blank" class="btn btn-secondary btn-sm"><i class="fa-solid fa-download"></i> Buka di Tab Baru</a>
+        </div>
+    </div>
+</div>
+
 <script>
+    function previewBukti(url) {
+        document.getElementById('buktiPreviewImg').src = url;
+        document.getElementById('buktiDownloadLink').href = url;
+        document.getElementById('buktiPreviewModal').classList.add('open');
+    }
+    function closeBuktiPreview(e) {
+        if (e && e.target !== e.currentTarget) return;
+        document.getElementById('buktiPreviewModal').classList.remove('open');
+    }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeBuktiPreview();
+    });
+
     const namaBulanAktif = '<?= $nama_bulan[$current_m] ?>';
     const tahunAktif = '<?= $tahun_aktif ?>';
 
