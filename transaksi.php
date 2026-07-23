@@ -1,9 +1,40 @@
 <?php
 // transaksi.php
 require_once 'config/database.php';
+
+// Handle hapus transaksi SEBELUM header.php dipanggil (biar header redirect gak error)
+if (session_status() === PHP_SESSION_NONE) session_start();
+if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_SESSION['user_id'])) {
+    $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+    if ($id > 0) {
+        try {
+            // Hapus file bukti jika ada
+            $stmt = $pdo->prepare("SELECT bukti FROM transaksi WHERE id = ?");
+            $stmt->execute([$id]);
+            $trans_data = $stmt->fetch();
+            if ($trans_data && !empty($trans_data['bukti'])) {
+                $file_path = __DIR__ . '/' . $trans_data['bukti'];
+                if (file_exists($file_path)) @unlink($file_path);
+            }
+
+            $stmt = $pdo->prepare("DELETE FROM transaksi WHERE id = ?");
+            $stmt->execute([$id]);
+
+            header('Location: transaksi.php');
+            exit;
+        } catch (PDOException $e) {
+            // fallback: biar error muncul di halaman
+            $_SESSION['delete_error'] = $e->getMessage();
+            header('Location: transaksi.php');
+            exit;
+        }
+    }
+}
+
 require_once 'includes/header.php';
 
-$error = '';
+$error = isset($_SESSION['delete_error']) ? $_SESSION['delete_error'] : '';
+unset($_SESSION['delete_error']);
 $success = '';
 
 // Ambil Saldo Kas Aktual Global (Untuk Validasi Pengeluaran Backend/Frontend)
@@ -96,33 +127,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_type']) && $_P
             $error = $e->getMessage();
         }
     }
+	} // <-- nutup if ($error === '')
 } // <-- nutup POST handler (line 23)
-
-// 2. Tangani Penghapusan Transaksi (Hanya Admin)
-if (isset($_GET['action']) && $_GET['action'] === 'delete' && $user_role === 'admin') {
-    $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-    if ($id > 0) {
-        try {
-            // Hapus file bukti jika ada
-            $stmt = $pdo->prepare("SELECT bukti FROM transaksi WHERE id = ?");
-            $stmt->execute([$id]);
-            $trans_data = $stmt->fetch();
-            if ($trans_data && !empty($trans_data['bukti'])) {
-                $file_path = __DIR__ . '/' . $trans_data['bukti'];
-                if (file_exists($file_path)) @unlink($file_path);
-            }
-
-            $stmt = $pdo->prepare("DELETE FROM transaksi WHERE id = ?");
-            $stmt->execute([$id]);
-
-            // Redirect biar URL bersih dari params action=delete&id=N
-            header('Location: transaksi.php');
-            exit;
-        } catch (PDOException $e) {
-            $error = 'Gagal menghapus transaksi: ' . $e->getMessage();
-        }
-    }
-}
 
 // 3. Setup Filter Transaksi
 $filter_jenis = $_GET['filter_jenis'] ?? 'semua';
