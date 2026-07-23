@@ -84,7 +84,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_type']) && $_P
     if ($error === '') {
     // Uang Kas Mingguan Anggota
     $is_kas = isset($_POST['is_kas']) ? (int)$_POST['is_kas'] : 0;
-    $anggota_id = ($jenis === 'pemasukan' && $is_kas === 1) ? (int)$_POST['anggota_id'] : null;
+    $anggota_id = null;
+    if ($jenis === 'pemasukan' && $is_kas === 1) {
+        $anggota_id = (int)$_POST['anggota_id'];
+    } elseif ($jenis === 'pengeluaran' && !empty($_POST['pengguna_id'])) {
+        $anggota_id = (int)$_POST['pengguna_id'];
+    }
     $minggu = ($jenis === 'pemasukan' && $is_kas === 1) ? (int)$_POST['minggu'] : null;
     $bulan = ($jenis === 'pemasukan' && $is_kas === 1) ? (int)$_POST['bulan'] : null;
     $tahun = ($jenis === 'pemasukan' && $is_kas === 1) ? (int)$_POST['tahun'] : null;
@@ -373,115 +378,134 @@ $nama_bulan = [
 </div>
 
 <!-- Modal Dialog Input Transaksi -->
-<div id="transactionModal" class="modal-overlay">
+<div id="transactionModal" class="modal-overlay" onclick="if(event.target===this)toggleTransactionModal(false)">
     <div class="modal-card" id="modalCard">
-        <div class="modal-header" style="background:linear-gradient(135deg,var(--primary-600),#7c3aed)">
-            <h3 style="color:#fff"><i class="fa-solid fa-wallet mr-2"></i> Catat Transaksi Baru</h3>
-            <button onclick="toggleTransactionModal(false)" class="modal-close" style="color:rgba(255,255,255,0.7);background:rgba(255,255,255,0.1)"><i class="fa-solid fa-xmark"></i></button>
+        <!-- Header -->
+        <div class="modal-header" style="background:linear-gradient(135deg,var(--primary-600),#7c3aed);border-radius:16px 16px 0 0">
+            <div>
+                <h3 style="color:#fff;font-size:15px;font-weight:700;margin:0"><i class="fa-solid fa-wallet mr-2"></i> Catat Transaksi Baru</h3>
+                <p style="color:rgba(255,255,255,0.55);font-size:11px;margin:2px 0 0">Pemasukan / Pengeluaran kas kelas</p>
+            </div>
+            <button onclick="toggleTransactionModal(false)" class="modal-close" style="color:rgba(255,255,255,0.7);background:rgba(255,255,255,0.12);border-radius:10px;width:32px;height:32px;border:none;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
         </div>
 
-        <form action="transaksi.php" method="POST" id="transactionForm" class="p-6 space-y-5" enctype="multipart/form-data">
+        <form action="transaksi.php" method="POST" id="transactionForm" class="p-5 md:p-6" enctype="multipart/form-data" style="display:flex;flex-direction:column;gap:18px">
             <input type="hidden" name="action_type" value="add">
 
-            <div class="grid grid-cols-2 gap-4">
+            <!-- Jenis + Tanggal -->
+            <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label for="jenis" class="input-label">Jenis Transaksi</label>
-                    <select name="jenis" id="jenis" required onchange="handleJenisChange()" class="input select text-sm font-semibold">
-                        <option value="pemasukan" selected>Pemasukan (+)</option>
-                        <option value="pengeluaran">Pengeluaran (-)</option>
-                    </select>
+                    <label class="input-label"><i class="fa-solid fa-arrow-right-arrow-left mr-1"></i> Jenis</label>
+                    <div style="display:flex;gap:6px;background:var(--surface-bg);padding:4px;border-radius:10px;border:1px solid var(--input-border)">
+                        <button type="button" id="jenisPemasukan" class="jenis-tab"
+                            onclick="setJenis('pemasukan')"
+                            style="flex:1;padding:8px 12px;border-radius:7px;border:none;font-weight:600;font-size:12px;cursor:pointer;transition:0.15s;color:var(--primary-600);background:var(--input-bg);box-shadow:0 1px 3px rgba(0,0,0,0.08)">
+                            <i class="fa-solid fa-arrow-down-long mr-1"></i> Masuk
+                        </button>
+                        <button type="button" id="jenisPengeluaran" class="jenis-tab"
+                            onclick="setJenis('pengeluaran')"
+                            style="flex:1;padding:8px 12px;border-radius:7px;border:none;font-weight:600;font-size:12px;cursor:pointer;transition:0.15s;color:var(--text-muted);background:transparent">
+                            <i class="fa-solid fa-arrow-up-long mr-1"></i> Keluar
+                        </button>
+                    </div>
+                    <input type="hidden" name="jenis" id="jenis" value="pemasukan">
                 </div>
                 <div>
-                    <label for="tanggal" class="input-label">Tanggal</label>
+                    <label for="tanggal" class="input-label"><i class="fa-regular fa-calendar mr-1"></i> Tanggal</label>
                     <input type="date" name="tanggal" id="tanggal" required value="<?= date('Y-m-d') ?>" class="input text-sm font-medium">
                 </div>
             </div>
 
-            <!-- Dues Section -->
-            <div id="duesSection" style="padding:16px;border-radius:12px;border:1px solid var(--border);background:var(--surface-bg)">
-                <label style="display:inline-flex;align-items:center;font-size:12px;font-weight:600;color:var(--text);cursor:pointer;gap:8px">
+            <!-- Dues Section (hanya pemasukan) -->
+            <div id="duesSection" style="padding:14px;border-radius:10px;border:1px solid var(--border);background:var(--surface-bg)">
+                <label style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--text);cursor:pointer;user-select:none">
                     <input type="checkbox" name="is_kas" id="is_kas" value="1" onchange="toggleDuesForm()"
-                           style="width:16px;height:16px;accent-color:var(--primary-600)">
-                    Apakah ini pembayaran kas mingguan siswa?
+                           style="width:15px;height:15px;accent-color:var(--primary-600);flex-shrink:0">
+                    <span><i class="fa-regular fa-clock mr-1"></i> Kas mingguan siswa</span>
                 </label>
-
-                <div id="duesFields" class="hidden space-y-3 pt-3" style="border-top:1px solid var(--border)">
+                <div id="duesFields" class="hidden" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:grid;gap:10px">
                     <div>
-                        <label for="anggota_id" class="input-label" style="color:var(--text)">Pilih Siswa</label>
+                        <label for="anggota_id" class="input-label" style="color:var(--text-muted)">Siswa</label>
                         <select name="anggota_id" id="anggota_id" class="input text-xs font-semibold select">
-                            <option value="">-- Pilih Anggota --</option>
+                            <option value="">-- Pilih --</option>
                             <?php foreach ($anggota_list as $member): ?>
-                                <option value="<?= $member['id'] ?>"><?= htmlspecialchars($member['nama']) ?> (NIS: <?= htmlspecialchars($member['nis'] ?? '-') ?>)</option>
+                                <option value="<?= $member['id'] ?>"><?= htmlspecialchars($member['nama']) ?> (<?= htmlspecialchars($member['nis'] ?? '-') ?>)</option>
                             <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="grid grid-cols-3 gap-2">
-                        <div>
-                            <label for="minggu" class="input-label" style="color:#312e81">Minggu Ke</label>
-                            <select name="minggu" id="minggu" class="input text-xs select">
-                                <?php
-                                $c_w = (int)ceil(date('j') / 7);
-                                for ($w = 1; $w <= 5; $w++):
-                                ?>
-                                    <option value="<?= $w ?>" <?= $c_w === $w ? 'selected' : '' ?>>Minggu <?= $w ?></option>
-                                <?php endfor; ?>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="bulan" class="input-label" style="color:#312e81">Bulan</label>
-                            <select name="bulan" id="bulan" class="input text-xs select">
-                                <?php foreach ($nama_bulan as $num => $name): ?>
-                                    <option value="<?= $num ?>" <?= (int)date('n') === $num ? 'selected' : '' ?>><?= $name ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="tahun" class="input-label" style="color:#312e81">Tahun</label>
-                            <select name="tahun" id="tahun" class="input text-xs select">
-                                <?php
-                                $c_y = (int)date('Y');
-                                for ($y = $c_y - 2; $y <= $c_y + 2; $y++):
-                                ?>
-                                    <option value="<?= $y ?>" <?= $c_y === $y ? 'selected' : '' ?>><?= $y ?></option>
-                                <?php endfor; ?>
-                            </select>
-                        </div>
+                        <div><label for="minggu" class="input-label">Mgg</label><select name="minggu" id="minggu" class="input text-xs select"><?php $c_w=(int)ceil(date('j')/7);for($w=1;$w<=5;$w++):?><option value="<?=$w?>"<?=$c_w===$w?' selected':''?>>Mg <?=$w?></option><?php endfor;?></select></div>
+                        <div><label for="bulan" class="input-label">Bln</label><select name="bulan" id="bulan" class="input text-xs select"><?php foreach($nama_bulan as $num=>$name):?><option value="<?=$num?>"<?=(int)date('n')===$num?' selected':''?>><?=$name?></option><?php endforeach;?></select></div>
+                        <div><label for="tahun" class="input-label">Thn</label><select name="tahun" id="tahun" class="input text-xs select"><?php $c_y=(int)date('Y');for($y=$c_y-2;$y<=$c_y+2;$y++):?><option value="<?=$y?>"<?=$c_y===$y?' selected':''?>><?=$y?></option><?php endfor;?></select></div>
                     </div>
                 </div>
             </div>
 
+            <!-- Jumlah -->
             <div>
-                <label for="jumlah" class="input-label">Jumlah (Rupiah)</label>
+                <label for="jumlah" class="input-label"><i class="fa-solid fa-money-bill mr-1"></i> Jumlah</label>
                 <div class="relative">
-                    <span style="position:absolute;top:0;bottom:0;left:0;display:flex;align-items:center;padding-left:12px;color:var(--text-muted);font-weight:bold;font-size:14px;pointer-events:none">Rp</span>
+                    <span style="position:absolute;inset:0;display:flex;align-items:center;padding-left:14px;color:var(--text-muted);font-weight:700;font-size:15px;pointer-events:none">Rp</span>
                     <input type="number" name="jumlah" id="jumlah" required min="100" step="100"
-                           class="input pl-10 text-sm font-semibold"
-                           placeholder="Contoh: 2000" value="2000">
+                           class="input pl-12 text-sm font-semibold" style="font-size:16px;padding-top:12px;padding-bottom:12px"
+                           placeholder="0">
                 </div>
             </div>
 
+            <!-- Keterangan -->
             <div>
-                <label for="keterangan" class="input-label">Keterangan / Deskripsi</label>
+                <label for="keterangan" class="input-label"><i class="fa-solid fa-pen mr-1"></i> Keterangan</label>
                 <textarea name="keterangan" id="keterangan" required rows="2"
-                          class="input text-sm"
-                          placeholder="Keterangan singkat transaksi"></textarea>
+                          class="input text-sm" style="resize:none"
+                          placeholder="Misal: Uang kas mingguan, beli alat kelas, isi ulang air galon, dll"></textarea>
             </div>
 
-            <!-- Upload bukti (khusus pengeluaran) -->
-            <div id="buktiSection" style="display:none">
-                <label for="bukti" class="input-label">Upload Bukti / Nota (Gambar)</label>
-                <input type="file" name="bukti" id="bukti" accept="image/jpeg,image/png,image/webp"
-                       class="input text-sm" style="padding:8px 12px">
-                <p style="font-size:10px;color:var(--text-dim);margin-top:4px">Format: JPEG/PNG/WebP. Maks 2MB.</p>
+            <!-- Fields khusus pengeluaran -->
+            <div id="pengeluaranFields" style="display:none">
+                <div style="padding:14px;border-radius:10px;border:1px solid var(--border);background:var(--surface-bg);display:grid;gap:12px">
+                    <div>
+                        <label for="pengguna_id" class="input-label"><i class="fa-solid fa-user mr-1"></i> Yang Mengeluarkan</label>
+                        <select name="pengguna_id" id="pengguna_id" class="input select text-xs font-semibold">
+                            <option value="">-- Pilih Siswa --</option>
+                            <?php foreach ($anggota_list as $member): ?>
+                                <option value="<?= $member['id'] ?>"><?= htmlspecialchars($member['nama']) ?> (<?= htmlspecialchars($member['nis'] ?? '-') ?>)</option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="bukti" class="input-label"><i class="fa-solid fa-camera mr-1"></i> Bukti Nota <span style="color:var(--text-dim);font-weight:400;text-transform:none;letter-spacing:0;font-size:9px">(opsional)</span></label>
+                        <div style="border:1px dashed var(--input-border);border-radius:10px;padding:3px;transition:0.15s">
+                            <input type="file" name="bukti" id="bukti" accept="image/jpeg,image/png,image/webp"
+                                   class="input text-sm" style="padding:10px;border:none;background:transparent;font-size:12px">
+                        </div>
+                        <p style="font-size:10px;color:var(--text-dim);margin-top:4px;display:flex;align-items:center;gap:4px"><i class="fa-solid fa-circle-info"></i> JPEG/PNG/WebP, maks 2MB</p>
+                    </div>
+                </div>
             </div>
 
             <script>
-            document.getElementById('jenis').addEventListener('change', function() {
-                document.getElementById('buktiSection').style.display = this.value === 'pengeluaran' ? 'block' : 'none';
-            });
+            function setJenis(val) {
+                document.getElementById('jenis').value = val;
+                var pi = document.getElementById('jenisPemasukan');
+                var po = document.getElementById('jenisPengeluaran');
+                var ds = document.getElementById('duesSection');
+                var pf = document.getElementById('pengeluaranFields');
+                var ic = document.getElementById('is_kas');
+                if (val === 'pemasukan') {
+                    pi.style.background='var(--input-bg)'; pi.style.color='var(--primary-600)'; pi.style.boxShadow='0 1px 3px rgba(0,0,0,0.08)';
+                    po.style.background='transparent'; po.style.color='var(--text-muted)'; po.style.boxShadow='none';
+                    ds.style.display='block'; pf.style.display='none';
+                } else {
+                    po.style.background='var(--input-bg)'; po.style.color='var(--expense)'; po.style.boxShadow='0 1px 3px rgba(0,0,0,0.08)';
+                    pi.style.background='transparent'; pi.style.color='var(--text-muted)'; pi.style.boxShadow='none';
+                    ds.style.display='none'; if(ic)ic.checked=false; toggleDuesForm(); pf.style.display='block';
+                }
+            }
             </script>
 
-            <button type="submit" class="btn btn-primary w-full py-3">
+            <button type="submit" class="btn btn-primary w-full" style="padding:12px;border-radius:10px;font-size:14px">
                 <i class="fa-solid fa-floppy-disk"></i> Simpan Transaksi
             </button>
         </form>
