@@ -346,7 +346,7 @@ $nama_bulan = [
                                 </td>
                                 <td class="text-center">
                                     <?php if (!empty($trans['bukti'])): ?>
-                                        <a href="<?= htmlspecialchars($trans['bukti']) ?>" target="_blank"
+                                        <a href="javascript:void(0)" onclick="window.open('<?= htmlspecialchars($trans['bukti']) ?>','_blank','width=900,height=650,scrollbars=yes')"
                                            style="display:inline-flex;width:32px;height:32px;border-radius:8px;align-items:center;justify-content:center;font-size:12px;text-decoration:none;transition:0.15s;color:var(--primary-600);background:var(--tab-active-bg)"
                                            title="Lihat Bukti">
                                             <i class="fa-solid fa-image"></i>

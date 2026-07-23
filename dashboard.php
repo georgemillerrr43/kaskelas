@@ -276,7 +276,7 @@ function formatRupiah($angka) {
                                     <i class="fa-regular fa-calendar mr-1"></i><?= date('d M Y', strtotime($trans['tanggal'])) ?>
                                     &middot; <?= htmlspecialchars($trans['nama_petugas'] ?? 'Sistem') ?>
                                     <?php if (!empty($trans['bukti'])): ?>
-                                        &middot; <a href="<?= htmlspecialchars($trans['bukti']) ?>" target="_blank" style="color:var(--primary-600);font-weight:600;text-decoration:none"><i class="fa-solid fa-image"></i> Foto</a>
+                                        &middot; <a href="javascript:void(0)" onclick="window.open('<?= htmlspecialchars($trans['bukti']) ?>','_blank','width=900,height=650,scrollbars=yes')" style="color:var(--primary-600);font-weight:600;text-decoration:none"><i class="fa-solid fa-image"></i> Foto</a>
                                     <?php endif; ?>
                                 </span>
                             </div>

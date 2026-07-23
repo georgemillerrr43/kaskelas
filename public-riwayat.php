@@ -96,7 +96,7 @@ function fr($a) { return 'Rp ' . number_format($a, 0, ',', '.'); }
                             <?php if ($tr['minggu']): ?><span style="display:block;font-size:9px;color:var(--primary-400);font-weight:600;margin-top:2px">Mg <?= $tr['minggu'] ?>, <?= $nama_bulan[$tr['bulan']]??'' ?> <?= $tr['tahun'] ?></span><?php endif; ?>
                             <?php if (!empty($tr['bukti'])): ?>
                                 <span style="display:block;margin-top:3px">
-                                    <a href="<?= htmlspecialchars($tr['bukti']) ?>" target="_blank" style="font-size:10px;color:var(--primary-600);font-weight:600;text-decoration:none"><i class="fa-solid fa-image"></i> Bukti</a>
+                                    <a href="javascript:void(0)" onclick="window.open('<?= htmlspecialchars($tr['bukti']) ?>','_blank','width=900,height=650,scrollbars=yes')" style="font-size:10px;color:var(--primary-600);font-weight:600;text-decoration:none"><i class="fa-solid fa-image"></i> Bukti</a>
                                 </span>
                             <?php endif; ?>
                         </td>
