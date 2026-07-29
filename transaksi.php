@@ -59,23 +59,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_type']) && $_P
 
     // Handle file upload untuk pengeluaran (OPSIONAL)
     $bukti_path = null;
-    if ($jenis === 'pengeluaran' && isset($_FILES['bukti']) && $_FILES['bukti']['error'] === UPLOAD_ERR_OK) {
-        $allowed_mime = ['image/jpeg', 'image/png', 'image/webp'];
-        $allowed_ext  = ['jpg', 'jpeg', 'png', 'webp'];
-        $max_size = 2 * 1024 * 1024;
-        $file_mime = $_FILES['bukti']['type'];
-        if (strpos($file_mime, 'image/') !== 0 && !in_array(strtolower(pathinfo($_FILES['bukti']['name'], PATHINFO_EXTENSION)), $allowed_ext)) {
-            $error = 'File bukti harus berupa gambar (JPEG/PNG/WebP)!';
-        } elseif ($_FILES['bukti']['size'] > $max_size) {
-            $error = 'Ukuran file maksimal 2MB!';
+    $has_upload_attempt = isset($_FILES['bukti']) && $_FILES['bukti']['error'] !== UPLOAD_ERR_NO_FILE;
+    if ($jenis === 'pengeluaran' && $has_upload_attempt) {
+        $upload_err = $_FILES['bukti']['error'];
+        if ($upload_err !== UPLOAD_ERR_OK) {
+            $err_msgs = [
+                UPLOAD_ERR_INI_SIZE   => 'Ukuran file melebihi batas maksimum (upload_max_filesize)',
+                UPLOAD_ERR_FORM_SIZE  => 'Ukuran file melebihi batas maksimum form',
+                UPLOAD_ERR_PARTIAL    => 'File hanya terupload sebagian, coba lagi',
+                UPLOAD_ERR_NO_TMP_DIR => 'Folder temporary server tidak ditemukan',
+                UPLOAD_ERR_CANT_WRITE => 'Gagal menulis file ke disk server',
+            ];
+            $error = 'Gagal upload bukti: ' . ($err_msgs[$upload_err] ?? 'Error tidak dikenal (kode ' . $upload_err . ')');
         } else {
-            $ext = strtolower(pathinfo($_FILES['bukti']['name'], PATHINFO_EXTENSION));
-            $filename = 'bukti_' . time() . '_' . uniqid() . '.' . $ext;
-            $dest = __DIR__ . '/assets/uploads/' . $filename;
-            if (move_uploaded_file($_FILES['bukti']['tmp_name'], $dest)) {
-                $bukti_path = 'assets/uploads/' . $filename;
+            $allowed_ext  = ['jpg', 'jpeg', 'png', 'webp'];
+            $max_size = 2 * 1024 * 1024;
+
+            if ($_FILES['bukti']['size'] > $max_size) {
+                $error = 'Ukuran file bukti maksimal 2MB!';
             } else {
-                $error = 'Gagal menyimpan file bukti. Periksa izin folder uploads.';
+                $ext = strtolower(pathinfo($_FILES['bukti']['name'], PATHINFO_EXTENSION));
+                if (!in_array($ext, $allowed_ext)) {
+                    $error = 'File bukti harus berupa gambar (JPEG/PNG/WebP)!';
+                } else {
+                    // Validasi isi file via server
+                    $detected_mime = @mime_content_type($_FILES['bukti']['tmp_name']);
+                    $finfo_ok = $detected_mime && strpos($detected_mime, 'image/') === 0;
+                    if (!$finfo_ok) {
+                        $error = 'File bukti tidak dikenali sebagai gambar.';
+                    } else {
+                        $filename = 'bukti_' . time() . '_' . uniqid() . '.' . $ext;
+                        $dest = __DIR__ . '/assets/uploads/' . $filename;
+                        if (move_uploaded_file($_FILES['bukti']['tmp_name'], $dest)) {
+                            $bukti_path = 'assets/uploads/' . $filename;
+                        } else {
+                            $error = 'Gagal menyimpan file bukti. Periksa izin folder uploads.';
+                        }
+                    }
+                }
             }
         }
     }
@@ -541,7 +562,7 @@ $nama_bulan = [
         document.getElementById('buktiPreviewModal').classList.add('open');
     }
     function closeBuktiPreview(e) {
-        if (e && e.target !== e.currentTarget && !e) return;
+        if (e && e.target !== e.currentTarget) return;
         document.getElementById('buktiPreviewModal').classList.remove('open');
     }
     document.addEventListener('keydown', function(e) {

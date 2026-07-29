@@ -77,11 +77,12 @@ function fr($a) { return 'Rp ' . number_format($a, 0, ',', '.'); }
                     <th>Keterangan</th>
                     <th style="width:140px">Siswa</th>
                     <th style="width:120px;text-align:right">Jumlah</th>
+                    <th class="text-center" style="width:50px">Bukti</th>
                 </tr>
             </thead>
             <tbody>
                 <?php if (empty($semua_transaksi)): ?>
-                    <tr><td colspan="6" style="text-align:center;padding:60px 16px;color:var(--text-dim)"><i class="fa-solid fa-receipt" style="font-size:32px;display:block;margin-bottom:10px"></i>Belum ada transaksi.</td></tr>
+                    <tr><td colspan="7" style="text-align:center;padding:60px 16px;color:var(--text-dim)"><i class="fa-solid fa-receipt" style="font-size:32px;display:block;margin-bottom:10px"></i>Belum ada transaksi.</td></tr>
                 <?php else: $no=1; foreach ($semua_transaksi as $tr): ?>
                     <tr class="searchable-row">
                         <td style="text-align:center;font-weight:600;color:var(--text-dim);font-size:12px"><?= $no++ ?></td>
@@ -94,14 +95,20 @@ function fr($a) { return 'Rp ' . number_format($a, 0, ',', '.'); }
                         <td style="font-weight:500">
                             <?= htmlspecialchars($tr['keterangan']) ?>
                             <?php if ($tr['minggu']): ?><span style="display:block;font-size:9px;color:var(--primary-400);font-weight:600;margin-top:2px">Mg <?= $tr['minggu'] ?>, <?= $nama_bulan[$tr['bulan']]??'' ?> <?= $tr['tahun'] ?></span><?php endif; ?>
-                            <?php if (!empty($tr['bukti'])): ?>
-                                <span style="display:block;margin-top:3px">
-                                    <a href="javascript:void(0)" onclick="previewBukti('<?= htmlspecialchars($tr['bukti']) ?>')" style="font-size:10px;color:var(--primary-600);font-weight:600;text-decoration:none"><i class="fa-solid fa-image"></i> Bukti</a>
-                                </span>
-                            <?php endif; ?>
                         </td>
                         <td style="color:var(--text-muted);font-weight:500"><?= htmlspecialchars($tr['nama_anggota']??'-') ?></td>
                         <td style="text-align:right;font-weight:700;font-family:monospace;color:<?= $tr['jenis']==='pemasukan'?'var(--income)':'var(--expense)'?>"><?= $tr['jenis']==='pemasukan'?'+':'-' ?><?= number_format($tr['jumlah'],0,',','.') ?></td>
+                        <td class="text-center">
+                            <?php if (!empty($tr['bukti'])): ?>
+                                <a href="javascript:void(0)" onclick="previewBukti('<?= htmlspecialchars($tr['bukti']) ?>')"
+                                   style="display:inline-flex;width:32px;height:32px;border-radius:8px;align-items:center;justify-content:center;font-size:12px;text-decoration:none;transition:0.15s;color:var(--primary-600);background:var(--tab-active-bg)"
+                                   title="Lihat Bukti">
+                                    <i class="fa-solid fa-image"></i>
+                                </a>
+                            <?php else: ?>
+                                <span style="color:var(--text-dim);font-size:10px">—</span>
+                            <?php endif; ?>
+                        </td>
                     </tr>
                 <?php endforeach; endif; ?>
             </tbody>
