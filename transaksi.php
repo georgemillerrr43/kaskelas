@@ -365,7 +365,16 @@ $nama_bulan = [
                                     <?php endif; ?>
                                 </td>
                                 <td class="font-medium" style="color:var(--text-muted)">
-                                    <?= htmlspecialchars($trans['nama_anggota'] ?? '-') ?>
+                                    <?php if ($trans['nama_anggota']): ?>
+                                        <?= htmlspecialchars($trans['nama_anggota']) ?>
+                                        <?php if ($trans['jenis'] === 'pengeluaran' && $trans['nama_petugas']): ?>
+                                            <span style="display:block;font-size:9px;color:var(--text-dim)">dicatat oleh <?= htmlspecialchars($trans['nama_petugas']) ?></span>
+                                        <?php endif; ?>
+                                    <?php elseif ($trans['jenis'] === 'pemasukan'): ?>
+                                        <span style="color:var(--text-dim);font-size:11px">Kas kelas</span>
+                                    <?php else: ?>
+                                        <span style="color:var(--text-dim)">—</span>
+                                    <?php endif; ?>
                                 </td>
                                 <td class="text-right font-mono font-bold" style="color:<?= $trans['jenis'] === 'pemasukan' ? 'var(--income)' : 'var(--expense)' ?>">
                                     <?= $trans['jenis'] === 'pemasukan' ? '+' : '-' ?>Rp <?= number_format($trans['jumlah'], 0, ',', '.') ?>
@@ -443,7 +452,7 @@ $nama_bulan = [
             <div id="duesSection" style="padding:14px;border-radius:10px;border:1px solid var(--border);background:var(--surface-bg)">
                 <label style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--text);cursor:pointer;user-select:none">
                     <input type="checkbox" name="is_kas" id="is_kas" value="1" onchange="toggleDuesForm()"
-                           style="width:15px;height:15px;accent-color:var(--primary-600);flex-shrink:0">
+                           style="width:15px;height:15px;accent-color:var(--primary-600);flex-shrink:0;cursor:pointer">
                     <span><i class="fa-regular fa-clock mr-1"></i> Kas mingguan siswa</span>
                 </label>
                 <div id="duesFields" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:none;gap:10px">
