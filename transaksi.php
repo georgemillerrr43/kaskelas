@@ -537,37 +537,172 @@ $nama_bulan = [
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 
-<!-- Modal Preview Bukti -->
-<div id="buktiPreviewModal" class="modal-overlay" onclick="closeBuktiPreview(event)">
-    <div class="modal-card" style="max-width:700px;padding:16px" onclick="event.stopPropagation()">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-            <span style="font-size:13px;font-weight:700;color:var(--text)"><i class="fa-solid fa-image mr-2"></i> Bukti Transaksi</span>
-            <button onclick="closeBuktiPreview()" class="modal-close" style="width:30px;height:30px;border-radius:8px;border:none;background:var(--tab-hover);color:var(--text-muted);cursor:pointer;font-size:14px"><i class="fa-solid fa-xmark"></i></button>
+<!-- ══ MODAL LIGHTBOX BUKTI ══ -->
+<div id="buktiOverlay" class="lightbox-overlay" onclick="closeLightbox(event)">
+    <button class="lightbox-close-btn" onclick="closeLightbox()" aria-label="Tutup">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div class="lightbox-image-wrap" onclick="event.stopPropagation()">
+        <div class="lightbox-loader" id="lightboxLoader">
+            <div class="lb-spinner"></div>
+            <span>Memuat gambar...</span>
         </div>
-        <div style="background:var(--surface-bg);border-radius:10px;padding:12px;display:flex;align-items:center;justify-content:center;max-height:70vh;overflow:hidden">
-            <img id="buktiPreviewImg" src="" alt="Bukti Transaksi" style="max-width:100%;max-height:65vh;object-fit:contain;border-radius:6px">
+        <img id="lightboxImg" class="lightbox-img" src="" alt="Bukti Transaksi" onclick="toggleZoom(event)">
+        <div class="lightbox-hint" id="lightboxHint"><i class="fa-solid fa-magnifying-glass-plus"></i> Klik untuk zoom</div>
+    </div>
+    <div class="lightbox-bar" onclick="event.stopPropagation()">
+        <div class="lightbox-bar-left">
+            <div class="lightbox-badge"><i class="fa-solid fa-image"></i> Bukti Transaksi</div>
+            <span class="lightbox-filename" id="lightboxFilename"></span>
         </div>
-        <div style="margin-top:12px;text-align:center">
-            <a id="buktiDownloadLink" href="#" target="_blank" class="btn btn-secondary btn-sm" style="display:inline-flex;gap:6px">
-                <i class="fa-solid fa-download"></i> Buka di Tab Baru
+        <div class="lightbox-bar-right">
+            <a id="lightboxDownload" href="#" target="_blank" class="lightbox-action-btn" title="Buka di tab baru">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                <span>Buka</span>
             </a>
+            <button class="lightbox-action-btn" onclick="closeLightbox()" title="Tutup (Esc)">
+                <i class="fa-solid fa-xmark"></i>
+                <span>Tutup</span>
+            </button>
         </div>
     </div>
 </div>
 
+<style>
+.lightbox-overlay {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: lbFadeIn 0.25s ease;
+}
+.lightbox-overlay.open { display: flex; }
+@keyframes lbFadeIn { from { opacity: 0; } to { opacity: 1; } }
+.lightbox-close-btn {
+    position: absolute; top: 16px; right: 16px; z-index: 10;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #fff; font-size: 22px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s ease;
+}
+.lightbox-close-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.08); }
+.lightbox-image-wrap {
+    position: relative; flex: 1;
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; max-width: 900px;
+    min-height: 200px; margin-bottom: 80px;
+    overflow: hidden;
+}
+.lightbox-img {
+    max-width: 100%; max-height: 100%; object-fit: contain;
+    border-radius: 8px; display: none;
+    cursor: zoom-in; box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+    transition: transform 0.25s ease;
+    user-select: none; -webkit-user-drag: none;
+}
+.lightbox-img.zoomed { cursor: zoom-out; transform: scale(1.8); }
+.lightbox-loader {
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    color: rgba(255,255,255,0.5); font-size: 13px;
+}
+.lb-spinner {
+    width: 36px; height: 36px;
+    border: 3px solid rgba(255,255,255,0.1);
+    border-top-color: #818cf8; border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.lightbox-hint {
+    position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+    font-size: 11px; color: rgba(255,255,255,0.35);
+    background: rgba(0,0,0,0.4); padding: 4px 12px; border-radius: 99px;
+    pointer-events: none; transition: opacity 0.4s ease;
+}
+.lightbox-bar {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 64px;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; gap: 12px;
+}
+.lightbox-bar-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.lightbox-badge {
+    display: flex; align-items: center; gap: 6px;
+    padding: 5px 12px; border-radius: 6px;
+    background: rgba(99,102,241,0.2);
+    color: #a5b4fc; font-size: 11px; font-weight: 700; white-space: nowrap;
+}
+.lightbox-filename {
+    font-size: 12px; color: rgba(255,255,255,0.5);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.lightbox-bar-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.lightbox-action-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border-radius: 8px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.7); font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s ease;
+    text-decoration: none; font-family: inherit;
+}
+.lightbox-action-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+@media (max-width: 768px) {
+    .lightbox-overlay { padding: 0; }
+    .lightbox-image-wrap { margin-bottom: 60px; padding: 12px; }
+    .lightbox-img.zoomed { transform: scale(1.5); }
+    .lightbox-bar { height: 56px; padding: 0 12px; }
+    .lightbox-close-btn { top: 10px; right: 10px; width: 38px; height: 38px; font-size: 18px; }
+    .lightbox-badge { font-size: 10px; padding: 4px 10px; }
+    .lightbox-filename { display: none; }
+    .lightbox-action-btn span { display: none; }
+    .lightbox-action-btn { padding: 8px; font-size: 14px; }
+}
+</style>
+
 <script>
-    function previewBukti(url) {
-        document.getElementById('buktiPreviewImg').src = url;
-        document.getElementById('buktiDownloadLink').href = url;
-        document.getElementById('buktiPreviewModal').classList.add('open');
-    }
-    function closeBuktiPreview(e) {
-        if (e && e.target !== e.currentTarget) return;
-        document.getElementById('buktiPreviewModal').classList.remove('open');
-    }
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closeBuktiPreview();
-    });
+var currentZoom = false;
+function previewBukti(url) {
+    var overlay = document.getElementById('buktiOverlay');
+    var img = document.getElementById('lightboxImg');
+    var loader = document.getElementById('lightboxLoader');
+    var hint = document.getElementById('lightboxHint');
+    var fn = document.getElementById('lightboxFilename');
+    var dl = document.getElementById('lightboxDownload');
+    currentZoom = false; img.classList.remove('zoomed');
+    img.style.display = 'none'; loader.style.display = 'flex';
+    hint.style.opacity = '1'; dl.href = url;
+    fn.textContent = url.split('/').pop();
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    img.onload = function() { loader.style.display = 'none'; img.style.display = 'block'; };
+    img.onerror = function() { loader.innerHTML = '<i class="fa-solid fa-image-slash" style="font-size:32px;color:#fb7185"></i><span style="color:rgba(255,255,255,0.4)">Gagal memuat gambar</span>'; };
+    img.src = url;
+}
+function closeLightbox(e) {
+    if (e && e.target !== e.currentTarget) return;
+    document.getElementById('buktiOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+    currentZoom = false;
+}
+function toggleZoom(e) {
+    e.preventDefault();
+    var img = document.getElementById('lightboxImg');
+    currentZoom = !currentZoom;
+    img.classList.toggle('zoomed');
+    document.getElementById('lightboxHint').style.opacity = '0';
+}
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+});
 
     // Menyimpan Saldo Kas Aktual Global untuk Validasi Frontend JS
     const currentActualBalance = <?= $actual_saldo_kas ?>;
