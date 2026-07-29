@@ -446,7 +446,7 @@ $nama_bulan = [
                            style="width:15px;height:15px;accent-color:var(--primary-600);flex-shrink:0">
                     <span><i class="fa-regular fa-clock mr-1"></i> Kas mingguan siswa</span>
                 </label>
-                <div id="duesFields" class="hidden" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:grid;gap:10px">
+                <div id="duesFields" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:none;gap:10px">
                     <div>
                         <label for="anggota_id" class="input-label" style="color:var(--text-muted)">Siswa</label>
                         <select name="anggota_id" id="anggota_id" class="input text-xs font-semibold select">
@@ -1046,7 +1046,7 @@ document.addEventListener('keydown', function(e) {
         doc.setFontSize(8);
         doc.setTextColor(...C.subText);
         doc.text('Mengetahui,', centerX, ttdY, { align: 'center' });
-        doc.text('Bendahara Kelas', centerX, ttdY + 4, { align: 'center' });
+        doc.text('Ketua Kelas', centerX, ttdY + 4, { align: 'center' });
 
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(9);
