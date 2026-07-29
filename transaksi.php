@@ -624,15 +624,22 @@ document.addEventListener('keydown', function(e) {
         const selectMinggu = document.getElementById('minggu');
         const selectBulan = document.getElementById('bulan');
         const selectTahun = document.getElementById('tahun');
+        const jumlahInput = document.getElementById('jumlah');
 
         if (isKasCheckbox && isKasCheckbox.checked) {
             duesFields.classList.remove('hidden');
             selectAnggota.setAttribute('required', 'true');
+            jumlahInput.value = 2000;
+            jumlahInput.readOnly = true;
+            jumlahInput.style.background = 'var(--surface-bg)';
             // Auto update keterangan saat siswa dipilih
             updateDuesKeterangan();
         } else {
             duesFields.classList.add('hidden');
             selectAnggota.removeAttribute('required');
+            jumlahInput.value = '';
+            jumlahInput.readOnly = false;
+            jumlahInput.style.background = '';
         }
     }
 
