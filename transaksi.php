@@ -627,15 +627,14 @@ document.addEventListener('keydown', function(e) {
         const jumlahInput = document.getElementById('jumlah');
 
         if (isKasCheckbox && isKasCheckbox.checked) {
-            duesFields.classList.remove('hidden');
+            duesFields.style.display = 'grid';
             selectAnggota.setAttribute('required', 'true');
             jumlahInput.value = 2000;
             jumlahInput.readOnly = true;
             jumlahInput.style.background = 'var(--surface-bg)';
-            // Auto update keterangan saat siswa dipilih
             updateDuesKeterangan();
         } else {
-            duesFields.classList.add('hidden');
+            duesFields.style.display = 'none';
             selectAnggota.removeAttribute('required');
             jumlahInput.value = '';
             jumlahInput.readOnly = false;
