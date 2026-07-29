@@ -100,6 +100,7 @@ $user_initial = $user_nama ? strtoupper(substr($user_nama, 0, 1)) : '';
             --scrollbar-thumb: #cbd5e1;
             --input-bg: #ffffff;
             --input-border: #e2e8f0;
+            --modal-overlay: rgba(15,23,42,0.7);
         }
 
         /* ── Dark Mode ──────────────────────────── */
@@ -132,6 +133,7 @@ $user_initial = $user_nama ? strtoupper(substr($user_nama, 0, 1)) : '';
             --scrollbar-thumb: #334155;
             --input-bg: #1e293b;
             --input-border: rgba(255,255,255,0.1);
+            --modal-overlay: rgba(2,6,23,0.8);
         }
 
         * { box-sizing: border-box; }
@@ -391,6 +393,31 @@ $user_initial = $user_nama ? strtoupper(substr($user_nama, 0, 1)) : '';
             transition: background 0.3s ease;
         }
         .pub-footer span { font-size: 11px; color: var(--text-muted); }
+
+        /* ── Modal ──────────────────────────────── */
+        .modal-overlay {
+            position: fixed; inset: 0; z-index: 100;
+            background: var(--modal-overlay);
+            backdrop-filter: blur(4px);
+            display: none; align-items: center; justify-content: center; padding: 16px;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal-card {
+            background: var(--surface-card);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            width: 100%; max-width: 520px;
+            max-height: 90vh; overflow-y: auto;
+            transition: background 0.3s ease;
+        }
+        .modal-close {
+            width: 32px; height: 32px; border-radius: 8px;
+            border: none; background: var(--tab-hover);
+            color: var(--text-muted); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; transition: 0.15s ease;
+        }
+        .modal-close:hover { background: var(--expense-bg); color: var(--expense); }
 
         /* ── Empty State ────────────────────────── */
         .empty-icon { font-size: 32px; display: block; margin-bottom: 10px; }

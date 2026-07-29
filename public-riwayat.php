@@ -84,7 +84,7 @@ function fr($a) { return 'Rp ' . number_format($a, 0, ',', '.'); }
                 <?php if (empty($semua_transaksi)): ?>
                     <tr><td colspan="7" style="text-align:center;padding:60px 16px;color:var(--text-dim)"><i class="fa-solid fa-receipt" style="font-size:32px;display:block;margin-bottom:10px"></i>Belum ada transaksi.</td></tr>
                 <?php else: $no=1; foreach ($semua_transaksi as $tr): ?>
-                    <tr class="searchable-row">
+                    <tr>
                         <td style="text-align:center;font-weight:600;color:var(--text-dim);font-size:12px"><?= $no++ ?></td>
                         <td style="font-weight:500"><?= date('d/m/Y',strtotime($tr['tanggal'])) ?></td>
                         <td style="text-align:center">
@@ -100,11 +100,12 @@ function fr($a) { return 'Rp ' . number_format($a, 0, ',', '.'); }
                         <td style="text-align:right;font-weight:700;font-family:monospace;color:<?= $tr['jenis']==='pemasukan'?'var(--income)':'var(--expense)'?>"><?= $tr['jenis']==='pemasukan'?'+':'-' ?><?= number_format($tr['jumlah'],0,',','.') ?></td>
                         <td class="text-center">
                             <?php if (!empty($tr['bukti'])): ?>
-                                <a href="javascript:void(0)" onclick="previewBukti('<?= htmlspecialchars($tr['bukti']) ?>')"
-                                   style="display:inline-flex;width:32px;height:32px;border-radius:8px;align-items:center;justify-content:center;font-size:12px;text-decoration:none;transition:0.15s;color:var(--primary-600);background:var(--tab-active-bg)"
-                                   title="Lihat Bukti">
+                                <button onclick="previewBukti('<?= htmlspecialchars($tr['bukti']) ?>')"
+                                        class="bukti-btn"
+                                        title="Lihat Bukti Transaksi"
+                                        aria-label="Lihat Bukti Transaksi">
                                     <i class="fa-solid fa-image"></i>
-                                </a>
+                                </button>
                             <?php else: ?>
                                 <span style="color:var(--text-dim);font-size:10px">—</span>
                             <?php endif; ?>
@@ -118,25 +119,96 @@ function fr($a) { return 'Rp ' . number_format($a, 0, ',', '.'); }
 
 <!-- Modal Preview Bukti -->
 <div id="buktiPreviewModal" class="modal-overlay" onclick="closeBuktiPreview(event)">
-    <div class="modal-card" style="max-width:700px;padding:16px" onclick="event.stopPropagation()">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-            <span style="font-size:13px;font-weight:700;color:var(--text)"><i class="fa-solid fa-image mr-2"></i> Bukti Transaksi</span>
-            <button onclick="closeBuktiPreview()" class="modal-close" style="width:30px;height:30px;border-radius:8px;border:none;background:var(--tab-hover);color:var(--text-muted);cursor:pointer;font-size:14px"><i class="fa-solid fa-xmark"></i></button>
+    <div class="modal-card modal-bukti" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <div style="display:flex;align-items:center;gap:10px">
+                <div style="width:32px;height:32px;border-radius:8px;background:var(--tab-active-bg);color:var(--tab-active-text);display:flex;align-items:center;justify-content:center;font-size:13px">
+                    <i class="fa-solid fa-image"></i>
+                </div>
+                <div>
+                    <h3 style="margin:0;font-size:14px;font-weight:700;color:var(--text)">Bukti Transaksi</h3>
+                    <p style="margin:1px 0 0;font-size:10px;color:var(--text-muted)">Dokumen pendukung transaksi kas kelas</p>
+                </div>
+            </div>
+            <button onclick="closeBuktiPreview()" class="modal-close" aria-label="Tutup">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
         </div>
-        <div style="background:var(--surface-bg);border-radius:10px;padding:12px;display:flex;align-items:center;justify-content:center;max-height:70vh;overflow:hidden">
-            <img id="buktiPreviewImg" src="" alt="Bukti Transaksi" style="max-width:100%;max-height:65vh;object-fit:contain;border-radius:6px">
-        </div>
-        <div style="margin-top:12px;text-align:center">
-            <a id="buktiDownloadLink" href="#" target="_blank" class="btn btn-outline btn-sm"><i class="fa-solid fa-download"></i> Buka di Tab Baru</a>
+        <div style="padding:16px">
+            <div style="background:var(--surface-bg);border-radius:12px;padding:16px;display:flex;align-items:center;justify-content:center;min-height:200px;max-height:65vh;overflow:hidden;border:1px solid var(--border);position:relative">
+                <img id="buktiPreviewImg" src="" alt="Bukti Transaksi" style="max-width:100%;max-height:60vh;object-fit:contain;border-radius:8px;display:none">
+                <div id="buktiLoading" style="color:var(--text-dim);font-size:13px;display:flex;flex-direction:column;align-items:center;gap:8px">
+                    <i class="fa-solid fa-spinner fa-spin" style="font-size:24px"></i>
+                    <span>Memuat bukti...</span>
+                </div>
+            </div>
+            <div style="margin-top:14px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+                <a id="buktiDownloadLink" href="#" target="_blank" class="btn btn-primary btn-sm" style="display:inline-flex;gap:6px">
+                    <i class="fa-solid fa-download"></i> Buka di Tab Baru
+                </a>
+                <button onclick="closeBuktiPreview()" class="btn btn-outline btn-sm" style="display:inline-flex;gap:6px">
+                    <i class="fa-solid fa-xmark"></i> Tutup
+                </button>
+            </div>
         </div>
     </div>
 </div>
 
+<style>
+/* ── Bukti Button ─────────────────────────── */
+.bukti-btn {
+    display: inline-flex; width: 32px; height: 32px; border-radius: 8px;
+    align-items: center; justify-content: center;
+    font-size: 12px; text-decoration: none;
+    color: var(--primary-600); background: var(--tab-active-bg);
+    border: none; cursor: pointer;
+    transition: all 0.2s ease;
+}
+.bukti-btn:hover {
+    background: var(--primary-600); color: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(99,102,241,0.3);
+}
+.bukti-btn:active { transform: scale(0.92); }
+
+/* ── Modal Bukti ──────────────────────────── */
+.modal-bukti {
+    max-width: 640px !important;
+    border-radius: 16px !important;
+    overflow: hidden;
+    animation: modalFadeIn 0.2s ease;
+}
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: scale(0.95) translateY(8px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@media (max-width: 768px) {
+    .modal-bukti { max-width: 100% !important; margin: 0 8px; }
+    .modal-bukti .modal-header { padding: 12px 14px; }
+    .modal-bukti > div:last-child { padding: 12px; }
+    .modal-bukti > div:last-child > div:first-child { padding: 10px !important; min-height: 160px !important; }
+}
+</style>
+
 <script>
 function previewBukti(url) {
-    document.getElementById('buktiPreviewImg').src = url;
+    var img = document.getElementById('buktiPreviewImg');
+    var loading = document.getElementById('buktiLoading');
+    img.style.display = 'none';
+    loading.style.display = 'flex';
     document.getElementById('buktiDownloadLink').href = url;
     document.getElementById('buktiPreviewModal').classList.add('open');
+
+    // Load image
+    img.onload = function() {
+        loading.style.display = 'none';
+        img.style.display = 'block';
+    };
+    img.onerror = function() {
+        loading.innerHTML = '<i class="fa-solid fa-image-slash" style="font-size:28px;color:var(--expense)"></i><span style="color:var(--text-muted)">Gagal memuat gambar</span>';
+    };
+    img.src = url;
 }
 function closeBuktiPreview(e) {
     if (e && e.target !== e.currentTarget) return;
@@ -151,12 +223,13 @@ document.addEventListener('DOMContentLoaded',function(){
     var si=document.getElementById('searchInput');
     if(si)si.addEventListener('input',function(){
         var q=si.value.toLowerCase().trim();
-        document.querySelectorAll('.searchable-row').forEach(function(r){
+        document.querySelectorAll('#riwayatTable tbody tr').forEach(function(r){
             r.style.display=r.textContent.toLowerCase().indexOf(q)>-1?'':'none';
         });
     });
 });
 
+// ── PDF Export ──────────────────────────────
 function loadSigAndRun(cb) {
     try {
         if(typeof window.jspdf==='undefined'){alert('Library PDF gagal dimuat. Coba refresh.');return}
@@ -224,7 +297,6 @@ function genRiwayatPublikPDF(sigImgData){
         }
     });
 
-    // summary
     var saldo=totalPemasukan-totalPengeluaran;
     var sumY=doc.lastAutoTable.finalY+8;
     var sumItems=[
@@ -244,7 +316,6 @@ function genRiwayatPublikPDF(sigImgData){
         doc.text(item.val,tx+CW-3,sumY+8.5+i*7,{align:'right'});
     });
 
-    // TTD
     var ttdY=sumY+36;
     if(ttdY+42>PH-18){doc.addPage();ttdY=28}
     var cx=PW-MR-28;
