@@ -371,38 +371,61 @@ $user_initial = strtoupper(substr($user_nama, 0, 1));
         /* ── Responsive ──────────────────────────── */
         @media (max-width: 768px) {
             .admin-nav { padding: 0 12px; height: 56px; }
-            .page-content { padding: 14px; }
+            .page-content { padding: 10px 10px; width: 100%; max-width: 100%; overflow-x: hidden; }
             .nav-links { display: none; }
             .nav-mobile-menu { display: flex !important; }
             .nav-brand-icon { width: 30px; height: 30px; font-size: 13px; }
             .nav-brand-text { font-size: 13px; }
             .app-footer { padding: 10px 14px calc(10px + var(--sa-bottom)); flex-direction: column; text-align: center; }
-            .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            .stat-card { padding: 14px; }
-            .stat-value { font-size: 1.2rem; }
-            .card-header { padding: 14px 16px; flex-direction: column; align-items: stretch; gap: 8px; }
-            table.data-table thead th { padding: 8px 6px; font-size: 9px; }
-            table.data-table tbody td { padding: 8px 6px; font-size: 11px; }
-            .btn-sm { padding: 6px 12px; font-size: 11px; }
+            .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .stat-card { padding: 12px; }
+            .stat-value { font-size: 1.1rem; }
+            .card-header { padding: 12px 14px; flex-direction: column; align-items: stretch; gap: 6px; }
+            table.data-table thead th { padding: 6px 5px; font-size: 8px; }
+            table.data-table tbody td { padding: 6px 5px; font-size: 10px; white-space: nowrap; }
+            .btn-sm { padding: 5px 10px; font-size: 10px; }
             .modal-card { margin: 0 8px; }
-            .modal-header { padding: 14px 16px; }
-            .modal-header h3 { font-size: 14px; }
+            .modal-header { padding: 12px 14px; }
+            .modal-header h3 { font-size: 13px; }
+            .input-label { font-size: 9px; }
+            .card .page-wrap { padding: 14px; }
+            .btn { padding: 7px 12px; font-size: 11px; }
+            .page-content .card .card-header h4 { font-size: 12px; }
+            .page-content .card .card-header p { font-size: 10px; }
+            .filter-row { flex-wrap: wrap; gap: 6px; }
+            .filter-row select, .filter-row input, .filter-row .btn { font-size: 10px; padding: 5px 8px; }
         }
         @media (min-width: 769px) {
             .nav-mobile-menu { display: none !important; }
         }
         @media (max-width: 480px) {
-            .page-content { padding: 10px 8px; }
-            .admin-nav { padding: 0 8px; }
-            .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
-            .stat-card { padding: 10px; }
-            .stat-value { font-size: 1rem; }
-            .card-header { padding: 10px 12px; }
-            .tab-btn { font-size: 11px; padding: 6px 8px; }
-            table.data-table thead th { padding: 6px 4px; font-size: 8px; }
-            table.data-table tbody td { padding: 6px 4px; font-size: 10px; }
-            .btn, .btn-sm { padding: 5px 10px; font-size: 10px; }
-            .input { padding: 8px 10px; font-size: 12px; }
+            .page-content { padding: 6px 6px; }
+            .admin-nav { height: 50px; padding: 0 8px; }
+            .admin-nav .nav-right { gap: 4px; }
+            .admin-nav .theme-btn { width: 32px; height: 32px; font-size: 12px; }
+            .admin-nav .btn-sm { padding: 4px 8px; font-size: 9px; }
+            .admin-nav .nav-brand-icon { width: 28px; height: 28px; font-size: 12px; }
+            .admin-nav .nav-brand-text { font-size: 12px; }
+            .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 5px; }
+            .stat-card { padding: 8px; }
+            .stat-value { font-size: 0.9rem; }
+            .stat-label { font-size: 8px; }
+            .card-header { padding: 8px 10px; }
+            .card-header h4 { font-size: 11px; }
+            .card-header p { font-size: 9px !important; }
+            table.data-table thead th { padding: 4px 3px; font-size: 7px; }
+            table.data-table tbody td { padding: 4px 3px; font-size: 8px; }
+            table.data-table tbody td .badge { font-size: 7px; padding: 1px 5px; gap: 2px; }
+            .btn, .btn-sm { padding: 4px 6px; font-size: 8px; gap: 3px; }
+            .input { padding: 6px 8px; font-size: 11px; }
+            .input-label { font-size: 8px; }
+            .modal-card { margin: 0 4px; border-radius: var(--radius) !important; }
+            .modal-header { padding: 8px 10px; }
+            .modal-header h3 { font-size: 12px; }
+            .modal-body { padding: 12px; }
+            .tab-btn { font-size: 10px; padding: 5px 6px; }
+            .app-footer { padding: 8px 10px calc(8px + var(--sa-bottom)); }
+            .app-footer span { font-size: 9px; }
         }
 
         /* ── Mobile Nav Drawer ──────────────────── */

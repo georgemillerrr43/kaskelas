@@ -432,38 +432,52 @@ $user_initial = $user_nama ? strtoupper(substr($user_nama, 0, 1)) : '';
         /* ── Responsive ─────────────────────────── */
         @media (max-width: 768px) {
             .pub-topbar { padding: 0 12px; height: 56px; gap: 6px; }
-            .pub-content { padding: 16px 12px; }
-            .pub-hero { padding: 24px 0 20px; }
-            .pub-hero h1 { font-size: 1.3rem; }
-            .pub-hero p { font-size: 0.85rem; margin-bottom: 16px; }
+            .pub-content { padding: 12px 12px; width: 100%; max-width: 100%; overflow-x: hidden; }
+            .pub-hero { padding: 18px 0 14px; }
+            .pub-hero h1 { font-size: 1.15rem; }
+            .pub-hero p { font-size: 0.82rem; margin-bottom: 14px; }
             .pub-nav { display: none; }
             .pub-hamburger { display: flex !important; }
-            .pub-brand-mark { width: 34px; height: 34px; font-size: 14px; }
-            .pub-brand-title { font-size: 14px; }
-            .pub-footer { padding: 12px 16px calc(12px + var(--sa-bottom)); flex-direction: column; text-align: center; }
-            .tab-btn { font-size: 12px; padding: 8px 10px; }
+            .pub-brand-mark { width: 32px; height: 32px; font-size: 13px; }
+            .pub-brand-title { font-size: 13px; }
+            .pub-brand-sub { display: none; }
+            .pub-footer { padding: 12px 14px calc(12px + var(--sa-bottom)); flex-direction: column; text-align: center; }
+            .tab-btn { font-size: 11px; padding: 6px 8px; }
             .tab-btn span.tab-label { display: none; }
-            .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            .stat-card { padding: 14px; }
-            .stat-value { font-size: clamp(1rem, 3vw, 1.3rem); }
-            .card-header { padding: 14px 16px; flex-direction: column; align-items: stretch; }
+            .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 18px; }
+            .stat-card { padding: 12px; }
+            .stat-value { font-size: clamp(0.95rem, 2.8vw, 1.15rem); }
+            .card-header { padding: 12px 14px; flex-direction: column; align-items: stretch; }
             table.data-table thead th,
-            table.data-table tbody td { padding: 8px 6px; font-size: 10px; }
+            table.data-table tbody td { padding: 6px 5px; font-size: 9px; white-space: nowrap; }
+            table.data-table thead th { font-size: 8px; }
             .hero-actions { flex-direction: column; align-items: center; }
+            .btn, .btn-sm { padding: 6px 12px; font-size: 10px; }
+            .pub-content .card { border-radius: var(--radius); }
+            .pub-content .card-header h4 { font-size: 12px; }
+            .legend-box { font-size: 10px; padding: 8px 10px; flex-wrap: wrap; gap: 6px; }
         }
         @media (max-width: 480px) {
-            .pub-content { padding: 12px 10px; }
-            .pub-hero { padding: 16px 0 14px; }
-            .pub-hero h1 { font-size: 1.15rem; }
-            .pub-brand-sub { display: none; }
-            .pub-nav-link { padding: 5px 8px; font-size: 11px; }
-            pub-nav-link i { font-size: 13px; }
-            .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-            .stat-card { padding: 12px; }
-            .stat-value { font-size: 1rem; }
-            .card-header { padding: 12px 14px; }
-            table.data-table thead th { padding: 6px 4px; font-size: 8px; }
-            table.data-table tbody td { padding: 6px 4px; font-size: 10px; }
+            .pub-content { padding: 8px 8px; }
+            .pub-hero { padding: 12px 0 10px; }
+            .pub-hero h1 { font-size: 1.05rem; }
+            .pub-hero p { font-size: 0.78rem; }
+            .pub-hero .hero-actions { flex-direction: row; gap: 6px; }
+            .pub-hero .hero-actions .btn { flex: 1; min-width: 0; padding: 6px 8px; font-size: 9px; }
+            .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+            .stat-card { padding: 10px; }
+            .stat-value { font-size: 0.95rem; }
+            .card-header { padding: 8px 10px; }
+            .card-header h4 { font-size: 11px; }
+            table.data-table thead th { padding: 5px 3px; font-size: 7px; letter-spacing: 0.3px; }
+            table.data-table tbody td { padding: 5px 3px; font-size: 8px; }
+            table.data-table tbody td .badge { font-size: 8px; padding: 2px 6px; }
+            .btn, .btn-sm { padding: 5px 8px; font-size: 9px; gap: 4px; }
+            .pub-topbar { height: 50px; padding: 0 8px; }
+            .pub-topbar .pub-actions { gap: 4px; }
+            .pub-topbar .theme-btn { width: 32px; height: 32px; font-size: 12px; }
+            .modal-card { margin: 0 4px; }
+            .modal-header { padding: 10px 12px; }
         }
 
         /* ── TTD ─────────────────────────────────── */

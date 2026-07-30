@@ -175,7 +175,7 @@ function genRekapPublikPDF(sigImgData){
     var cx=PW-42;
     doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...C.subText);
     doc.text('Mengetahui,',cx,ttdY,{align:'center'});
-    doc.text('Bendahara Kelas',cx,ttdY+4,{align:'center'});
+    doc.text('Ketua Kelas',cx,ttdY+4,{align:'center'});
     doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...C.black);
     doc.text('Rizky perdana putra sam',cx,ttdY+9,{align:'center'});
     if(sigImgData){try{doc.addImage(sigImgData,'PNG',cx-22,ttdY+11,44,20);}catch(e){}}
