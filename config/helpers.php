@@ -4,19 +4,35 @@
  * Fungsi-fungsi pembantu (Helper Functions) global untuk aplikasi Uangkas Kelas.
  */
 
+if (!function_exists('start_app_session')) {
+    /**
+     * Memulai session PHP dengan nama session yang unik dan terisolasi per folder website.
+     * Mencegah konflik login session jika ada 2 atau lebih website di server yang sama.
+     */
+    function start_app_session() {
+        if (session_status() === PHP_SESSION_NONE) {
+            $sess_name = 'UANGKAS_' . substr(md5(dirname(__DIR__)), 0, 8);
+            @session_name($sess_name);
+            @session_start();
+        }
+    }
+}
+
 if (!function_exists('load_env')) {
     /**
      * Memuat file .env mandiri tanpa dependensi composer (Pure PHP).
-     * Mengisi $_ENV, $_SERVER, dan getenv().
+     * Selalu membaca langsung file .env lokal dari direktori proyek masing-masing
+     * sehingga aman digunakan untuk multi-website di satu server yang sama.
      *
      * @param string $path Path absolut atau relatif ke file .env
-     * @return bool True jika file berhasil dimuat, False jika tidak ditemukan
+     * @return array Array asosiatif berisi pasangan key => value dari .env
      */
     function load_env($path) {
         if (!file_exists($path) || !is_readable($path)) {
-            return false;
+            return [];
         }
 
+        $vars = [];
         $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         foreach ($lines as $line) {
             $line = trim($line);
@@ -38,33 +54,48 @@ if (!function_exists('load_env')) {
                     (str_starts_with($value, "'") && str_ends_with($value, "'"))
                 ) {
                     $value = substr($value, 1, -1);
+                } else {
+                    // Hapus inline comment jika ada
+                    $comment_pos = strpos($value, '#');
+                    if ($comment_pos !== false) {
+                        $value = trim(substr($value, 0, $comment_pos));
+                    }
                 }
 
-                // Jangan timpa jika variabel sudah diatur di environment sistem web server
-                if (!array_key_exists($key, $_SERVER) && !array_key_exists($key, $_ENV)) {
-                    putenv(sprintf('%s=%s', $key, $value));
-                    $_ENV[$key] = $value;
-                    $_SERVER[$key] = $value;
+                $vars[$key] = $value;
+                $_ENV[$key] = $value;
+                $_SERVER[$key] = $value;
+                if (function_exists('putenv')) {
+                    @putenv(sprintf('%s=%s', $key, $value));
                 }
             }
         }
 
-        return true;
+        return $vars;
     }
 }
 
 if (!function_exists('env')) {
     /**
      * Mengambil nilai environment variable dengan fallback nilai default.
+     * Aman dari disable_functions bawaan server / aaPanel.
      *
      * @param string $key Nama environment variable
      * @param mixed $default Nilai default jika tidak ditemukan
      * @return mixed
      */
     function env($key, $default = null) {
-        $val = getenv($key);
-        if ($val === false) {
-            $val = $_ENV[$key] ?? $_SERVER[$key] ?? $default;
+        $val = $_ENV[$key] ?? $_SERVER[$key] ?? null;
+
+        if ($val === null && function_exists('getenv')) {
+            $get_val = @getenv($key);
+            if ($get_val !== false) {
+                $val = $get_val;
+            }
+        }
+
+        if ($val === null) {
+            $val = $default;
         }
 
         if ($val === 'true' || $val === '(true)') return true;

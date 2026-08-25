@@ -1,22 +1,32 @@
 <?php
-// logout.php
-session_start();
+/**
+ * logout.php
+ * Keluar Aplikasi — Menghapus data sesi dan redirect ke halaman beranda publik.
+ */
+
+require_once __DIR__ . '/config/helpers.php';
+start_app_session();
 
 // Hapus semua data session
-$_SESSION = array();
+$_SESSION = [];
 
-// Hancurkan session cookie jika ada
+// Hancurkan session cookie
 if (ini_get("session.use_cookies")) {
     $params = session_get_cookie_params();
-    setcookie(session_name(), '', time() - 42000,
-        $params["path"], $params["domain"],
-        $params["secure"], $params["httponly"]
+    setcookie(
+        session_name(),
+        '',
+        time() - 42000,
+        $params["path"],
+        $params["domain"],
+        $params["secure"],
+        $params["httponly"]
     );
 }
 
-// Hancurkan session
+// Hancurkan session server
 session_destroy();
 
-// Redirect ke halaman publik
+// Redirect ke beranda
 header("Location: index.php");
 exit();

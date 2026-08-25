@@ -1,5 +1,9 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) session_start();
+if (function_exists('start_app_session')) {
+    start_app_session();
+} elseif (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 if (!isset($_SESSION['user_id'])) { header("Location: index.php"); exit(); }
 
 $current_page = basename($_SERVER['SCRIPT_NAME']);

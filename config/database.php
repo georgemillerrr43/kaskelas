@@ -2,20 +2,24 @@
 /**
  * config/database.php
  * Konfigurasi koneksi MySQL Database, inisialisasi tabel, dan manajemen lingkungan (.env).
+ * Dirancang terisolasi penuh sehingga aman digunakan untuk multi-website di satu server aaPanel.
  */
 
 require_once __DIR__ . '/helpers.php';
 
-// 1. Muat file .env dari root direktori
-$env_path = dirname(__DIR__) . '/.env';
-load_env($env_path);
+// Inisialisasi sesi pengguna yang terisolasi khusus untuk website ini
+start_app_session();
 
-// 2. Ambil parameter konfigurasi database dari environment
-$db_host = env('DB_HOST', '127.0.0.1');
-$db_port = env('DB_PORT', '3306');
-$db_name = env('DB_NAME', 'db_kas_kelas');
-$db_user = env('DB_USER', 'root');
-$db_pass = env('DB_PASS', '');
+// 1. Muat file .env khusus dari root direktori proyek ini
+$env_path = dirname(__DIR__) . '/.env';
+$env_vars = load_env($env_path);
+
+// 2. Ambil parameter konfigurasi database langsung dari file .env proyek ini
+$db_host = $env_vars['DB_HOST'] ?? env('DB_HOST', '127.0.0.1');
+$db_port = $env_vars['DB_PORT'] ?? env('DB_PORT', '3306');
+$db_name = $env_vars['DB_NAME'] ?? env('DB_NAME', 'db_kas_kelas');
+$db_user = $env_vars['DB_USER'] ?? env('DB_USER', 'root');
+$db_pass = $env_vars['DB_PASS'] ?? env('DB_PASS', '');
 
 // Simpan sebagai konstanta untuk kompatibilitas
 if (!defined('DB_HOST')) define('DB_HOST', $db_host);
@@ -32,7 +36,7 @@ $pdo_options = [
 ];
 
 try {
-    // 3. Coba koneksi langsung ke database yang ditentukan
+    // 3. Coba koneksi langsung ke database yang ditentukan di .env
     try {
         $dsn = "mysql:host={$db_host};port={$db_port};dbname={$db_name};charset=utf8mb4";
         $pdo = new PDO($dsn, $db_user, $db_pass, $pdo_options);
@@ -107,7 +111,7 @@ try {
         @mkdir($upload_dir, 0755, true);
     }
     
-    // Buat .htaccess proteksi keamanan folder upload (mencegah eksekusi script PHP berbahaya)
+    // Buat .htaccess proteksi keamanan folder upload
     $htaccess_file = $upload_dir . '/.htaccess';
     if (!file_exists($htaccess_file)) {
         @file_put_contents($htaccess_file, "<FilesMatch \"\\.(php|phtml|php3|php4|php5|php7|phps)$\">\n    Require all denied\n</FilesMatch>\nOptions -ExecCGI\n");
@@ -151,10 +155,9 @@ try {
             <div class='guide'>
                 <strong>Langkah Pengecekan di aaPanel / Server:</strong>
                 <ol>
-                    <li>Buka file <code>.env</code> di root direktori proyek.</li>
+                    <li>Buka file <code>.env</code> di folder website ini.</li>
                     <li>Sesuaikan <code>DB_HOST</code>, <code>DB_NAME</code>, <code>DB_USER</code>, dan <code>DB_PASS</code>.</li>
-                    <li>Pastikan service MySQL di aaPanel dalam status <strong>Running</strong>.</li>
-                    <li>Jika database belum dibuat, buat database baru melalui menu <strong>Databases</strong> di aaPanel.</li>
+                    <li>Pastikan masing-masing website menggunakan nama database (<code>DB_NAME</code>) yang berbeda agar datanya tidak tercampur.</li>
                 </ol>
             </div>
         </div>

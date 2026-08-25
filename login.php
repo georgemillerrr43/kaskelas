@@ -4,7 +4,6 @@
  * Halaman Autentikasi Bendahara — Login aman menggunakan password_verify() dan Session PHP.
  */
 
-session_start();
 require_once 'config/database.php';
 
 // Jika sudah login sebagai bendahara, langsung arahkan ke dashboard

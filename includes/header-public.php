@@ -1,6 +1,10 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) session_start();
-$is_logged_in = isset($_SESSION['user_id']) && $_SESSION['role'] === 'admin';
+if (function_exists('start_app_session')) {
+    start_app_session();
+} elseif (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+$is_logged_in = isset($_SESSION['user_id']) && ($_SESSION['role'] ?? '') === 'admin';
 $current_page = basename($_SERVER['SCRIPT_NAME']);
 $user_nama = $_SESSION['nama'] ?? '';
 $user_initial = $user_nama ? strtoupper(substr($user_nama, 0, 1)) : '';
