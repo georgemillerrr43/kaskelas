@@ -1,53 +1,58 @@
 <?php
-// public-riwayat.php
+/**
+ * public-riwayat.php
+ * Riwayat Transaksi Kas Kelas (Informasi Publik) — Menampilkan seluruh catatan mutasi pemasukan & pengeluaran kas.
+ */
+
 require_once 'config/database.php';
 require_once 'includes/header-public.php';
 
 $error = '';
-$nama_bulan = [
-    1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
-    5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
-    9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
-];
+$nama_bulan = nama_bulan();
+
+// 1. Ambil ringkasan keuangan global langsung dari database
+$ringkasan = get_ringkasan_kas($pdo);
+$total_pemasukan = $ringkasan['pemasukan'];
+$total_pengeluaran = $ringkasan['pengeluaran'];
+$saldo_kas = $ringkasan['saldo'];
 
 try {
-    $stmt_t = $pdo->query("SELECT t.*, a.nama AS nama_anggota FROM transaksi t LEFT JOIN anggota a ON t.anggota_id = a.id ORDER BY t.tanggal DESC, t.id DESC LIMIT 100");
+    // 2. Ambil 100 riwayat transaksi terbaru
+    $stmt_t = $pdo->query("
+        SELECT t.*, a.nama AS nama_anggota, a.nis AS nis_anggota 
+        FROM transaksi t 
+        LEFT JOIN anggota a ON t.anggota_id = a.id 
+        ORDER BY t.tanggal DESC, t.id DESC 
+        LIMIT 100
+    ");
     $semua_transaksi = $stmt_t->fetchAll();
-
-    $total_pemasukan = 0;
-    $total_pengeluaran = 0;
-    foreach ($semua_transaksi as $tr) {
-        if ($tr['jenis'] === 'pemasukan') $total_pemasukan += (float)$tr['jumlah'];
-        else $total_pengeluaran += (float)$tr['jumlah'];
-    }
-    $saldo_kas = $total_pemasukan - $total_pengeluaran;
 } catch (PDOException $e) {
-    $error = 'Gagal memuat data: ' . $e->getMessage();
+    $error = 'Gagal memuat data transaksi: ' . $e->getMessage();
     $semua_transaksi = [];
-    $total_pemasukan = 0;
-    $total_pengeluaran = 0;
-    $saldo_kas = 0;
 }
-function fr($a) { return 'Rp ' . number_format($a, 0, ',', '.'); }
 ?>
+
 <div class="pub-hero" style="padding:20px 0">
     <h1>Riwayat Transaksi Kas Kelas</h1>
-    <p>Seluruh aktivitas keuangan — 100 transaksi terakhir</p>
+    <p>Seluruh aktivitas keuangan kelas — 100 transaksi terbaru secara transparan</p>
 </div>
 
+<!-- Statistik Ringkasan Global -->
 <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px">
     <div class="stat-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:0;flex:1;max-width:600px">
         <div class="stat-card" style="padding:14px 18px">
-            <div class="stat-label">Pemasukan</div>
-            <div class="stat-value" style="font-size:1.2rem;color:var(--income)"><?= fr($total_pemasukan) ?></div>
+            <div class="stat-label">Total Pemasukan</div>
+            <div class="stat-value" style="font-size:1.2rem;color:var(--income)"><?= format_rupiah($total_pemasukan) ?></div>
         </div>
         <div class="stat-card" style="padding:14px 18px">
-            <div class="stat-label">Pengeluaran</div>
-            <div class="stat-value" style="font-size:1.2rem;color:var(--expense)"><?= fr($total_pengeluaran) ?></div>
+            <div class="stat-label">Total Pengeluaran</div>
+            <div class="stat-value" style="font-size:1.2rem;color:var(--expense)"><?= format_rupiah($total_pengeluaran) ?></div>
         </div>
         <div class="stat-card" style="padding:14px 18px">
-            <div class="stat-label">Saldo</div>
-            <div class="stat-value" style="font-size:1.2rem;color:<?= $saldo_kas>=0?'var(--primary-600)':'var(--expense)' ?>"><?= fr($saldo_kas) ?></div>
+            <div class="stat-label">Saldo Kas</div>
+            <div class="stat-value" style="font-size:1.2rem;color:<?= $saldo_kas >= 0 ? 'var(--primary-600)' : 'var(--expense)' ?>">
+                <?= format_rupiah($saldo_kas) ?>
+            </div>
         </div>
     </div>
     <button onclick="exportRiwayatPublikPDF()" class="btn btn-outline btn-sm no-print">
@@ -56,12 +61,12 @@ function fr($a) { return 'Rp ' . number_format($a, 0, ',', '.'); }
 </div>
 
 <?php if ($error): ?>
-    <div style="background:var(--expense-bg);border-left:4px solid var(--expense);color:var(--expense);padding:14px 18px;border-radius:12px;margin-bottom:20px;font-size:14px"><?= htmlspecialchars($error) ?></div>
+    <div style="background:var(--expense-bg);border-left:4px solid var(--expense);color:var(--expense);padding:14px 18px;border-radius:12px;margin-bottom:20px;font-size:14px"><?= e($error) ?></div>
 <?php endif; ?>
 
 <div class="card overflow-hidden">
     <div style="padding:12px 20px;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px">
-        <span style="font-size:13px;font-weight:600;color:var(--text-muted)">Ditemukan <strong><?= count($semua_transaksi) ?></strong> transaksi</span>
+        <span style="font-size:13px;font-weight:600;color:var(--text-muted)">Menampilkan <strong><?= count($semua_transaksi) ?></strong> transaksi terakhir</span>
         <div style="position:relative;width:100%;max-width:220px" class="no-print">
             <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-dim);font-size:12px;pointer-events:none"><i class="fa-solid fa-search"></i></span>
             <input type="text" id="searchInput" style="width:100%;padding:9px 12px 9px 34px;border:1px solid var(--border-table);border-radius:8px;font-size:12px;font-family:inherit;background:var(--input-bg);color:var(--text);outline:none" placeholder="Cari transaksi...">
@@ -75,35 +80,48 @@ function fr($a) { return 'Rp ' . number_format($a, 0, ',', '.'); }
                     <th style="width:90px">Tanggal</th>
                     <th style="width:80px;text-align:center">Jenis</th>
                     <th>Keterangan</th>
-                    <th style="width:140px">Siswa</th>
+                    <th style="width:140px">Siswa / Anggota</th>
                     <th style="width:120px;text-align:right">Jumlah</th>
                     <th class="text-center" style="width:50px">Bukti</th>
                 </tr>
             </thead>
             <tbody>
                 <?php if (empty($semua_transaksi)): ?>
-                    <tr><td colspan="7" style="text-align:center;padding:60px 16px;color:var(--text-dim)"><i class="fa-solid fa-receipt" style="font-size:32px;display:block;margin-bottom:10px"></i>Belum ada transaksi.</td></tr>
+                    <tr><td colspan="7" style="text-align:center;padding:60px 16px;color:var(--text-dim)"><i class="fa-solid fa-receipt" style="font-size:32px;display:block;margin-bottom:10px"></i>Belum ada transaksi dicatat di database.</td></tr>
                 <?php else: $no=1; foreach ($semua_transaksi as $tr): ?>
                     <tr>
                         <td style="text-align:center;font-weight:600;color:var(--text-dim);font-size:12px"><?= $no++ ?></td>
-                        <td style="font-weight:500"><?= date('d/m/Y',strtotime($tr['tanggal'])) ?></td>
+                        <td style="font-weight:500"><?= date('d/m/Y', strtotime($tr['tanggal'])) ?></td>
                         <td style="text-align:center">
                             <span class="badge" style="background:<?= $tr['jenis']==='pemasukan'?'var(--income-bg)':'var(--expense-bg)'?>;color:<?= $tr['jenis']==='pemasukan'?'var(--income)':'var(--expense)'?>">
-                                <i class="fa-solid <?= $tr['jenis']==='pemasukan'?'fa-arrow-down-long':'fa-arrow-up-long'?>"></i> <?= $tr['jenis'] ?>
+                                <i class="fa-solid <?= $tr['jenis']==='pemasukan'?'fa-arrow-down-long':'fa-arrow-up-long'?>"></i> <?= e($tr['jenis']) ?>
                             </span>
                         </td>
                         <td style="font-weight:500">
-                            <?= htmlspecialchars($tr['keterangan']) ?>
-                            <?php if ($tr['minggu']): ?><span style="display:block;font-size:9px;color:var(--primary-400);font-weight:600;margin-top:2px">Mg <?= $tr['minggu'] ?>, <?= $nama_bulan[$tr['bulan']]??'' ?> <?= $tr['tahun'] ?></span><?php endif; ?>
+                            <?= e($tr['keterangan']) ?>
+                            <?php if ($tr['minggu']): ?>
+                                <span style="display:block;font-size:9px;color:var(--primary-400);font-weight:600;margin-top:2px">
+                                    Mg <?= (int)$tr['minggu'] ?>, <?= $nama_bulan[(int)$tr['bulan']] ?? '' ?> <?= (int)$tr['tahun'] ?>
+                                </span>
+                            <?php endif; ?>
                         </td>
-                        <td style="color:var(--text-muted);font-weight:500"><?= htmlspecialchars($tr['nama_anggota']??'-') ?></td>
-                        <td style="text-align:right;font-weight:700;font-family:monospace;color:<?= $tr['jenis']==='pemasukan'?'var(--income)':'var(--expense)'?>"><?= $tr['jenis']==='pemasukan'?'+':'-' ?><?= number_format($tr['jumlah'],0,',','.') ?></td>
+                        <td style="color:var(--text-muted);font-weight:500">
+                            <?php if (!empty($tr['nama_anggota'])): ?>
+                                <?= e($tr['nama_anggota']) ?>
+                            <?php elseif ($tr['jenis'] === 'pemasukan'): ?>
+                                <span style="color:var(--text-dim);font-size:11px">Kas Umum</span>
+                            <?php else: ?>
+                                <span style="color:var(--text-dim)">—</span>
+                            <?php endif; ?>
+                        </td>
+                        <td style="text-align:right;font-weight:700;font-family:monospace;color:<?= $tr['jenis']==='pemasukan'?'var(--income)':'var(--expense)'?>">
+                            <?= $tr['jenis']==='pemasukan'?'+':'-' ?><?= number_format($tr['jumlah'],0,',','.') ?>
+                        </td>
                         <td class="text-center">
                             <?php if (!empty($tr['bukti'])): ?>
-                                <button onclick="previewBukti('<?= htmlspecialchars($tr['bukti']) ?>')"
-                                        class="bukti-btn"
-                                        title="Lihat Bukti Transaksi"
-                                        aria-label="Lihat Bukti Transaksi">
+                                <button onclick="previewBukti('<?= e($tr['bukti']) ?>')"
+                                        style="display:inline-flex;width:28px;height:28px;border-radius:6px;align-items:center;justify-content:center;font-size:11px;color:var(--primary-600);background:var(--tab-active-bg);border:none;cursor:pointer"
+                                        title="Lihat Bukti Foto">
                                     <i class="fa-solid fa-image"></i>
                                 </button>
                             <?php else: ?>
@@ -117,7 +135,7 @@ function fr($a) { return 'Rp ' . number_format($a, 0, ',', '.'); }
     </div>
 </div>
 
-<!-- ══ MODAL BUKTI ══ -->
+<!-- ══ MODAL BUKTI TRANSAKSI ══ -->
 <div id="buktiModal" class="modal-overlay" onclick="closeBuktiModal(event)">
     <div class="modal-card modal-bukti" onclick="event.stopPropagation()">
         <div class="modal-header">
@@ -156,19 +174,9 @@ function fr($a) { return 'Rp ' . number_format($a, 0, ',', '.'); }
 
 <style>
 @keyframes spin { to { transform: rotate(360deg); } }
-.modal-bukti {
-    max-width: 600px !important;
-    border-radius: 16px !important;
-    overflow: hidden;
-    animation: modalIn 0.2s ease;
-}
-@keyframes modalIn {
-    from { opacity: 0; transform: scale(0.96) translateY(8px); }
-    to   { opacity: 1; transform: scale(1) translateY(0); }
-}
-@media (max-width: 768px) {
-    .modal-bukti { max-width: calc(100% - 16px) !important; margin: 0; }
-}
+.modal-bukti { max-width: 600px !important; border-radius: 16px !important; overflow: hidden; animation: modalIn 0.2s ease; }
+@keyframes modalIn { from { opacity: 0; transform: scale(0.96) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+@media (max-width: 768px) { .modal-bukti { max-width: calc(100% - 16px) !important; margin: 0; } }
 </style>
 
 <script>
@@ -191,7 +199,7 @@ document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeBuktiModal();
 });
 
-// search
+// Search
 document.addEventListener('DOMContentLoaded',function(){
     var si=document.getElementById('searchInput');
     if(si)si.addEventListener('input',function(){
@@ -202,7 +210,7 @@ document.addEventListener('DOMContentLoaded',function(){
     });
 });
 
-// ── PDF Export ──────────────────────────────
+// PDF Export
 function loadSigAndRun(cb) {
     try {
         if(typeof window.jspdf==='undefined'){alert('Library PDF gagal dimuat. Coba refresh.');return}
@@ -273,9 +281,9 @@ function genRiwayatPublikPDF(sigImgData){
     var saldo=totalPemasukan-totalPengeluaran;
     var sumY=doc.lastAutoTable.finalY+8;
     var sumItems=[
-        {label:'Total Pemasukan',val:'+Rp '+totalPemasukan.toLocaleString('id-ID'),c:C.incomeText,bg:C.incomeBg},
-        {label:'Total Pengeluaran',val:'-Rp '+totalPengeluaran.toLocaleString('id-ID'),c:C.expText,bg:C.expBg},
-        {label:'Saldo Akhir',val:'Rp '+Math.abs(saldo).toLocaleString('id-ID')+(saldo<0?' (Defisit)':''),c:saldo>=0?C.accentBlue:C.expText,bg:[238,242,255]},
+        {label:'Total Pemasukan (Tabel)',val:'+Rp '+totalPemasukan.toLocaleString('id-ID'),c:C.incomeText,bg:C.incomeBg},
+        {label:'Total Pengeluaran (Tabel)',val:'-Rp '+totalPengeluaran.toLocaleString('id-ID'),c:C.expText,bg:C.expBg},
+        {label:'Saldo Bersih',val:'Rp '+Math.abs(saldo).toLocaleString('id-ID')+(saldo<0?' (Defisit)':''),c:saldo>=0?C.accentBlue:C.expText,bg:[238,242,255]},
     ];
     if(sumY+32>PH-20){doc.addPage();sumY=22}
     doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.setTextColor(...C.subText);
@@ -299,8 +307,6 @@ function genRiwayatPublikPDF(sigImgData){
     if(sigImgData){try{doc.addImage(sigImgData,'PNG',cx-22,ttdY+11,44,20)}catch(e){}}
     doc.setDrawColor(...C.borderGray);doc.setLineWidth(0.4);
     doc.line(cx-24,ttdY+34,cx+24,ttdY+34);
-    doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(...C.dimText);
-    doc.text('Jumlah baris data: '+rows.length+' transaksi',tx,sumY-2);
 
     for(var p=1;p<=doc.internal.getNumberOfPages();p++){
         doc.setPage(p);

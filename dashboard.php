@@ -1,41 +1,29 @@
 <?php
-// dashboard.php
+/**
+ * dashboard.php
+ * Panel Utama Bendahara — Ringkasan keuangan, analisis grafik bulanan/mingguan, dan aktivitas kas terbaru.
+ */
+
 require_once 'config/database.php';
 require_once 'includes/header.php';
 
-// Array nama bulan bahasa Indonesia
-$nama_bulan = [
-    1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
-    5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
-    9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
-];
+$nama_bulan = nama_bulan();
 
 // Ambil tahun aktif dari query parameter, default tahun ini
 $tahun_aktif = isset($_GET['tahun']) ? (int)$_GET['tahun'] : (int)date('Y');
+$current_w = (int)ceil(date('j') / 7);
+$current_m = (int)date('n');
+$current_y = (int)date('Y');
 
-// 1. Ambil data ringkasan keuangan
+// 1. Ambil data ringkasan keuangan global
+$ringkasan = get_ringkasan_kas($pdo);
+$total_pemasukan = $ringkasan['pemasukan'];
+$total_pengeluaran = $ringkasan['pengeluaran'];
+$saldo_kas = $ringkasan['saldo'];
+$total_anggota = $ringkasan['total_anggota'];
+
 try {
-    // Total Pemasukan
-    $stmt = $pdo->query("SELECT SUM(jumlah) AS total FROM transaksi WHERE jenis = 'pemasukan'");
-    $total_pemasukan = (float)($stmt->fetch()['total'] ?? 0);
-
-    // Total Pengeluaran
-    $stmt = $pdo->query("SELECT SUM(jumlah) AS total FROM transaksi WHERE jenis = 'pengeluaran'");
-    $total_pengeluaran = (float)($stmt->fetch()['total'] ?? 0);
-
-    // Saldo Sisa (Total Pemasukan - Total Pengeluaran) secara Real-Time
-    $saldo_kas = $total_pemasukan - $total_pengeluaran;
-
-    // Total Anggota
-    $stmt = $pdo->query("SELECT COUNT(*) AS total FROM anggota");
-    $total_anggota = (int)($stmt->fetch()['total'] ?? 0);
-
-    // 2. Kalkulasi Kas Mingguan untuk Minggu Terkini
-    $current_w = (int)ceil(date('j') / 7);
-    $current_m = (int)date('n');
-    $current_y = (int)date('Y');
-
-    // Query berapa siswa yang sudah bayar iuran minggu ini
+    // 2. Kalkulasi Siswa yang sudah bayar iuran kas minggu ini
     $stmt_paid_week = $pdo->prepare("
         SELECT COUNT(DISTINCT anggota_id)
         FROM transaksi
@@ -52,15 +40,25 @@ try {
     $monthly_income = array_fill(1, 12, 0);
     $monthly_expense = array_fill(1, 12, 0);
 
-    $stmt = $pdo->prepare("SELECT MONTH(tanggal) AS bulan, SUM(jumlah) AS total FROM transaksi WHERE jenis = 'pemasukan' AND YEAR(tanggal) = ? GROUP BY MONTH(tanggal)");
-    $stmt->execute([$tahun_aktif]);
-    while ($row = $stmt->fetch()) {
+    $stmt_m_in = $pdo->prepare("
+        SELECT MONTH(tanggal) AS bulan, SUM(jumlah) AS total 
+        FROM transaksi 
+        WHERE jenis = 'pemasukan' AND YEAR(tanggal) = ? 
+        GROUP BY MONTH(tanggal)
+    ");
+    $stmt_m_in->execute([$tahun_aktif]);
+    while ($row = $stmt_m_in->fetch()) {
         $monthly_income[(int)$row['bulan']] = (float)$row['total'];
     }
 
-    $stmt = $pdo->prepare("SELECT MONTH(tanggal) AS bulan, SUM(jumlah) AS total FROM transaksi WHERE jenis = 'pengeluaran' AND YEAR(tanggal) = ? GROUP BY MONTH(tanggal)");
-    $stmt->execute([$tahun_aktif]);
-    while ($row = $stmt->fetch()) {
+    $stmt_m_out = $pdo->prepare("
+        SELECT MONTH(tanggal) AS bulan, SUM(jumlah) AS total 
+        FROM transaksi 
+        WHERE jenis = 'pengeluaran' AND YEAR(tanggal) = ? 
+        GROUP BY MONTH(tanggal)
+    ");
+    $stmt_m_out->execute([$tahun_aktif]);
+    while ($row = $stmt_m_out->fetch()) {
         $monthly_expense[(int)$row['bulan']] = (float)$row['total'];
     }
 
@@ -68,28 +66,32 @@ try {
     $weekly_income = array_fill(1, 5, 0);
     $weekly_expense = array_fill(1, 5, 0);
 
-    $stmt = $pdo->prepare("
-        SELECT CEIL(DAY(tanggal) / 7) AS mgg, SUM(jumlah) AS total
+    $stmt_w_in = $pdo->prepare("
+        SELECT 
+            COALESCE(minggu, CEIL(DAY(tanggal) / 7)) AS mgg, 
+            SUM(jumlah) AS total
         FROM transaksi
         WHERE jenis = 'pemasukan' AND MONTH(tanggal) = ? AND YEAR(tanggal) = ?
-        GROUP BY CEIL(DAY(tanggal) / 7)
+        GROUP BY COALESCE(minggu, CEIL(DAY(tanggal) / 7))
     ");
-    $stmt->execute([$current_m, $tahun_aktif]);
-    while ($row = $stmt->fetch()) {
+    $stmt_w_in->execute([$current_m, $tahun_aktif]);
+    while ($row = $stmt_w_in->fetch()) {
         $mgg_idx = (int)$row['mgg'];
         if ($mgg_idx >= 1 && $mgg_idx <= 5) {
             $weekly_income[$mgg_idx] = (float)$row['total'];
         }
     }
 
-    $stmt = $pdo->prepare("
-        SELECT CEIL(DAY(tanggal) / 7) AS mgg, SUM(jumlah) AS total
+    $stmt_w_out = $pdo->prepare("
+        SELECT 
+            COALESCE(minggu, CEIL(DAY(tanggal) / 7)) AS mgg, 
+            SUM(jumlah) AS total
         FROM transaksi
         WHERE jenis = 'pengeluaran' AND MONTH(tanggal) = ? AND YEAR(tanggal) = ?
-        GROUP BY CEIL(DAY(tanggal) / 7)
+        GROUP BY COALESCE(minggu, CEIL(DAY(tanggal) / 7))
     ");
-    $stmt->execute([$current_m, $tahun_aktif]);
-    while ($row = $stmt->fetch()) {
+    $stmt_w_out->execute([$current_m, $tahun_aktif]);
+    while ($row = $stmt_w_out->fetch()) {
         $mgg_idx = (int)$row['mgg'];
         if ($mgg_idx >= 1 && $mgg_idx <= 5) {
             $weekly_expense[$mgg_idx] = (float)$row['total'];
@@ -97,7 +99,7 @@ try {
     }
 
     // 5. Ambil 5 Transaksi Terakhir
-    $stmt = $pdo->query("
+    $stmt_recent = $pdo->query("
         SELECT t.*, a.nama AS nama_anggota, u.nama AS nama_petugas
         FROM transaksi t
         LEFT JOIN anggota a ON t.anggota_id = a.id
@@ -105,15 +107,11 @@ try {
         ORDER BY t.tanggal DESC, t.id DESC
         LIMIT 5
     ");
-    $recent_transactions = $stmt->fetchAll();
+    $recent_transactions = $stmt_recent->fetchAll();
 
 } catch (PDOException $e) {
-    echo "<div class='alert alert-error'>Terjadi kesalahan query: " . $e->getMessage() . "</div>";
-    exit();
-}
-
-function formatRupiah($angka) {
-    return 'Rp ' . number_format($angka, 0, ',', '.');
+    echo "<div class='alert alert-error'>Terjadi kesalahan query database: " . e($e->getMessage()) . "</div>";
+    $recent_transactions = [];
 }
 ?>
 
@@ -123,7 +121,9 @@ function formatRupiah($angka) {
     <div class="card p-4 md:p-5 flex items-center justify-between card-hover">
         <div class="space-y-1 min-w-0">
             <span style="font-size:10px;font-weight:bold;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;display:block">Total Pemasukan</span>
-            <h3 style="font-size:1.5rem;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--income)"><?= formatRupiah($total_pemasukan) ?></h3>
+            <h3 style="font-size:1.5rem;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--income)">
+                <?= format_rupiah($total_pemasukan) ?>
+            </h3>
             <span style="font-size:10px;color:var(--income);font-weight:600;display:flex;align-items:center;gap:4px">
                 <i class="fa-solid fa-arrow-trend-up"></i> Akumulasi Masuk
             </span>
@@ -137,7 +137,9 @@ function formatRupiah($angka) {
     <div class="card p-4 md:p-5 flex items-center justify-between card-hover">
         <div class="space-y-1 min-w-0">
             <span style="font-size:10px;font-weight:bold;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;display:block">Total Pengeluaran</span>
-            <h3 style="font-size:1.5rem;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--expense)"><?= formatRupiah($total_pengeluaran) ?></h3>
+            <h3 style="font-size:1.5rem;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--expense)">
+                <?= format_rupiah($total_pengeluaran) ?>
+            </h3>
             <span style="font-size:10px;color:var(--expense);font-weight:600;display:flex;align-items:center;gap:4px">
                 <i class="fa-solid fa-arrow-trend-down"></i> Uang Terpakai
             </span>
@@ -150,8 +152,10 @@ function formatRupiah($angka) {
     <!-- Card Saldo Sisa -->
     <div class="card p-4 md:p-5 flex items-center justify-between card-hover">
         <div class="space-y-1 min-w-0">
-            <span style="font-size:10px;font-weight:bold;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;display:block">Saldo Saat Ini</span>
-            <h3 style="font-size:1.5rem;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:<?= $saldo_kas >= 0 ? 'var(--primary-600)' : 'var(--expense)' ?>"><?= formatRupiah($saldo_kas) ?></h3>
+            <span style="font-size:10px;font-weight:bold;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;display:block">Saldo Kas Saat Ini</span>
+            <h3 style="font-size:1.5rem;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:<?= $saldo_kas >= 0 ? 'var(--primary-600)' : 'var(--expense)' ?>">
+                <?= format_rupiah($saldo_kas) ?>
+            </h3>
             <span style="font-size:10px;font-weight:600;display:flex;align-items:center;gap:4px">
                 <?php if ($saldo_kas < 0): ?>
                     <span style="color:var(--expense)"><i class="fa-solid fa-triangle-exclamation"></i> Saldo Defisit</span>
@@ -178,9 +182,7 @@ function formatRupiah($angka) {
                 <i class="fa-solid fa-calendar-check"></i>
             </div>
         </div>
-        <?php
-        $pct = $total_anggota > 0 ? min(100, ($siswa_lunas_minggu_ini / $total_anggota) * 100) : 0;
-        ?>
+        <?php $pct = $total_anggota > 0 ? min(100, ($siswa_lunas_minggu_ini / $total_anggota) * 100) : 0; ?>
         <!-- Progress bar -->
         <div style="width:100%;background:var(--border-light);border-radius:99px;height:8px">
             <div class="bg-gradient-to-r from-indigo-500 to-violet-500 h-2 rounded-full transition-all duration-500 shadow-sm" style="width: <?= $pct ?>%"></div>
@@ -259,7 +261,7 @@ function formatRupiah($angka) {
             <?php if (empty($recent_transactions)): ?>
                 <div style="text-align:center;padding:48px 16px;color:var(--text-muted);font-size:14px">
                     <i class="fa-solid fa-receipt" style="font-size:32px;margin-bottom:12px;display:block;color:var(--text-dim)"></i>
-                    Belum ada transaksi dicatat.
+                    Belum ada transaksi dicatat di database.
                 </div>
             <?php else: ?>
                 <?php foreach ($recent_transactions as $trans): ?>
@@ -269,14 +271,14 @@ function formatRupiah($angka) {
                                 <i class="fa-solid <?= $trans['jenis'] === 'pemasukan' ? 'fa-arrow-down-long' : 'fa-arrow-up-long' ?>"></i>
                             </div>
                             <div class="min-w-0">
-                                <span style="display:block;font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="<?= htmlspecialchars($trans['keterangan']) ?>">
-                                    <?= htmlspecialchars($trans['keterangan']) ?>
+                                <span style="display:block;font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="<?= e($trans['keterangan']) ?>">
+                                    <?= e($trans['keterangan']) ?>
                                 </span>
                                 <span style="display:block;font-size:10px;color:var(--text-muted);margin-top:2px">
                                     <i class="fa-regular fa-calendar mr-1"></i><?= date('d M Y', strtotime($trans['tanggal'])) ?>
-                                    &middot; <?= htmlspecialchars($trans['nama_petugas'] ?? 'Sistem') ?>
+                                    &middot; <?= e($trans['nama_petugas'] ?? 'Sistem') ?>
                                     <?php if (!empty($trans['bukti'])): ?>
-                                        &middot; <a href="javascript:void(0)" onclick="previewBukti('<?= htmlspecialchars($trans['bukti']) ?>')" style="color:var(--primary-600);font-weight:600;text-decoration:none"><i class="fa-solid fa-image"></i> Foto</a>
+                                        &middot; <a href="javascript:void(0)" onclick="previewBukti('<?= e($trans['bukti']) ?>')" style="color:var(--primary-600);font-weight:600;text-decoration:none"><i class="fa-solid fa-image"></i> Foto</a>
                                     <?php endif; ?>
                                 </span>
                             </div>
@@ -300,16 +302,16 @@ function formatRupiah($angka) {
             <i class="fa-solid fa-graduation-cap"></i>
         </div>
         <div>
-            <h4 style="font-size:14px;font-weight:800;color:var(--text);margin:0 0 2px">Butuh Bantuan atau Ingin Mencatat Kas?</h4>
-            <p style="font-size:12px;color:var(--text-muted);margin:0">Bendahara dapat menambahkan data siswa atau mencatat kas mingguan melalui menu di atas.</p>
+            <h4 style="font-size:14px;font-weight:800;color:var(--text);margin:0 0 2px">Kelola Kas Kelas dengan Mudah</h4>
+            <p style="font-size:12px;color:var(--text-muted);margin:0">Bendahara dapat menambahkan data siswa atau mencatat kas mingguan secara realtime.</p>
         </div>
     </div>
     <div style="display:flex;gap:8px;flex-shrink:0">
-            <a href="transaksi.php?action=add" class="btn btn-primary btn-sm">
-                <i class="fa-solid fa-plus"></i> Catat Transaksi
-            </a>
+        <a href="transaksi.php" class="btn btn-primary btn-sm">
+            <i class="fa-solid fa-plus"></i> Catat Transaksi
+        </a>
         <a href="rekap.php" class="btn btn-secondary btn-sm">
-            <i class="fa-solid fa-table-cells"></i> Rekap
+            <i class="fa-solid fa-table-cells"></i> Rekap Mingguan
         </a>
     </div>
 </div>
@@ -379,7 +381,6 @@ function formatRupiah($angka) {
     function getCSS(varName, fallback) {
         return getComputedStyle(document.documentElement).getPropertyValue(varName).trim() || fallback;
     }
-    // Read dynamic theme colors from CSS variables
     const CHART_TEXT = getCSS('--text-muted', '#64748b');
     const CHART_GRID = getCSS('--border-light', '#f1f5f9');
     const CHART_TOOLTIP = '#0f172a';
@@ -393,7 +394,6 @@ function formatRupiah($angka) {
     };
 
     document.addEventListener("DOMContentLoaded", function () {
-        // ── Chart defaults ──
         Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
         Chart.defaults.font.size = 11;
         Chart.defaults.responsive = true;

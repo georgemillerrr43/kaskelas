@@ -1,16 +1,14 @@
 <?php
-// rekap.php
+/**
+ * rekap.php
+ * Matriks Rekapitulasi Kas Mingguan (Panel Bendahara) — Rekap pembayaran iuran siswa Minggu 1 s.d. Minggu 5.
+ */
+
 require_once 'config/database.php';
 require_once 'includes/header.php';
 
 $error = '';
-
-// Array nama bulan bahasa Indonesia
-$nama_bulan = [
-    1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
-    5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
-    9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
-];
+$nama_bulan = nama_bulan();
 
 // Ambil bulan dan tahun dari parameter filter, default bulan berjalan dan tahun berjalan
 $bulan_aktif = isset($_GET['bulan']) && $_GET['bulan'] !== '' ? (int)$_GET['bulan'] : (int)date('n');
@@ -48,7 +46,7 @@ try {
 
 <!-- Alert Box -->
 <?php if ($error !== ''): ?>
-    <div class="alert alert-error mb-6"><?= htmlspecialchars($error) ?></div>
+    <div class="alert alert-error mb-6"><i class="fa-solid fa-circle-exclamation mr-2"></i> <?= e($error) ?></div>
 <?php endif; ?>
 
 <!-- Header Filter -->
@@ -60,13 +58,13 @@ try {
 
     <form method="GET" action="rekap.php" style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
         <select name="bulan" id="bulan" onchange="this.form.submit()"
-                style="padding:8px 12px;border:1px solid var(--input-border);border-radius:8px;font-size:12px;font-weight:600;font-family:inherit;background:var(--input-bg);color:var(--text);outline:none;cursor:pointer;min-width:120px;width:auto;appearance:none">
+                style="padding:8px 12px;border:1px solid var(--input-border);border-radius:8px;font-size:12px;font-weight:600;font-family:inherit;background:var(--input-bg);color:var(--text);outline:none;cursor:pointer;min-width:120px;width:auto">
             <?php foreach ($nama_bulan as $num => $name): ?>
                 <option value="<?= $num ?>" <?= $num === $bulan_aktif ? 'selected' : '' ?>><?= $name ?></option>
             <?php endforeach; ?>
         </select>
         <select name="tahun" id="tahun" onchange="this.form.submit()"
-                style="padding:8px 12px;border:1px solid var(--input-border);border-radius:8px;font-size:12px;font-weight:600;font-family:inherit;background:var(--input-bg);color:var(--text);outline:none;cursor:pointer;min-width:90px;width:auto;appearance:none">
+                style="padding:8px 12px;border:1px solid var(--input-border);border-radius:8px;font-size:12px;font-weight:600;font-family:inherit;background:var(--input-bg);color:var(--text);outline:none;cursor:pointer;min-width:90px;width:auto">
             <?php
             $current_y = (int)date('Y');
             for ($y = $current_y - 3; $y <= $current_y + 2; $y++):
@@ -123,9 +121,9 @@ try {
                         <tr style="<?= $i % 2 === 0 ? 'background:var(--surface-bg)' : '' ?>">
                             <td style="text-align:center;font-weight:600;color:var(--text-dim);font-size:12px"><?= $no++ ?></td>
                             <td style="border-right:1px solid var(--border-table)">
-                                <span style="font-weight:600;color:var(--text)"><?= htmlspecialchars($member['nama']) ?></span>
+                                <span style="font-weight:600;color:var(--text)"><?= e($member['nama']) ?></span>
                                 <?php if ($member['nis']): ?>
-                                    <span style="display:block;font-size:9px;color:var(--text-dim);font-family:monospace;font-weight:500">NIS: <?= htmlspecialchars($member['nis']) ?></span>
+                                    <span style="display:block;font-size:9px;color:var(--text-dim);font-family:monospace;font-weight:500">NIS: <?= e($member['nis']) ?></span>
                                 <?php endif; ?>
                             </td>
 
@@ -158,7 +156,7 @@ try {
                             <!-- Total Bulan Ini -->
                             <td style="text-align:center;font-weight:bold;white-space:nowrap;border-left:1px solid var(--border-table);background:var(--surface-bg)">
                                 <span style="display:inline-block;padding:6px 12px;background:var(--tab-active-bg);color:var(--tab-active-text);border-radius:8px;font-size:11px;font-weight:bold;border:1px solid rgba(99,102,241,0.15);white-space:nowrap">
-                                    Rp <?= number_format($total_paid_this_month, 0, ',', '.') ?>
+                                    <?= format_rupiah($total_paid_this_month) ?>
                                 </span>
                             </td>
                         </tr>
@@ -279,4 +277,5 @@ function genRekapPDF(sigImgData) {
     doc.save('Rekap_Kas_'+bulanTxt+'_'+tahunTxt+'.pdf');
 }
 </script>
+
 <?php require_once 'includes/footer.php'; ?>

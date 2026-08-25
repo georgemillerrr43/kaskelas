@@ -17,22 +17,19 @@ desktop.ini
 *.swo
 *~
 
-# ── Logs ──
+# ── Logs & Scratch ──
 *.log
+scratch/
 
-# ── Claude (personal AI harness) ──
-.claude/
-.claude-flow/
+# ── Uploads & Generated Assets ──
+assets/uploads/*
+!assets/uploads/.gitkeep
+!assets/uploads/.htaccess
+assets/cache/
 
-# ── Database ──
-database.sql
+# ── Database Backup ──
+*.bak.sql
+*.dump.sql
 *.sqlite
 *.sqlite3
 *.db
-
-# ── Assets (generated/user-uploaded) ──
-assets/uploads/
-assets/cache/
-
-# ── Git ──
-# Keep the git directory clean of transient files

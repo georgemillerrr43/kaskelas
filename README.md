@@ -2,12 +2,12 @@
   <img src="assets/images/joji.svg" alt="Uangkas Kelas" width="80" height="80">
 </p>
 
-<h1 align="center">📊 Uangkas Antigravity</h1>
+<h1 align="center">📊 Uangkas Kelas</h1>
 
 <p align="center">
-  <strong>Aplikasi Manajemen Kas Kelas Berbasis Web</strong>
+  <strong>Sistem Informasi & Manajemen Kas Kelas Berbasis Web</strong>
   <br>
-  Kelola iuran mingguan, pantau saldo, dan lacak transaksi keuangan kelas secara transparan & akurat.
+  Kelola iuran mingguan, pantau saldo, dan lacak transaksi keuangan kelas secara transparan & akurat dengan MySQL.
 </p>
 
 <p align="center">
@@ -19,127 +19,100 @@
 
 ---
 
-## ✨ Fitur
+## ✨ Fitur Utama
 
 | Fitur | Keterangan |
 |-------|------------|
-| **Dashboard Interaktif** | Ringkasan saldo, grafik pemasukan/pengeluaran (bulanan & mingguan) |
-| **Manajemen Transaksi** | Catat pemasukan & pengeluaran dengan filter berdasarkan jenis, bulan, tahun |
-| **Kas Mingguan** | Lacak pembayaran iuran mingguan per siswa (Minggu 1–5) |
-| **Matriks Rekap** | Tabel rekap siapa saja yang sudah bayar kas mingguan |
-| **Manajemen Anggota** | CRUD data siswa dengan NIS, lengkap dengan fitur pencarian |
-| **Multi Role** | Bendahara (admin) dapat mencatat & mengelola; Anggota (view-only) melihat laporan |
-| **Export PDF** | Ekspor laporan transaksi ke PDF profesional dengan kop surat & tanda tangan |
-| **Responsive Design** | Tampilan optimal di desktop, tablet, dan mobile |
+| **Dashboard Real-Time** | Ringkasan saldo, grafik pemasukan/pengeluaran bulanan & mingguan |
+| **Manajemen Transaksi** | Catat pemasukan & pengeluaran kas dengan validasi anti-defisit di database |
+| **Iuran Kas Mingguan** | Pencatatan iuran kas mingguan per siswa (Minggu 1–5) |
+| **Matriks Rekap Kas** | Tabel matriks interaktif status pembayaran per siswa |
+| **Upload Bukti Nota** | Unggah dan pratinjau foto kuitansi/nota belanja kas kelas |
+| **Manajemen Anggota** | CRUD data siswa lengkap dengan NIS, pencarian instan, dan pengurutan |
+| **Export PDF Resmi** | Cetak laporan transaksi & rekapitulasi ke format PDF resmi siap tanda tangan |
+| **Panel Publik & Admin** | Halaman publik untuk transparansi siswa/wali murid & panel khusus bendahara |
+| **Clean Architecture** | Kode bersih, aman dari SQL Injection (PDO Prepared Statements), sanitasi XSS, dan manajemen `.env` mandiri |
 
-## 🖼️ Tampilan
+---
 
-| Halaman | Fungsi |
-|---------|--------|
-| `login.php` | Autentikasi pengguna |
-| `dashboard.php` | Ringkasan keuangan, grafik, & transaksi terbaru |
-| `transaksi.php` | Buku riwayat transaksi dengan filter & export PDF |
-| `rekap.php` | Matriks pembayaran kas mingguan per siswa |
-| `anggota.php` | CRUD anggota kelas dengan pencarian |
+## 🚀 Panduan Deployment ke aaPanel
 
-## 🚀 Instalasi
+Untuk petunjuk lengkap dan panduan visual langkah demi langkah deployment ke server **aaPanel**, silakan baca dokumen berikut:
 
-### Persyaratan
+👉 **[TUTORIAL DEPLOY KE AAPANEL (Klik Disini)](file:///home/joji/Website/kaskelas/TUTORIAL_DEPLOY_AAPANEL.md)**
 
-- PHP 8.1 atau lebih baru
-- MySQL 5.7+ atau MariaDB 10.3+
-- Web server (Apache / Nginx / XAMPP / Laragon)
+---
 
-### Langkah Instalasi
+## 🛠️ Instalasi & Konfigurasi Cepat
 
-1. **Clone repositori**
-
+### 1. Salin Konfigurasi `.env`
+Salin file `.env.example` menjadi `.env`:
 ```bash
-git clone https://github.com/joji/uangkas-antigravity.git
-cd uangkas-antigravity
+cp .env.example .env
 ```
 
-2. **Konfigurasi database**
-
-Salin `config/database.php` lalu sesuaikan kredensial database:
-
-```php
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'db_kas_kelas');
-define('DB_USER', 'root');
-define('DB_PASS', 'password_anda');
+Sesuaikan kredensial database MySQL Anda di dalam file `.env`:
+```env
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_NAME=db_kas_kelas
+DB_USER=root
+DB_PASS=password_anda
 ```
 
-Atau import `database.sql` melalui phpMyAdmin / command line:
-
+### 2. Impor Database (Opsional / Otomatis)
+Aplikasi sudah dilengkapi fitur **Auto-Migration** yang akan otomatis membuat tabel saat aplikasi pertama kali dijalankan. Namun Anda juga dapat mengimpor file `database.sql` secara manual melalui phpMyAdmin atau MySQL CLI:
 ```bash
-mysql -u root -p < database.sql
+mysql -u root -p db_kas_kelas < database.sql
 ```
 
-> **Catatan:** Aplikasi secara otomatis membuat database dan tabel saat pertama kali dijalankan, termasuk data contoh (5 siswa, 2 user default, 6 transaksi awal).
+### 3. Akun Login Default Bendahara
+- **URL Login:** `http://localhost/login.php` (atau `https://domain-anda.com/login.php`)
+- **Username:** `admin`
+- **Password:** `adminpassword`
 
-3. **Jalankan aplikasi**
+*(Segera ganti password default setelah login pertama kali melalui menu **Password**)*
 
-Letakkan folder project di direktori web server (htdocs, www, atau public_html), lalu akses melalui browser:
-
-```
-http://localhost/uangkas-antigravity
-```
-
-### Akun Default
-
-| Role | Username | Password |
-|------|----------|----------|
-| **Bendahara** (admin) | `admin` | `adminpassword` |
-| **Anggota** (view) | `siswa` | `siswapassword` |
-
-## 🛠️ Tech Stack
-
-- **Frontend:** Tailwind CSS (CDN), Chart.js, jsPDF + jspdf-autotable, Font Awesome 6
-- **Backend:** PHP 8+ native (no framework)
-- **Database:** MySQL/MariaDB with PDO
-- **Font:** Plus Jakarta Sans (Google Fonts)
+---
 
 ## 📁 Struktur Proyek
 
-```
-uangkas-antigravity/
+```text
+kaskelas/
 ├── assets/
-│   └── images/            # Aset gambar (logo, signature)
+│   ├── images/                # Aset gambar & favicon
+│   └── uploads/               # Direktori penyimpanan foto bukti nota transaksi
 ├── config/
-│   └── database.php       # Konfigurasi & migrasi database
+│   ├── database.php           # Inisialisasi PDO MySQL & migrasi tabel
+│   └── helpers.php            # Fungsi helper global (.env parser, format rupiah, sanitasi)
 ├── includes/
-│   ├── header.php         # Layout global (sidebar, navbar, CSS)
-│   └── footer.php         # Footer & JavaScript
-├── login.php              # Halaman login
-├── dashboard.php          # Dashboard utama
-├── transaksi.php          # Riwayat transaksi
-├── rekap.php              # Matriks kas mingguan
-├── anggota.php            # Manajemen anggota
-├── logout.php             # Logout handler
-├── index.php              # Entry point (redirect)
-├── database.sql           # SQL dump manual
-├── .gitignore
+│   ├── header.php             # Template header panel admin/bendahara
+│   ├── header-public.php      # Template header halaman publik
+│   ├── footer.php             # Template footer panel admin/bendahara
+│   └── footer-public.php      # Template footer halaman publik
+├── .env                       # File konfigurasi lokal/server (tidak masuk git)
+├── .env.example               # Template contoh konfigurasi environment
+├── .gitignore                 # Daftar file yang diabaikan git
+├── anggota.php                # CRUD manajemen siswa
+├── dashboard.php              # Dashboard analitik keuangan
+├── database.sql               # Skema database MySQL
+├── ganti-password.php         # Ubah kata sandi bendahara
+├── index.php                  # Halaman beranda publik
+├── login.php                  # Halaman login autentikasi bendahara
+├── logout.php                 # Logout session handler
+├── public-rekap.php           # Halaman rekap mingguan publik
+├── public-riwayat.php         # Halaman riwayat transaksi publik
+├── rekap.php                  # Matriks rekapitulasi kas bendahara
+├── transaksi.php              # Riwayat & pencatatan transaksi kas
+├── TUTORIAL_DEPLOY_AAPANEL.md # Panduan deployment ke aaPanel
 └── README.md
 ```
 
-## 🤝 Kontribusi
-
-Kontribusi selalu diterima! Silakan buka *issue* atau kirim *pull request* untuk perbaikan atau fitur baru.
-
-1. Fork repositori
-2. Buat branch fitur (`git checkout -b fitur/fitur-keren`)
-3. Commit perubahan (`git commit -m 'feat: Tambah fitur keren'`)
-4. Push ke branch (`git push origin fitur/fitur-keren`)
-5. Buka Pull Request
-
-## 📄 Lisensi
-
-Distributed under the MIT License. See `LICENSE` for more information.
+---
 
 ## 👤 Pengembang
 
-**Joji** — Pembuat & pengelola utama
+**Joji** — Pembuat & Pengelola Utama
 
 ---
 

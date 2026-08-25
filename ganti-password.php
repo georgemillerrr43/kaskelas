@@ -1,4 +1,9 @@
 <?php
+/**
+ * ganti-password.php
+ * Ubah Kata Sandi Bendahara — Mengubah password akun login dengan hashing Bcrypt.
+ */
+
 require_once 'config/database.php';
 require_once 'includes/header.php';
 
@@ -11,11 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $confirm = trim($_POST['password_konfirmasi'] ?? '');
 
     if ($old === '' || $new === '' || $confirm === '') {
-        $error = 'Semua field wajib diisi!';
+        $error = 'Semua field password wajib diisi!';
     } elseif ($new !== $confirm) {
         $error = 'Konfirmasi password baru tidak cocok!';
     } elseif (strlen($new) < 6) {
-        $error = 'Password baru minimal 6 karakter!';
+        $error = 'Password baru minimal 6 karakter demi keamanan!';
     } else {
         try {
             $stmt = $pdo->prepare("SELECT password FROM users WHERE id = ?");
@@ -23,15 +28,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user = $stmt->fetch();
 
             if (!$user || !password_verify($old, $user['password'])) {
-                $error = 'Password lama tidak sesuai!';
+                $error = 'Password lama yang Anda masukkan tidak sesuai!';
             } else {
                 $hash = password_hash($new, PASSWORD_BCRYPT);
                 $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE id = ?");
                 $stmt->execute([$hash, $_SESSION['user_id']]);
-                $success = 'Password berhasil diubah!';
+                $success = 'Password akun bendahara berhasil diperbarui!';
             }
         } catch (PDOException $e) {
-            $error = 'Kesalahan sistem: ' . $e->getMessage();
+            $error = 'Kesalahan database: ' . $e->getMessage();
         }
     }
 }
@@ -43,14 +48,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <i class="fa-solid fa-key"></i>
             </div>
             <h3 style="margin:0;font-size:18px;font-weight:800;color:var(--text)">Ganti Password</h3>
-            <p style="margin:4px 0 0;font-size:13px;color:var(--text-muted)">Ubah kata sandi akun bendahara</p>
+            <p style="margin:4px 0 0;font-size:13px;color:var(--text-muted)">Ubah kata sandi akun bendahara kelas</p>
         </div>
 
         <?php if ($success): ?>
-            <div class="alert alert-success mb-6"><?= htmlspecialchars($success) ?></div>
+            <div class="alert alert-success mb-6"><i class="fa-solid fa-circle-check mr-2"></i> <?= e($success) ?></div>
         <?php endif; ?>
         <?php if ($error): ?>
-            <div class="alert alert-error mb-6"><?= htmlspecialchars($error) ?></div>
+            <div class="alert alert-error mb-6"><i class="fa-solid fa-circle-exclamation mr-2"></i> <?= e($error) ?></div>
         <?php endif; ?>
 
         <form method="POST" style="display:flex;flex-direction:column;gap:16px">
@@ -88,7 +93,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </div>
 
-<?php require_once 'includes/footer.php'; ?>
 <script>
 function togglePW(id, btn) {
     var inp = document.getElementById(id);
@@ -104,3 +108,5 @@ function togglePW(id, btn) {
     }
 }
 </script>
+
+<?php require_once 'includes/footer.php'; ?>

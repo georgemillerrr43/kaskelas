@@ -1,8 +1,14 @@
 <?php
+/**
+ * login.php
+ * Halaman Autentikasi Bendahara — Login aman menggunakan password_verify() dan Session PHP.
+ */
+
 session_start();
 require_once 'config/database.php';
 
-if (isset($_SESSION['user_id'])) {
+// Jika sudah login sebagai bendahara, langsung arahkan ke dashboard
+if (isset($_SESSION['user_id']) && ($_SESSION['role'] ?? '') === 'admin') {
     header("Location: dashboard.php");
     exit();
 }
@@ -17,27 +23,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Username dan password wajib diisi!';
     } else {
         try {
-            $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
+            $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ? LIMIT 1");
             $stmt->execute([$username]);
             $user = $stmt->fetch();
 
             if ($user && password_verify($password, $user['password'])) {
-                // Hanya role admin (bendahara) yang boleh login
                 if ($user['role'] !== 'admin') {
-                    $error = 'Akses hanya untuk Bendahara. Login siswa tidak lagi didukung.';
+                    $error = 'Akses ditolak. Panel ini hanya diperuntukkan bagi Bendahara Kelas.';
                 } else {
-                    $_SESSION['user_id'] = $user['id'];
+                    // Regenerasi session ID untuk mencegah session fixation
+                    session_regenerate_id(true);
+
+                    $_SESSION['user_id']  = $user['id'];
                     $_SESSION['username'] = $user['username'];
-                    $_SESSION['nama'] = $user['nama'];
-                    $_SESSION['role'] = $user['role'];
+                    $_SESSION['nama']     = $user['nama'];
+                    $_SESSION['role']     = $user['role'];
+
                     header("Location: dashboard.php");
                     exit();
                 }
             } else {
-                $error = 'Username atau password tidak cocok!';
+                $error = 'Username atau password yang Anda masukkan salah!';
             }
         } catch (PDOException $e) {
-            $error = 'Kesalahan sistem: ' . $e->getMessage();
+            $error = 'Terjadi kesalahan sistem saat menghubungi database: ' . $e->getMessage();
         }
     }
 }
@@ -212,15 +221,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .btn-login:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(79,70,229,0.4); }
         .btn-login:active { transform: translateY(0) scale(0.98); }
 
-        .login-hint {
-            margin-top: 20px; padding: 14px;
-            background: var(--hint-bg);
-            border: 1px solid rgba(99,102,241,0.12);
-            border-radius: 12px; font-size: 12px;
-            color: var(--hint-text); line-height: 1.6;
-            text-align: center; transition: background 0.3s ease;
-        }
-
         .error-alert {
             display: flex; align-items: center; gap: 10px;
             padding: 12px 16px;
@@ -231,7 +231,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         .error-alert i { font-size: 16px; flex-shrink: 0; }
 
-        /* ── Theme Toggle ── */
         .theme-toggle {
             position: fixed; top: 20px; right: 20px; z-index: 20;
             width: 40px; height: 40px; border-radius: 12px;
@@ -245,14 +244,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .theme-toggle:hover { background: rgba(255,255,255,0.2); }
         .theme-toggle:active { transform: scale(0.92); }
 
-        /* ── Back link ── */
         .back-link {
             display: inline-flex; align-items: center; gap: 6px;
-            color: rgba(255,255,255,0.6); text-decoration: none;
+            color: rgba(255,255,255,0.7); text-decoration: none;
             font-size: 12px; font-weight: 600; margin-bottom: 16px;
             transition: 0.15s ease;
         }
-        .back-link:hover { color: rgba(255,255,255,0.9); }
+        .back-link:hover { color: #ffffff; }
 
         @media (max-width: 480px) {
             .login-header { padding: 28px 20px 0; }
@@ -280,14 +278,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="login-header">
                 <div class="login-icon"><i class="fa-solid fa-wallet"></i></div>
                 <h1>Uangkas Kelas</h1>
-                <p>Panel Bendahara — Kelola Kas dengan Cermat</p>
+                <p>Panel Bendahara — Kelola Keuangan Kelas</p>
             </div>
 
             <div class="login-form">
                 <?php if ($error !== ''): ?>
                     <div class="error-alert">
                         <i class="fa-solid fa-circle-exclamation"></i>
-                        <span><?= htmlspecialchars($error) ?></span>
+                        <span><?= e($error) ?></span>
                     </div>
                 <?php endif; ?>
 

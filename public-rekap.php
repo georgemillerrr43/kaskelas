@@ -1,32 +1,39 @@
 <?php
-// public-rekap.php
+/**
+ * public-rekap.php
+ * Rekapitulasi Kas Mingguan (Informasi Publik) — Transparansi status iuran siswa per minggu (Mg 1 - Mg 5).
+ */
+
 require_once 'config/database.php';
 require_once 'includes/header-public.php';
 
 $error = '';
-$nama_bulan = [
-    1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
-    5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
-    9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
-];
+$nama_bulan = nama_bulan();
 $bulan_aktif = isset($_GET['bulan']) && $_GET['bulan'] !== '' ? (int)$_GET['bulan'] : (int)date('n');
 $tahun_aktif = isset($_GET['tahun']) ? (int)$_GET['tahun'] : (int)date('Y');
 
 try {
     $stmt_m = $pdo->query("SELECT id, nis, nama FROM anggota ORDER BY nama ASC");
     $anggota_list = $stmt_m->fetchAll();
-    $stmt_p = $pdo->prepare("SELECT anggota_id, minggu, SUM(jumlah) AS total_bayar FROM transaksi WHERE jenis = 'pemasukan' AND anggota_id IS NOT NULL AND bulan = ? AND tahun = ? GROUP BY anggota_id, minggu");
+
+    $stmt_p = $pdo->prepare("
+        SELECT anggota_id, minggu, SUM(jumlah) AS total_bayar 
+        FROM transaksi 
+        WHERE jenis = 'pemasukan' AND anggota_id IS NOT NULL AND bulan = ? AND tahun = ? 
+        GROUP BY anggota_id, minggu
+    ");
     $stmt_p->execute([$bulan_aktif, $tahun_aktif]);
     $payments = [];
     foreach ($stmt_p->fetchAll() as $pay) {
         $payments[(int)$pay['anggota_id']][(int)$pay['minggu']] = (float)$pay['total_bayar'];
     }
 } catch (PDOException $e) {
-    $error = 'Gagal memuat rekapitulasi: ' . $e->getMessage();
-    $anggota_list = []; $payments = [];
+    $error = 'Gagal memuat data rekapitulasi: ' . $e->getMessage();
+    $anggota_list = [];
+    $payments = [];
 }
-function fr($a) { return 'Rp ' . number_format($a, 0, ',', '.'); }
 ?>
+
 <div class="pub-hero" style="padding:20px 0">
     <h1>Rekap Kas Mingguan</h1>
     <p>Status iuran mingguan per siswa — <?= $nama_bulan[$bulan_aktif] ?> <?= $tahun_aktif ?></p>
@@ -51,7 +58,7 @@ function fr($a) { return 'Rp ' . number_format($a, 0, ',', '.'); }
 </div>
 
 <?php if ($error): ?>
-    <div style="background:var(--expense-bg);border-left:4px solid var(--expense);color:var(--expense);padding:14px 18px;border-radius:12px;margin-bottom:20px;font-size:14px"><?= htmlspecialchars($error) ?></div>
+    <div style="background:var(--expense-bg);border-left:4px solid var(--expense);color:var(--expense);padding:14px 18px;border-radius:12px;margin-bottom:20px;font-size:14px"><?= e($error) ?></div>
 <?php endif; ?>
 
 <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:12px;color:var(--text-muted);font-weight:500;background:var(--surface-bg);padding:10px 14px;border-radius:10px;border:1px solid var(--border);margin-bottom:20px">
@@ -77,15 +84,15 @@ function fr($a) { return 'Rp ' . number_format($a, 0, ',', '.'); }
             </thead>
             <tbody>
                 <?php if (empty($anggota_list)): ?>
-                    <tr><td colspan="8" style="text-align:center;padding:60px 16px;color:var(--text-dim)"><i class="fa-solid fa-users-slash" style="font-size:32px;display:block;margin-bottom:10px"></i>Belum ada data siswa.</td></tr>
+                    <tr><td colspan="8" style="text-align:center;padding:60px 16px;color:var(--text-dim)"><i class="fa-solid fa-users-slash" style="font-size:32px;display:block;margin-bottom:10px"></i>Belum ada data siswa terdaftar.</td></tr>
                 <?php else: $no=1; $i=0; foreach ($anggota_list as $m): $i++; $total=0;
                     for ($w=1;$w<=5;$w++){if(isset($payments[$m['id']][$w]))$total+=$payments[$m['id']][$w];}
                 ?>
                     <tr style="<?= $i%2===0?'background:var(--surface-bg)':'' ?>">
                         <td style="text-align:center;font-weight:600;color:var(--text-dim);font-size:12px"><?= $no++ ?></td>
                         <td style="border-right:1px solid var(--border-table)">
-                            <span style="font-weight:600;color:var(--text)"><?= htmlspecialchars($m['nama']) ?></span>
-                            <?php if ($m['nis']): ?><span style="display:block;font-size:9px;color:var(--text-dim);font-family:monospace">NIS: <?= htmlspecialchars($m['nis']) ?></span><?php endif; ?>
+                            <span style="font-weight:600;color:var(--text)"><?= e($m['nama']) ?></span>
+                            <?php if ($m['nis']): ?><span style="display:block;font-size:9px;color:var(--text-dim);font-family:monospace">NIS: <?= e($m['nis']) ?></span><?php endif; ?>
                         </td>
                         <?php for ($w=1;$w<=5;$w++):
                             $paid = isset($payments[$m['id']][$w]);
@@ -106,7 +113,9 @@ function fr($a) { return 'Rp ' . number_format($a, 0, ',', '.'); }
                             </td>
                         <?php endfor; ?>
                         <td style="text-align:center;vertical-align:middle;border-left:1px solid var(--border-table);background:var(--surface-bg);white-space:nowrap">
-                            <span style="display:inline-flex;align-items:center;gap:3px;padding:3px 10px;background:var(--tab-active-bg);color:var(--tab-active-text);border-radius:8px;font-size:11px;font-weight:700;border:1px solid rgba(99,102,241,0.15);white-space:nowrap">Rp <?= number_format($total,0,',','.') ?></span>
+                            <span style="display:inline-flex;align-items:center;gap:3px;padding:3px 10px;background:var(--tab-active-bg);color:var(--tab-active-text);border-radius:8px;font-size:11px;font-weight:700;border:1px solid rgba(99,102,241,0.15);white-space:nowrap">
+                                <?= format_rupiah($total) ?>
+                            </span>
                         </td>
                     </tr>
                 <?php endforeach; endif; ?>
@@ -117,9 +126,11 @@ function fr($a) { return 'Rp ' . number_format($a, 0, ',', '.'); }
 
 <script>
 function loadSigAndRun(cb) {
-    try { if(typeof window.jspdf==='undefined'){alert('Library PDF gagal dimuat. Coba refresh.');return}
-    var t=new window.jspdf.jsPDF('p','mm','a4'); if(typeof t.autoTable!=='function'){alert('Plugin tabel gagal dimuat.');return}
-    }catch(e){alert('Error: '+e.message);return}
+    try { 
+        if(typeof window.jspdf==='undefined'){alert('Library PDF gagal dimuat. Coba refresh.');return}
+        var t=new window.jspdf.jsPDF('p','mm','a4'); 
+        if(typeof t.autoTable!=='function'){alert('Plugin tabel gagal dimuat.');return}
+    } catch(e){alert('Error: '+e.message);return}
     var img=new Image(); img.crossOrigin="anonymous"; img.src='assets/images/ttd.svg';
     img.onload=function(){try{var c=document.createElement('canvas');c.width=300;c.height=120;c.getContext('2d').drawImage(img,0,0,300,120);cb(c.toDataURL('image/png'))}catch(e){cb(null)}};
     img.onerror=function(){cb(null)};
@@ -178,7 +189,7 @@ function genRekapPublikPDF(sigImgData){
     doc.text('Ketua Kelas',cx,ttdY+4,{align:'center'});
     doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...C.black);
     doc.text('Rizky perdana putra sam',cx,ttdY+9,{align:'center'});
-    if(sigImgData){try{doc.addImage(sigImgData,'PNG',cx-22,ttdY+11,44,20);}catch(e){}}
+    if(sigImgData){try{doc.addImage(sigImgData,'PNG',cx-22,ttdY+11,44,20)}catch(e){}}
     doc.setDrawColor(...C.borderGray);doc.setLineWidth(0.4);
     doc.line(cx-24,ttdY+34,cx+24,ttdY+34);
 
